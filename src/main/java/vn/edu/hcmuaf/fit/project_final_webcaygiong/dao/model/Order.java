@@ -1,0 +1,106 @@
+package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model;
+
+import java.util.Date;
+
+public class Order {
+    private int orderId;
+    private int customerId;
+    private int userId;
+    Date orderDate;
+    double totalAMount;
+    String status;
+    double shippingFee;
+    Date createAt;
+
+    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt) {
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalAMount = totalAMount;
+        this.status = status;
+        this.shippingFee = shippingFee;
+        this.createAt = createAt;
+    }
+
+    public Order() {
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", customerId=" + customerId +
+                ", userId=" + userId +
+                ", orderDate=" + orderDate +
+                ", totalAMount=" + totalAMount +
+                ", status='" + status + '\'' +
+                ", shippingFee=" + shippingFee +
+                ", createAt=" + createAt +
+                '}';
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public double getTotalAMount() {
+        return totalAMount;
+    }
+
+    public void setTotalAMount(double totalAMount) {
+        this.totalAMount = totalAMount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+}

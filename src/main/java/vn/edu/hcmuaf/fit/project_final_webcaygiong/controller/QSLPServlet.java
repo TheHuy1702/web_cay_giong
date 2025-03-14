@@ -1,0 +1,80 @@
+package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLSPDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@WebServlet(name = "QSLPServlet", value = "/QuanLySanPham")
+public class QSLPServlet extends HttpServlet {
+    private QLSPDao qlspDao = new QLSPDao();
+    private CategoryDao categoryDao = new CategoryDao();
+    private ProductDao productDao = new ProductDao();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+        List<SubImage> subImages = qlspDao.getSubImage();
+        request.setAttribute("subImage", subImages);
+
+        // ds sản phẩm
+        List<Categories> dsCategories = categoryDao.getAllCategories();
+        request.setAttribute("dsCategories", dsCategories);
+
+        // tìm kiếm.
+        String search = request.getParameter("search");
+        ProductDao productDao = new ProductDao();
+        if (search != null && !search.trim().isEmpty()) {
+            List<Product> searchProducts = productDao.timKiem(search);
+            request.setAttribute("products", searchProducts);
+        } else {
+            List<Product> products = qlspDao.getAllProducts();
+            request.setAttribute("products", products);
+        }
+
+        //Lấy danh mục sản phẩm
+        RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLySanPham.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // nút xoá
+        String action = request.getParameter("action");
+        if ("them".equals(action)) {
+            String name = request.getParameter("addname");
+            double price = Double.parseDouble(request.getParameter("addprice"));
+            String imageMan = request.getParameter("addimageMan");
+            int stock = Integer.parseInt(request.getParameter("addstock"));
+            int categoryId = Integer.parseInt(request.getParameter("addcategoryID"));
+            String introduce = request.getParameter("addintroduce");
+            String infoPro = request.getParameter("addinfoPro");
+            // Thêm sản phẩm qua DAO
+            QLSPDao dao = new QLSPDao();
+            Product product = dao.addProduct(name, price, imageMan, stock, categoryId, introduce, infoPro);
+            request.setAttribute("product", product);
+            // Chuyển hướng về trang danh sách sản phẩm hoặc thông báo thành công
+            response.sendRedirect("QuanLySanPham?them=thanhcong"); // Điều hướng lại để làm mới danh sách sản phẩm
+            if (name == null || name.trim().isEmpty() || price <= 0 || stock < 0) {
+                request.setAttribute("error", "Dữ liệu không hợp lệ!");
+                response.sendRedirect("QuanLySanPham?them=thatBai");
+            }
+        } else if ("delet".equals(action)) {
+            String productId = request.getParameter("productIdXoa");
+            qlspDao.deleteProductById(Integer.parseInt(productId));
+            response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
+        }
+
+    }
+}

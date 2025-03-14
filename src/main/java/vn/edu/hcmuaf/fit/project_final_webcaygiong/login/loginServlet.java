@@ -1,0 +1,48 @@
+package vn.edu.hcmuaf.fit.project_final_webcaygiong.login;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
+
+import java.io.IOException;
+
+@WebServlet(name = "loginServlet", value = "/login")
+public class loginServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Lấy thông tin người dùng gửi từ form
+        String phone = request.getParameter("phone");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession();
+        // Kiểm tra thông tin đăng nhập
+        User adminUser = new User();
+        UserDao userDao = new UserDao();
+        adminUser = userDao.findByPhone("0123456789");
+        if (adminUser.getPhone().equals(phone) && adminUser.getPassword().equals(password)) {
+            session.setAttribute("user", adminUser); // Lưu đối tượng admin vào session
+            session.setAttribute("au", true); // Đánh dấu là admin
+            response.sendRedirect("DashBoard"); // Chuyển đến trang quản trị
+        } else {
+            User user = userDao.findByPhone(phone);
+            boolean isLogin = userDao.checkLogin(user.getPhone(), password);
+            System.out.println("is" + isLogin);
+            if (isLogin) {
+                session.setAttribute("user", user); // Lưu đối tượng user vào session
+                session.setAttribute("au", false); // Đánh dấu không phải admin
+                response.sendRedirect("TrangChu"); // Chuyển đến trang người dùng
+            } else {
+                response.sendRedirect("login?PassWord=Sai");
+            }
+        }
+    }
+
+}
