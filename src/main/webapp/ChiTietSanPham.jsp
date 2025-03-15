@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm - Cây hoa Mẫu Đơn - OnH2K</title>
+    <title>Chi tiết sản phẩm - OnH2K</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
@@ -30,7 +30,6 @@
 
         #headerSection {
             margin: auto;
-            width: 1200px;
         }
 
         .header {
@@ -111,8 +110,7 @@
             display: flex;
             justify-content: center;
             margin-top: -6px;
-            padding-left: 100px;
-            padding-right: 100px;
+
         }
 
         .navbar input[type=text] {
@@ -121,25 +119,22 @@
             font-size: 17px;
             border: none;
             border-radius: 4px;
-            color: #4CAF50;
-            background-color: #4CAF50;
         }
 
         .navbar .search-container button {
             padding: 6px 10px;
             margin-top: 8px;
             margin-right: 16px;
+            background: #ddd;
             font-size: 17px;
             border: none;
             cursor: pointer;
             border-radius: 4px;
-            color: #4CAF50;
-            background-color: #4CAF50;
         }
 
-        /*.navbar .search-container button:hover {*/
-        /*    background: #ccc;*/
-        /*}*/
+        .navbar .search-container button:hover {
+            background: #ccc;
+        }
 
         /* gợi ý cho tìm kiếm */
         .search-suggestions {
@@ -376,7 +371,6 @@
         #contentSection,
         .container {
             margin: auto;
-            width: 1200px;
             background-color: white;
         }
 
@@ -398,6 +392,9 @@
             color: black;
             cursor: pointer;
         }
+        .breadcrumb a:nth-child(2) {
+            font-size: 18px;
+        }
 
         .breadcrumb a:nth-child(2):hover {
             color: #ff9900;
@@ -414,13 +411,13 @@
             font-size: 18px;
         }
 
-        .left-column,
-        .right-column {
-            width: 48%;
-            margin-left: 20px;
+        .left-column{
+            width: 35%;
+            margin-left: 40px;
         }
-
         .right-column {
+            width: 60%;
+            margin-left: 20px;
             margin-top: 50px;
             margin-right: 20px;
         }
@@ -530,7 +527,7 @@
         }
 
         .main-image {
-            width: 100%;
+            width: 470px;
             height: 450px;
             background-color: #ccc;
             position: relative;
@@ -541,7 +538,7 @@
         }
 
         .main-image img {
-            width: 100%;
+            width: 470px;
             height: 100%;
             transition: transform 0.25s;
             /* Hiệu ứng mượt mà khi lật */
@@ -552,32 +549,9 @@
 
         }
 
-        .main-image .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .main-image .arrow.left {
-            left: 10px;
-            transition: transform 0.3s;
-        }
-
-        .main-image .arrow:hover {
-            transform: translateY(-50%) scale(1.2);
-            /* Phóng to khi hover */
-        }
-
-        .main-image .arrow.right {
-            right: 10px;
-            transition: transform 0.3s;
-        }
-
         .product-images {
             display: flex;
+            width: 470px;
             justify-content: space-between;
             margin-top: 20px;
         }
@@ -838,20 +812,21 @@
         }
 
         .container_2 .product {
-            width: 197px;
+            width: 250px;
             margin: 10px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             /* Bóng */
-            border-radius: 10px;
+            border-radius: 15px;
         }
 
         .container_2 .product img {
-            width: 197px;
-            height: 270px;
+            width: 240px;
+            height: 260px;
             background-color: #e0e0e0;
             transition: transform 0.3s ease;
-            border-radius: 10px;
+            border-radius: 15px;
+            margin-top: 5px;
         }
 
         .container_2 .product-name {
@@ -968,7 +943,6 @@
         /* id 3 */
         #footerSection {
             margin: auto;
-            width: 1200px;
         }
 
         .custom-bg {
@@ -1142,6 +1116,11 @@
             </div>
             <a href="GioiThieu">GIỚI THIỆU</a>
             <div class="search-container">
+                <form method="get" action="TrangChu">
+                    <input type="text" placeholder="Tìm kiếm..." id="search-input" name="search"
+                           value="${ser}">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
             </div>
             <div class="icons">
                 <a href="show-cart"><span>Giỏ Hàng ${sessionScope.cart!=null?sessionScope.cart.totalQuantity:0} <i
@@ -1170,7 +1149,6 @@
                     </c:choose>
                 </div>
 
-
             </div>
         </div>
     </div>
@@ -1186,8 +1164,8 @@
             <div class="main-content">
                 <div class="left-column">
                     <div class="main-image">
-                        <img id="mainImage" alt="${detail.name}" height="450" src="${detail.imageMain}"
-                             width="300"/>
+                        <img id="mainImage" alt="${detail.name}" src="${detail.imageMain}"
+                             />
                     </div>
                     <div class="product-images">
                         <c:forEach var="listSubImage" items="${listSubImage}">
