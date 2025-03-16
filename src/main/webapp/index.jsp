@@ -19,7 +19,6 @@
 
         #headerSection {
             margin: auto;
-            width: 1200px;
         }
 
         .header {
@@ -337,7 +336,6 @@
         }
 
         #ContentSection {
-            width: 1200px;
             margin: auto;
             padding-top: 0px;
             background-color: white;
@@ -359,6 +357,7 @@
         }
 
         .container {
+            margin-left: 40px;
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
@@ -366,19 +365,20 @@
         }
 
         .product {
-            width: 197px;
+            width: 250px;
             margin: 17px;
             text-align: center;
             float: right;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            border-radius: 15px;
         }
 
         .product img {
-            width: 197px;
-            height: 270px;
+            width: 240px;
+            height: 260px;
+            margin-top: 5px;
             background-color: #e0e0e0;
-            border-radius: 10px;
+            border-radius: 15px;
         }
 
         .product-name {
@@ -449,7 +449,6 @@
         }
 
         #footerSection {
-            width: 1200px;
             margin-top: 20px;
             margin: auto;
         }
@@ -1093,6 +1092,37 @@
 <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i>
     <div>Lên đầu trang</div>
 </button>
-</div>
 </body>
+<script>
+    // quay về đầu trang
+    // Hiện nút khi cuộn xuống
+    window.onscroll = function () {
+        const button = document.getElementById('backToTop');
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+            button.style.bottom = "20px";
+        } else {
+            button.style.bottom = "-60px";
+        }
+    };
+
+    // Cuộn lên đầu trang khi nhấn nút
+    document.getElementById('backToTop').onclick = function () {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+    const images = [
+        "Ảnh/nền2.jpeg",
+        "Ảnh/ảnh nền 2.jpg",
+        "Ảnh/ảnh nền AI.webp"
+    ];
+    let currentIndex = 0;
+    // Hàm thay đổi hình ảnh
+    function changeImage() {
+        const imgElement = document.getElementById("slideshow");
+        currentIndex = (currentIndex + 1) % images.length; // Chuyển sang ảnh tiếp theo
+        imgElement.src = images[currentIndex]; // Thay đổi src của ảnh
+    }
+
+    // Cài đặt chuyển ảnh sau mỗi 5 giây
+    setInterval(changeImage, 5000);
+</script>
 </html>

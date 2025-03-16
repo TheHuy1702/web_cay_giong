@@ -21,14 +21,12 @@
         }
 
         #HeaderSection {
-            width: 1200px;
             margin-left: auto;
             margin-right: auto;
             margin-top: 0;
         }
 
         #ContentSection {
-            width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -120,10 +118,10 @@
 
         .card {
             background-color: white;
-            padding: 20px;
+            padding: 22px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 28%;
+            width: 29%;
             text-align: center;
         }
 
@@ -165,7 +163,8 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -540px;
+            right: -650px;
+
             border-radius: 5px;
         }
 
