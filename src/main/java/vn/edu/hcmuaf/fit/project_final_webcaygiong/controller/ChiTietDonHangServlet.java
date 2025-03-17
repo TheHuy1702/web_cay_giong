@@ -23,11 +23,16 @@ public class ChiTietDonHangServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy orderId từ tham số yêu cầu
         String orderId = request.getParameter("orderID");
+        // Tổng số lượng sản phẩm.
+        int totalQuantity=0;
 
         // Tạo đối tượng DAO để truy xuất thông tin đơn hàng
         OrderDao orderDao = new OrderDao();
         Order order = orderDao.getOrderById(Integer.parseInt(orderId));
         List<OrderItems> orderItems = orderDao.getOrderItemsByOrderId(Integer.parseInt(orderId));
+        for(OrderItems oi: orderItems){
+            totalQuantity+=oi.getQuantity();
+        }
         Customer customer = orderDao.getCustomerById(order.getCustomerId());
 
         ProductDao productDao = new ProductDao();
@@ -38,6 +43,7 @@ public class ChiTietDonHangServlet extends HttpServlet {
         request.setAttribute("order", order);
         request.setAttribute("orderItems", orderItems);
         request.setAttribute("customer", customer);
+        request.setAttribute("totalQuantity", totalQuantity);
 
         // Chuyển tiếp đến trang chi tiết đơn hàng
         request.getRequestDispatcher("ChiTietDonHang.jsp").forward(request, response);
