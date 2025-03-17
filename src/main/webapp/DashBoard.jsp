@@ -248,35 +248,20 @@
         <div class="sidebar">
             <h3>Quản lý</h3>
             <ul>
-                <a href="DashBoard">
-                    <li class="background"><i class="fas fa-tachometer-alt icon"></i>Dashboard</li>
-                </a>
-                <a href="QuanLySanPham">
-                    <li><i class="fas fa-box icon"></i>Quản lý sản phẩm</li>
-                </a>
-                <a href="QuanLyDonHang">
-                    <li><i class="fas fa-shopping-cart icon"></i>Quản lý đơn hàng</li>
-                </a>
-                <a href="QuanLiKhachHang">
-                    <li><i class="fas fa-users icon"></i>Quản lý khách hàng</li>
-                </a>
-                <a href="QuanLiBinhLuanVaDanhGia">
-                    <li><i class="fas fa-comments icon"></i>Quản lý bình luận và
-                        đánh giá
-                    </li>
-                </a>
+                <li><i class="fas fa-tachometer-alt icon"></i><a href="DashBoard">Dashboard</a></li>
+                <li><i class="fas fa-box icon"></i><a href="QuanLySanPham">Quản lý sản phẩm</a></li>
+                <li><i class="fas fa-shopping-cart icon"></i><a href="QuanLyDonHang">Quản lý đơn hàng</a></li>
+                <li><i class="fas fa-users icon"></i><a href="QuanLiKhachHang">Quản lý khách hàng</a></li>
+                <li><i class="fas fa-comments icon"></i><a href="QuanLiBinhLuanVaDanhGia">Quản lý bình luận và
+                    đánh giá</a></li>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
-
-                    <a href="QuanLiGioiThieu">
-                        <li><i class="fas fa-info-circle icon"></i>Chỉnh sửa thông
-                            tin giới thiệu
-                        </li>
-                    </a>
-
+                    <li><i class="fas fa-info-circle icon"></i><a href="QuanLiGioiThieu">Chỉnh sửa thông
+                        tin giới thiệu</a></li>
                 </ul>
                 <form method="post" action="logout">
-                    <button class="dangxuat" id="logout" type="submit"><i class="fas fa-sign-out-alt icon"></i>Đăng xuất
+                    <button class="dangxuat" id="logout" type="submit"><i
+                            class="fas fa-sign-out-alt"></i> Đăng xuất
                     </button>
                 </form>
             </ul>
@@ -415,30 +400,13 @@
         }
     });
 
-    <%--const labels = <%= request.getAttribute("labels") %>; // Nhãn (tháng)--%>
-    <%--const data = <%= request.getAttribute("data") %>; // Dữ liệu khách hàng--%>
-
-    <%--// Vẽ biểu đồ bằng Chart.js--%>
-    <%--const newCustomersCtx = document.getElementById('newCustomersChart').getContext('2d');--%>
-    <%--const newCustomersChart = new Chart(newCustomersCtx, {--%>
-    <%--    type: 'line',--%>
-    <%--    data: {--%>
-    <%--        labels: labels, // Sử dụng nhãn từ JSP--%>
-    <%--        datasets: [{--%>
-    <%--            label: 'Số lượng khách hàng mới',--%>
-    <%--            data: data, // Sử dụng dữ liệu từ JSP--%>
-    <%--            backgroundColor: 'rgba(153, 102, 255, 0.2)',--%>
-    <%--            borderColor: 'rgba(153, 102, 255, 1)',--%>
-    <%--            borderWidth: 1--%>
-    <%--        }]--%>
-    <%--    },--%>
-    <%--    options: {--%>
-    <%--        scales: {--%>
-    <%--            y: {--%>
-    <%--                beginAtZero: true--%>
-    <%--            }--%>
-    <%--        }--%>
-    <%--    }--%>
-    <%--});--%>
+    function toggleSubMenu() {
+        var subMenu = document.getElementById("subMenu");
+        if (subMenu.style.display === "none" || subMenu.style.display === "") {
+            subMenu.style.display = "block";
+        } else {
+            subMenu.style.display = "none";
+        }
+    }
 </script>
 </html>
