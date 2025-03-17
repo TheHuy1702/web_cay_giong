@@ -19,16 +19,16 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // tìm kiem.
-//        String searchName = request.getParameter("search");
-//        List<Product> productsSearch;
-//        // Nếu có từ khóa tìm kiếm, gọi phương thức timKiem
-//        if (searchName != null && !searchName.isEmpty()) {
-//            productsSearch = productDao.timKiem(searchName);
-//        } else {
-//            productsSearch = null;
-//        }
-//        request.setAttribute("ser", searchName);
-//        request.setAttribute("productsSearch", productsSearch);
+        String searchName = request.getParameter("search");
+        List<Product> productsSearch;
+        // Nếu có từ khóa tìm kiếm, gọi phương thức timKiem
+        if (searchName != null && !searchName.isEmpty()) {
+            productsSearch = productDao.timKiem(searchName);
+        } else {
+            productsSearch = null;
+        }
+        request.setAttribute("ser", searchName);
+        request.setAttribute("productsSearch", productsSearch);
         // Lấy tất cả sản phẩm
         List<Product> products = productDao.getAllProducts();
         request.setAttribute("products", products);
