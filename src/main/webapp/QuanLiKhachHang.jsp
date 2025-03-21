@@ -26,12 +26,10 @@
         }
 
         #HeaderSection {
-            width: 1200px;
             margin: auto;
         }
 
         #ContentSection {
-            width: 1200px;
             margin: auto;
         }
 
@@ -265,13 +263,16 @@
         /*    background-color: red;*/
         /*}*/
 
-
         #customerTable th {
-            background-color: #42c0e7;
+            background-color: #4CAF50;
+            height: 50px;
+            color: white; /* Màu chữ cho tiêu đề cột */
+            font-weight: bold; /* Làm đậm chữ cho tiêu đề */
         }
 
         #customerTable tr:hover {
             background-color: #e9ecef;
+
         }
 
         .action-buttons button {
