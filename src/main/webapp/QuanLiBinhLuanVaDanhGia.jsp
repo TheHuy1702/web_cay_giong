@@ -75,12 +75,15 @@
         .sidebar ul li:hover {
             background-color: #555;
         }
+        .sidebar .background {
+            background-color: #555;
+        }
 
         .sidebar ul li:nth-child(5) {
             background-color: #555;
         }
 
-        .sidebar ul li a {
+        .sidebar ul a {
             color: white;
             text-decoration: none;
         }
@@ -301,17 +304,36 @@
         <div class="sidebar">
             <h3>Quản lý</h3>
             <ul>
-                <li><i class="fas fa-tachometer-alt icon"></i><a href="DashBoard">Dashboard</a></li>
-                <li><i class="fas fa-box icon"></i><a href="QuanLySanPham">Quản lý sản phẩm</a></li>
-                <li><i class="fas fa-shopping-cart icon"></i><a href="QuanLyDonHang">Quản lý đơn hàng</a></li>
-                <li><i class="fas fa-users icon"></i><a href="QuanLiKhachHang">Quản lý khách hàng</a></li>
-                <li><i class="fas fa-comments icon"></i><a href="QuanLiBinhLuanVaDanhGia">Quản lý bình luận và
-                    đánh giá</a></li>
+                <a href="DashBoard">
+                    <li><i class="fas fa-tachometer-alt icon"></i>Dashboard</li>
+                </a>
+                <a href="QuanLySanPham">
+                    <li><i class="fas fa-box icon"></i>Quản lý sản phẩm</li>
+                </a>
+                <a href="QuanLyDonHang">
+                    <li><i class="fas fa-shopping-cart icon"></i>Quản lý đơn hàng</li>
+                </a>
+                <a href="QuanLiKhachHang">
+                    <li><i class="fas fa-users icon"></i>Quản lý khách hàng</li>
+                </a>
+                <a href="QuanLiBinhLuanVaDanhGia">
+                    <li class="background"><i class="fas fa-comments icon"></i>Quản lý bình luận và
+                        đánh giá
+                    </li>
+                </a>
+                <a href="QuanLiUser">
+                    <li><i class="fas fa-users icon"></i>Quản lý tài khoản
+                    </li>
+                </a>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
+
                     <li><i class="fas fa-info-circle icon"></i><a href="QuanLiGioiThieu">Chỉnh sửa thông
-                        tin giới thiệu</a></li>
-                    <li><i class="fas fa-users icon"></i><a href="#">Thông tin của tôi</a></li>
+                        tin giới thiệu
+                    </a></li>
+
+                    <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
+
                 </ul>
                 <form method="post" action="logout">
                     <button class="dangxuat" id="logout" type="submit"><i
