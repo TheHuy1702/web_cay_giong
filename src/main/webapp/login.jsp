@@ -12,7 +12,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #ff7675, #6c5ce7);
+            background: linear-gradient(135deg, #00b894, #00a182, #009973); /* Màu xanh lá chủ đạo */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -38,15 +38,15 @@
         }
 
         .back-home:hover {
-            color: #09ba97;
+            color: #f60a36;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 350px;
+            padding: 40px; /* Tăng padding để form to hơn */
+            border-radius: 15px; /* Bo góc */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Tăng độ đậm của shadow */
+            width: 400px; /* Tăng chiều rộng của form */
             text-align: center;
             animation: fadeIn 1s ease-out;
         }
@@ -84,7 +84,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* Tăng khoảng cách giữa các form-group */
             text-align: left;
             animation: formGroupAnimation 1s ease-out;
         }
@@ -100,14 +100,15 @@
         }
 
         .form-group input {
-            margin-top: 5px;
+            margin-top: 10px; /* Tăng khoảng cách giữa label và input */
             width: 100%;
-            padding: 12px;
+            padding: 15px; /* Tăng padding cho input */
             border: 2px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8); /* Màu nền input trong suốt */
         }
 
         .form-group input:focus {
@@ -119,7 +120,7 @@
         .btn {
             background-color: #00b894;
             color: #fff;
-            padding: 12px;
+            padding: 15px; /* Tăng padding cho button */
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -134,10 +135,48 @@
             box-shadow: 0 0 15px rgba(0, 183, 148, 0.7);
         }
 
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            color: #333;
+            padding: 15px; /* Tăng padding cho nút đăng nhập xã hội */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 15px; /* Tăng khoảng cách giữa các nút */
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-social:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-social i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .btn-facebook {
+            background-color: #1877f2;
+            color: #fff;
+        }
+
+        .btn-google {
+            background-color: #db4437;
+            color: #fff;
+        }
+
         .extra-options {
-            margin-top: 10px;
+            margin-top: 15px; /* Tăng khoảng cách giữa các tùy chọn */
             font-size: 14px;
-            color: #333; /* Đặt màu chữ tối cho phần này */
+            color: #fff; /* Đổi màu chữ sang trắng để phù hợp với nền tối */
         }
 
         .extra-options a {
@@ -191,26 +230,6 @@
     <a href="TrangChu" class="back-home"><i class="fas fa-home"></i> Trang chủ</a>
     <div class="container">
         <h2>Đăng Nhập</h2>
-        <%--        <form method="post" action="login" id="loginForm">--%>
-        <%--            <div class="form-group">--%>
-        <%--                <label for="phone">Số điện thoại</label>--%>
-        <%--                <input type="text" id="phone" placeholder="Số điện thoại" required name="phone" value="${phone}">--%>
-        <%--                <p class="text-danger" id="phoneError">${phoneError}</p>--%>
-        <%--            </div>--%>
-        <%--            <div class="form-group">--%>
-        <%--                <label for="password">Mật khẩu</label>--%>
-        <%--                <div style="position: relative;">--%>
-        <%--                    <input type="password" id="password" placeholder="Mật khẩu" required name="password">--%>
-        <%--                    <i id="togglePassword" class="fas fa-eye"></i>--%>
-        <%--                </div>--%>
-        <%--                <p class="text-danger" id="passwordError">${passwordError}</p>--%>
-        <%--            </div>--%>
-        <%--            <button class="btn" type="submit">Đăng Nhập</button>--%>
-        <%--            <div class="extra-options">--%>
-        <%--                <p style="color: #333;">Quên mật khẩu? <a href="forgot_pass">Nhấn vào đây</a></p>--%>
-        <%--                <p style="color: #333;">Chưa có tài khoản? <a href="register">Đăng ký</a></p>--%>
-        <%--            </div>--%>
-        <%--        </form>--%>
         <form method="post" action="login" id="loginForm">
             <div class="form-group">
                 <label for="phone">Số điện thoại</label>
@@ -223,9 +242,16 @@
                     <input type="password" id="password" placeholder="Mật khẩu" required name="password">
                     <i id="togglePassword" class="fas fa-eye"></i>
                 </div>
-                <p class="text-danger" id="passwordError"></p>
+                <p class="text-danger" id="passwordError">${passwordError}</p>
             </div>
             <button class="btn" type="submit">Đăng Nhập</button>
+            <!-- Thêm nút đăng nhập bằng Facebook và Google -->
+            <button class="btn btn-social btn-facebook">
+                <i class="fab fa-facebook-f"></i> Đăng nhập bằng Facebook
+            </button>
+            <button class="btn btn-social btn-google">
+                <i class="fab fa-google"></i> Đăng nhập bằng Google
+            </button>
             <div class="extra-options">
                 <p style="color: #333;">Quên mật khẩu? <a href="forgot_pass">Nhấn vào đây</a></p>
                 <p style="color: #333;">Chưa có tài khoản? <a href="register">Đăng ký</a></p>
@@ -235,17 +261,6 @@
 </div>
 
 <script>
-    // document.addEventListener("DOMContentLoaded", () => {
-    //     const togglePassword = document.getElementById("togglePassword");
-    //     const passwordField = document.getElementById("password");
-    //
-    //     togglePassword.addEventListener("click", () => {
-    //         const type = passwordField.type === "password" ? "text" : "password";
-    //         passwordField.type = type;
-    //         togglePassword.classList.toggle("fa-eye-slash");
-    //     });
-    // });
-
     document.addEventListener("DOMContentLoaded", () => {
         const togglePassword = document.getElementById("togglePassword");
         const passwordField = document.getElementById("password");
