@@ -6,13 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #00a182, #009973); /* Màu xanh lá chủ đạo */
+            background: linear-gradient(135deg, #00b894, #6c5ce7, #ff7675); /* Màu gradient mới */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -43,11 +43,10 @@
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 40px; /* Tăng padding để form to hơn */
-            border-radius: 15px; /* Bo góc */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Tăng độ đậm của shadow */
-            width: 400px; /* Tăng chiều rộng của form */
-            text-align: center;
+            padding: 10px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 400px;
             animation: fadeIn 1s ease-out;
         }
 
@@ -62,13 +61,14 @@
         }
 
         h2 {
-            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7); /* Sử dụng gradient cho chữ */
+            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7);
             -webkit-background-clip: text;
-            color: transparent; /* Đặt màu chữ thành transparent để gradient có thể hiện lên */
+            color: transparent;
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 20px;
             animation: slideIn 1s ease-out;
+            text-align: center;
         }
 
         @keyframes slideIn {
@@ -84,7 +84,7 @@
         }
 
         .form-group {
-            margin-bottom: 25px; /* Tăng khoảng cách giữa các form-group */
+            margin-bottom: 25px;
             text-align: left;
             animation: formGroupAnimation 1s ease-out;
         }
@@ -100,15 +100,15 @@
         }
 
         .form-group input {
-            margin-top: 10px; /* Tăng khoảng cách giữa label và input */
+            margin-top: 10px;
             width: 100%;
-            padding: 15px; /* Tăng padding cho input */
+            padding: 15px;
             border: 2px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8); /* Màu nền input trong suốt */
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .form-group input:focus {
@@ -120,7 +120,7 @@
         .btn {
             background-color: #00b894;
             color: #fff;
-            padding: 15px; /* Tăng padding cho button */
+            padding: 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -141,14 +141,13 @@
             justify-content: center;
             background-color: #fff;
             color: #333;
-            padding: 15px; /* Tăng padding cho nút đăng nhập xã hội */
+            padding: 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            width: 100%;
+            width: 48%; /* Giảm width để hai nút nằm ngang hàng */
             font-size: 16px;
-            margin-top: 15px;
-            margin-bottom: 15px; /* Tăng khoảng cách giữa các nút */
+            margin-bottom: 15px;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -174,13 +173,32 @@
         }
 
         .extra-options {
-            margin-top: 15px; /* Tăng khoảng cách giữa các tùy chọn */
+            margin-top: 15px;
             font-size: 14px;
-            color: #fff; /* Đổi màu chữ sang trắng để phù hợp với nền tối */
+            color: #fff;
+        }
+
+        .extra-option {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .extra-option a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .extra-option a:hover {
+            color: #00b894;
+            text-decoration: underline;
         }
 
         .extra-options a {
-            color: #ffdd57; /* Màu nổi bật cho các liên kết */
+            color: #333;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
@@ -222,6 +240,36 @@
             font-size: 12px;
             margin-top: 5px;
         }
+
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .or-separator {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .or-separator::before,
+        .or-separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+            margin: auto;
+        }
+
+        .or-separator::before {
+            margin-right: 10px;
+        }
+
+        .or-separator::after {
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -244,17 +292,21 @@
                 </div>
                 <p class="text-danger" id="passwordError">${passwordError}</p>
             </div>
-            <button class="btn" type="submit">Đăng Nhập</button>
-            <!-- Thêm nút đăng nhập bằng Facebook và Google -->
-            <button class="btn btn-social btn-facebook">
-                <i class="fab fa-facebook-f"></i> Đăng nhập bằng Facebook
-            </button>
-            <button class="btn btn-social btn-google">
-                <i class="fab fa-google"></i> Đăng nhập bằng Google
-            </button>
             <div class="extra-options">
-                <p style="color: #333;">Quên mật khẩu? <a href="forgot_pass">Nhấn vào đây</a></p>
-                <p style="color: #333;">Chưa có tài khoản? <a href="register">Đăng ký</a></p>
+                <p style="color: #333;"><a href="forgot_pass">Quên mật khẩu ?</a></p>
+            </div>
+            <button class="btn" type="submit">Đăng Nhập</button>
+            <div class="or-separator">--------- hoặc ---------</div>
+            <div class="social-buttons">
+                <button class="btn btn-social btn-facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </button>
+                <button class="btn btn-social btn-google">
+                    <i class="fab fa-google"></i> Google
+                </button>
+            </div>
+            <div class="extra-option">
+                <p style="color: #333;">Chưa có tài khoản ? <a href="register">Đăng ký</a></p>
             </div>
         </form>
     </div>
