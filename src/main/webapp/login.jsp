@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
         body {
@@ -43,7 +43,7 @@
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
+            padding: 10px 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 400px;
@@ -178,6 +178,25 @@
             color: #fff;
         }
 
+        .extra-option {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .extra-option a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .extra-option a:hover {
+            color: #00b894;
+            text-decoration: underline;
+        }
+
         .extra-options a {
             color: #333;
             text-decoration: none;
@@ -286,7 +305,7 @@
                     <i class="fab fa-google"></i> Google
                 </button>
             </div>
-            <div class="extra-options">
+            <div class="extra-option">
                 <p style="color: #333;">Chưa có tài khoản ? <a href="register">Đăng ký</a></p>
             </div>
         </form>
