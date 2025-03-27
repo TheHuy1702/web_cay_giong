@@ -8,6 +8,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CustomerDao {
@@ -85,12 +87,11 @@ public class CustomerDao {
 //        );
 //    }
 
-    public void updateInfoCustomer(int userID, String fullName, String gender) {
+    public void updateInfoCustomer(int userID, String fullName) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("UPDATE customers SET nameCustomer =?, gender =? WHERE userID =?")
+                h.createUpdate("UPDATE customers SET nameCustomer =? WHERE userID =?")
                        .bind(0, fullName)
-                       .bind(1, gender)
-                       .bind(2, userID)
+                        .bind(1, userID)
                        .execute()
         );
     }
@@ -105,12 +106,21 @@ public class CustomerDao {
     }
     public void updateInfoCustomerEmail(int userID, String email) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("UPDATE customers SET email =? WHERE userID =?")
+                h.createUpdate("UPDATE users SET email =? WHERE userID =?")
                         .bind(0, email)
                         .bind(1, userID)
                         .execute()
         );
     }
+    public void updateInfoCustomerGender(int userID, String gender) {
+        JDBIConnect.get().useHandle(h ->
+                h.createUpdate("UPDATE customers SET gender =? WHERE userID =?")
+                        .bind(0, gender)
+                        .bind(1, userID)
+                        .execute()
+        );
+    }
+
 
 
     public static void main(String[] args) {

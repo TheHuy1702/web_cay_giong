@@ -7,7 +7,6 @@ public class Customer implements Serializable {
     private int customerID;
     private int userID;
     private String nameCustomer;
-    private String email;
     private String phone;
     private String address;
     private String district;
@@ -18,11 +17,10 @@ public class Customer implements Serializable {
     public Customer() {
     }
 
-    public Customer(int customerID, int userID, String nameCustomer, String email, String phone, String address, String district, String city, Date createAt, String gender) {
+    public Customer(int customerID, int userID, String nameCustomer, String phone, String address, String district, String city, Date createAt, String gender) {
         this.customerID = customerID;
         this.userID = userID;
         this.nameCustomer = nameCustomer;
-        this.email = email;
         this.phone = phone;
         this.address = address;
         this.district = district;
@@ -95,13 +93,6 @@ public class Customer implements Serializable {
         this.createAt = createAt;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getGender() {
         return gender;
@@ -118,7 +109,6 @@ public class Customer implements Serializable {
                         ", " + userID +
                         ", " + nameCustomer +
                         "," + phone +
-                        "," + email +
                         ", " + address +
                         ", " + district +
                         ", " + city +
