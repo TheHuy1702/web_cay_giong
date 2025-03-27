@@ -22,18 +22,22 @@ public class UpdateAddressServlet extends HttpServlet {
         String fullName = request.getParameter("fullname");
         String phoneNumber = request.getParameter("phonenumber");
         String address = request.getParameter("address");
+        String email = request.getParameter("email");
         String district = request.getParameter("district");
         String city = request.getParameter("city");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+
         if (user != null) {
+
             // Cập nhật địa chỉ cho khách hàng
             customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address, district, city);
             response.sendRedirect("thanhtoan?update=success");
         } else {
             response.sendRedirect("login");
         }
+
     }
 }
