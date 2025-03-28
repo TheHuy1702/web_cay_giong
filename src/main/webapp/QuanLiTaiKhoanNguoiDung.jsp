@@ -257,6 +257,7 @@
             font-weight: bold; /* Làm đậm chữ cho tiêu đề */
 
         }
+
         tbody tr:hover {
             background-color: #f1f1f1; /* Hiệu ứng hover cho hàng */
         }
@@ -298,7 +299,6 @@
         }
 
 
-
         .dangxuat {
             background-color: #333;
             font-size: 15px;
@@ -309,6 +309,13 @@
 
         .dangxuat:hover {
             background-color: #666;
+        }
+        .alert-warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
         }
     </style>
 </head>
@@ -351,10 +358,13 @@
                         đánh giá
                     </li>
                 </a>
-                <li onclick="toggleSubMenuTK()" style="cursor: pointer;"><i class="fas fa-users icon"></i>Quản lí tài khoản</li>
+                <li onclick="toggleSubMenuTK()" style="cursor: pointer;"><i class="fas fa-users icon"></i>Quản lí tài
+                    khoản
+                </li>
                 <ul id="subMenuTK" class="subMenuTK">
 
-                    <li class="background"><i class="fas fa-users icon"></i><a href="QuanLiGioiThieu">Quản lý tài khoản người dùng
+                    <li class="background"><i class="fas fa-users icon"></i><a href="QuanLiTaiKhoanUser">Quản lý tài
+                        khoản người dùng
                     </a></li>
 
                     <li><i class="fas fa-user icon"></i><a href="#">Quản lý tài khoản được phân quyền</a></li>
@@ -383,13 +393,13 @@
             <h2>Quản lý tài khoản</h2>
             <div class="container2">
                 <div class="header2">
-                    <form action="QuanLyDonHang" method="get">
+                    <form action="QuanLiTaiKhoanUser" method="get">
                         <input type="text" name="keyword"
-                               placeholder="Tìm kiếm số điện thoại..." value="${keyword}">
+                               placeholder="Tìm kiếm số tên, điện thoại..." value="${keyword}">
                         <button type="submit">Tìm kiếm</button>
                     </form>
                     <div class="right">
-                        <form method="get" action="QuanLyDonHang">
+                        <form method="get" action="QuanLiTaiKhoanUser">
                             <select name="sortBy" onchange="this.form.submit()">
                                 <option value="desc" ${sortBy == 'desc' ? 'selected' : ''}>Mới nhất</option>
                                 <option value="asc" ${sortBy == 'asc' ? 'selected' : ''}>Cũ nhất</option>
@@ -397,33 +407,40 @@
                         </form>
                     </div>
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Tài khoản</th>
-                        <th>Ngày tạo</th>
-                        <th>Email</th>
-                        <th>Giới tính</th>
-                        <th>Trạng thái</th>
-                        <th>Xóa/dừng hoạt động</th>
-                        <th>Nâng quyền</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="o" items="${orders}">
+                <c:if test="${empty users}">
+                    <div class="alert-warning">
+                        Không tìm thấy người dùng với tìm kiếm là "${keyword}" nào!
+                    </div>
+                </c:if>
+                <c:if test="${not empty users}">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>6</td>
-                            <td>7</td>
+                            <th>Tài khoản</th>
+                            <th>Ngày tạo</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Trạng thái</th>
+                            <th>Xóa/dừng hoạt động</th>
                         </tr>
-                    </c:forEach>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="u" items="${users}">
+                            <tr>
+                                <td>${u.name}</td>
+                                <td>${u.createAt}</td>
+                                <td>${u.email}</td>
+                                <td>${u.phone}</td>
+                                <td>${u.status}</td>
+                                <td>
+                                    <button>Xóa</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </c:if>
             </div>
 
 
@@ -441,6 +458,7 @@
             subMenu.style.display = "none";
         }
     }
+
     function toggleSubMenuTK() {
         var subMenuTK = document.getElementById("subMenuTK");
         if (subMenuTK.style.display === "none" || subMenuTK.style.display === "") {
