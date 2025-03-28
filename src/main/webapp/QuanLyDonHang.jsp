@@ -478,16 +478,18 @@
                         đánh giá
                     </li>
                 </a>
+                <a href="QuanLiUser">
+                    <li><i class="fas fa-users icon"></i>Quản lý tài khoản
+                    </li>
+                </a>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
-
 
                         <li><i class="fas fa-info-circle icon"></i><a href="QuanLiGioiThieu">Chỉnh sửa thông
                             tin giới thiệu
                         </a></li>
 
                     <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
-
 
                 </ul>
                 <form method="post" action="logout">
