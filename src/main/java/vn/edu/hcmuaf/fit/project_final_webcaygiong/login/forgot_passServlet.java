@@ -22,6 +22,8 @@ public class forgot_passServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("forgot_pass.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
