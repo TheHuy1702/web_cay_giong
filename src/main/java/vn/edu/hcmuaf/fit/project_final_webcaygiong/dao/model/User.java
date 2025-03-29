@@ -12,11 +12,13 @@ public class User implements Serializable {
     private Date updateAt;
     private String verifiCode;
     private Date verifiExpines;
+    private String email;
+    private String googleId;
 
     public User() {
     }
 
-    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines) {
+    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId) {
         this.userID = userID;
         this.name = name;
         this.password = password;
@@ -25,7 +27,17 @@ public class User implements Serializable {
         this.updateAt = updateAt;
         this.verifiCode = verifiCode;
         this.verifiExpines = verifiExpines;
+        this.email = email;
+        this.googleId = googleId;
     }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public String getGoogleId() { return googleId; }
+
+    public void setGoogleId(String googleId) { this.googleId = googleId; }
 
     public int getUserID() {
         return userID;
@@ -91,6 +103,7 @@ public class User implements Serializable {
         this.verifiExpines = verifiExpines;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -102,6 +115,8 @@ public class User implements Serializable {
                 ", updateAt=" + updateAt +
                 ", verifiCode='" + verifiCode + '\'' +
                 ", verifiExpines=" + verifiExpines +
+                ", email='" + email + '\'' +
+                ", googleId='" + googleId + '\'' +
                 '}';
     }
 }

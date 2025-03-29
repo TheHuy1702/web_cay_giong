@@ -8,6 +8,7 @@
     <title>Đăng Nhập</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             margin: 0;
@@ -301,9 +302,9 @@
                 <button class="btn btn-social btn-facebook">
                     <i class="fab fa-facebook-f"></i> Facebook
                 </button>
-                <button class="btn btn-social btn-google">
+                <div id="googleSignInButton" class="btn btn-social btn-google">
                     <i class="fab fa-google"></i> Google
-                </button>
+                </div>
             </div>
             <div class="extra-option">
                 <p style="color: #333;">Chưa có tài khoản ? <a href="register">Đăng ký</a></p>
@@ -353,6 +354,41 @@
             }
         });
     });
+
+    function handleCredentialResponse(response) {
+        // Gửi credential đến servlet để xác minh
+        fetch('google-login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'credential=' + encodeURIComponent(response.credential)
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    window.onload = function () {
+        google.accounts.id.initialize({
+            client_id: "579929879000-f6b0veahlid3g4d5n4imdj9q0f6i8s13.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById("googleSignInButton"),
+            {
+                theme: "filled_blue",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                width: "300" // Điều chỉnh kích thước phù hợp
+            }
+        );
+    };
 </script>
 
 </body>
