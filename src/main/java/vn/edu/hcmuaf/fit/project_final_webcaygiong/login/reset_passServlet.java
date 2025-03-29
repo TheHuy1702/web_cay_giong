@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.login;
 
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +22,8 @@ public class reset_passServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        RequestDispatcher dispatcher = request.getRequestDispatcher("register_pass.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
