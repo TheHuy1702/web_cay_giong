@@ -15,26 +15,23 @@ public class UpdateEmailServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 //        HttpSession session = request.getSession();
 //        User user = (User) session.getAttribute("user");
-//        if (user!= null) {
-//           int users = user.getUserID();
-//            request.setAttribute("users", users);
-//            String emailDis= user.getEmail();
-//            request.setAttribute("emailDis", emailDis);
-//            System.out.println("fyadwt27t3grwfvashjf:"+emailDis);
-//        }
-//        else {
+//        // Kiểm tra xem đã đăng nhập hay chưa
+//        if (user != null) {
+//            int userID=user.getUserID();
+//            System.out.println("12346"+userID+"\n");
+//            UserDao userDao=new UserDao();
+//            User user2=userDao.findUserID(userID);
+//            System.out.println("4631561656"+user2);
+//            request.setAttribute("u",user2);
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("myAccount.jsp");
+//            dispatcher.forward(request, response);
+//        } else {
 //            response.sendRedirect("login");
 //        }
-//        String emailDis= "46874781246";
-//            request.setAttribute("emailDis", emailDis);
-//        System.out.println(emailDis);
-//
-////        UserDao userDao;
-////        User user=userDao.findByUserID();
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("myAccount.jsp");
-//        dispatcher.forward(request, response);
+
     }
 
     @Override
@@ -48,7 +45,6 @@ public class UpdateEmailServlet extends HttpServlet {
         if (user != null) {
 
                 customerDao.updateInfoCustomerEmail(user.getUserID(), email);
-
                 response.sendRedirect("taiKhoanCuaToi?updateMail=success");
         } else {
             response.sendRedirect("login");

@@ -495,9 +495,8 @@
                 </div>
             </form>
 
-
-                <label>Email ${user.email}</label>
-                <p>${user.email}1234<a class="change-link" onclick="openEmailPopup()">Thay Đổi</a></p>
+                <label>Email:</label>
+                <p>${u.email}<a class="change-link" onclick="openEmailPopup()">Thay Đổi</a></p>
 
                 <div class="popup-overlay" id="email-popup">
                     <form id="emailCus" action="UpdateEmail" method="POST">
@@ -549,8 +548,7 @@
                 </div>
                 </div>
             </form>
-
-
+            
 
         </div>
 
