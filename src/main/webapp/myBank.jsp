@@ -1,7 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> -->
 <html>
 <head>
     <meta charset="UTF-8">
@@ -113,6 +113,10 @@
         }
         .container {
             display: flex;
+            align-items: flex-start;
+        }
+        .container-2{
+            display: block;
         }
 
         #footerSection {
@@ -271,15 +275,19 @@
         .account .dropdown-content a:hover {
             color: #45a049;
         }
-
+        .header{
+            color: black;
+            font-size: 20px;
+            font-weight: bold;
+        }
         .content {
-            background: white; /* Nền trắng */
-            max-width: 100%; /* Gần full chiều rộng */
-            margin: auto; /* Căn giữa */
-            padding: 20px 450px; /* Thêm padding cho đẹp */
-            border-radius: 10px; /* Bo tròn góc nhẹ */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+            text-align: center;
 
+            background-color: white;
+            color: #666;
+            padding: 20px;
+            padding-bottom: 230px;
+            width: 80%;
         }
 
         h2 {
@@ -389,6 +397,19 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+        .button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #c0392b;
+        }
 
         .popup-buttons {
             display: flex;
@@ -455,101 +476,29 @@
             <h3>Menu</h3>
             <a href="#">Trang Chủ</a>
             <div class="account">
-                <a href="#">Tài Khoản Của Tôi</a>
+                <a href="taiKhoanCuaToi">Tài Khoản Của Tôi</a>
                 <div class="dropdown-content">
-                    <a href="#" style="color: red"><b>Hồ Sơ</b></a>
-                    <a href="#">Ngân Hàng</a>
+                    <a href="taiKhoanCuaToi">Hồ Sơ</a>
+                    <a href="#" style="color: red"><b>Ngân Hàng</b></a>
                     <a href="#">Địa Chỉ</a>
                     <a href="#">Đổi Mật Khẩu</a>
 
                 </div>
+
             </div>
             <a href="#">Đơn mua</a>
         </div>
+
         <div class="content">
+            <div class="header">Tài Khoản Ngân Hàng Của Tôi</div>
 
-            <h2>Hồ Sơ Của Tôi</h2>
-            <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-
-                <label for="username">Tên đăng nhập</label>
-                <input type="text" id="username" value="${sessionScope.user.name}" disabled>
-
-
-
-
-            <form id="usernameForm" action="taiKhoanCuaToi" method="POST">
-                <label >Tên</label>
-                <p>${customer.nameCustomer}<a class="change-link" onclick="openNamePopup()">Thay Đổi</a></p>
-                <div class="popup-overlay" id="name-popup">
-
-                    <div class="popup-content">
-                        <div class="popup-header">Thay đổi tên</div>
-                        <input type="text" id="name" class="popup-input" placeholder="Nhập tên mới" name="name"
-                               required>
-                        <div class="popup-buttons">
-                            <button type="button" class="cancel-button" onclick="closeNamePopup()">Hủy</button>
-                            <button type="submit" class="save-button">Lưu</button>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-
-                <label>Email:</label>
-                <p>${u.email}<a class="change-link" onclick="openEmailPopup()">Thay Đổi</a></p>
-
-                <div class="popup-overlay" id="email-popup">
-                    <form id="emailCus" action="UpdateEmail" method="POST">
-                        <div class="popup-content">
-                            <div class="popup-header">Thay đổi Email</div>
-                            <input type="email" id="email" class="popup-input" placeholder="Nhập Email mới" name="nameEmail" required>
-                            <div class="popup-buttons">
-                                <button type="button" class="cancel-button" onclick="closeEmailPopup()">Hủy</button>
-                                <button type="submit" class="save-button">Lưu</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-
-
-                <label>Số điện thoại</label>
-                <p>${customer.phone}<a class="change-link" onclick="openPhonePopup()">Thay Đổi</a></p>
-                <div class="popup-overlay" id="phone-popup">
-                    <form id="phoneCus" action="UpdatePhone" method="POST">
-                        <div class="popup-content">
-                            <div class="popup-header">Thay đổi số điện thoại</div>
-                            <input type="number" id="phone" class="popup-input" placeholder="Nhập Số điện thoại mới" name="phone"
-                                   required>
-                            <div class="popup-buttons">
-                                <button type="button" class="cancel-button" onclick="closePhonePopup()">Hủy</button>
-                                <button type="submit" class="save-button">Lưu</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-            <form id="genderCus" action="UpdateGender" method="POST">
-                <label>Giới tính </label>
-                <p>${customer.gender}<a class="change-link" onclick="openGenderPopup()">Thay Đổi</a></p>
-                <div class="popup-overlay" id="gender-popup">
-                <div class="popup-content">
-                    <div class="popup-header">Thay đổi giới tính</div>
-                    <input type="radio" id="male" name="gender" value="Nam" ${customer.gender == 'Nam' ? 'checked' : ''}>
-                    <label for="male">Nam</label>
-                    <input type="radio" id="female" name="gender" value="Nữ" ${customer.gender == 'Nữ' ? 'checked' : ''}>
-                    <label for="female">Nữ</label>
-                    <input type="radio" id="other" name="gender" value="Khác" ${customer.gender == 'Khác' ? 'checked' : ''}>
-                    <label for="other">Khác</label>
-                    <div class="popup-buttons">
-                        <button type="button" class="cancel-button" onclick="closeGenderPopup()">Hủy</button>
-                        <button type="submit" class="save-button">Lưu</button>
-                    </div>
-                </div>
-                </div>
-            </form>
-            
-
+            <div style="text-align: right;">
+                <a href="#" class="button">+ Thêm Ngân Hàng Liên Kết</a>
+            </div>
+            <hr>
+            <div class="content-main">
+                Bạn chưa có tài khoản ngân hàng.
+            </div>
         </div>
 
     </div>

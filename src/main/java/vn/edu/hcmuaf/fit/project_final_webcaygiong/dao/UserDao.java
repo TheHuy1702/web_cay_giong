@@ -23,6 +23,17 @@ public class UserDao {
         return users;
     }
 
+    public User findUserID(int userID) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createQuery("SELECT * FROM users where userID=?")
+                        .bind(0, userID)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+
 
     public User findUsername(String name) {
         return JDBIConnect.get().withHandle(h ->
@@ -115,9 +126,10 @@ public class UserDao {
 
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
-        List<User> listAll = userDao.getAllUsers();
-        for (User c : listAll) {
-            System.out.println(c);
-        }
+//        List<User> listAll = userDao.getAllUsers();
+//        for (User c : listAll) {
+//            System.out.println(c);
+//        }
+        System.out.println(userDao.findUserID(2));
     }
 }

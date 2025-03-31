@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CustomerDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @WebServlet(name = "MyAccountServlet", value = "/taiKhoanCuaToi")
 public class myAccountServlet extends HttpServlet {
+    String emailDis;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CustomerDao customerDao = new CustomerDao();
@@ -41,7 +43,6 @@ public class myAccountServlet extends HttpServlet {
         CustomerDao customerDao = new CustomerDao();
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-
         if (user!= null) {
             customer = customerDao.getCustomerWithUID(user.getUserID());
 
@@ -53,6 +54,14 @@ public class myAccountServlet extends HttpServlet {
 //            String emailDis = user.getEmail();
             request.setAttribute("user", user);
 //            System.out.println(emailDis);
+
+
+
+
+            UserDao userDao=new UserDao();
+            User user2=userDao.findUserID(user.getUserID());
+            request.setAttribute("u",user2);
+
 
         }
         else {
