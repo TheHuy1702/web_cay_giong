@@ -29,6 +29,14 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public String getGoogleId() { return googleId; }
+
+    public void setGoogleId(String googleId) { this.googleId = googleId; }
+
     public int getUserID() {
         return userID;
     }
@@ -93,14 +101,6 @@ public class User implements Serializable {
         this.verifiExpines = verifiExpines;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -113,6 +113,8 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", verifiCode='" + verifiCode + '\'' +
                 ", verifiExpines=" + verifiExpines +
+                ", email='" + email + '\'' +
+                ", googleId='" + googleId + '\'' +
                 '}';
     }
 }

@@ -263,7 +263,7 @@
             </div>
         </div>
         <button type="submit" class="btn">Đăng Ký</button>
-        <div class="or-divider">---------hoặc---------</div>
+        <div class="or-divider">--------- hoặc ---------</div>
         <div class="social-buttons">
             <button type="button" class="social-btn facebook"><i class="fab fa-facebook-f"></i>Facebook</button>
             <button type="button" class="social-btn google"><i class="fab fa-google"></i>Google</button>
