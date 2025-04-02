@@ -26,12 +26,10 @@
         }
 
         #HeaderSection {
-            width: 1200px;
             margin: auto;
         }
 
         #ContentSection {
-            width: 1200px;
             margin: auto;
         }
 
@@ -115,7 +113,7 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -540px;
+            right: -650px;
             border-radius: 5px;
         }
 
@@ -242,9 +240,9 @@
 
         .search-container button {
             color: white;
+            background-color: #ff9800;;
             height: 25px;
             border-radius: 6px;
-            background-color: #ddd;
             cursor: pointer;
             border: none;
             transition: transform 0.3s ease;
@@ -265,13 +263,16 @@
         /*    background-color: red;*/
         /*}*/
 
-
         #customerTable th {
-            background-color: #42c0e7;
+            background-color: #4CAF50;
+            height: 50px;
+            color: white; /* Màu chữ cho tiêu đề cột */
+            font-weight: bold; /* Làm đậm chữ cho tiêu đề */
         }
 
         #customerTable tr:hover {
             background-color: #e9ecef;
+
         }
 
         .action-buttons button {
@@ -424,6 +425,10 @@
                         đánh giá
                     </li>
                 </a>
+                <a href="QuanLiUser">
+                    <li><i class="fas fa-users icon"></i>Quản lý tài khoản
+                    </li>
+                </a>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
 
@@ -431,6 +436,8 @@
                         <li><i class="fas fa-info-circle icon"></i>Chỉnh sửa thông
                             tin giới thiệu
                         </li>
+                        <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
+
                     </a>
 
                 </ul>

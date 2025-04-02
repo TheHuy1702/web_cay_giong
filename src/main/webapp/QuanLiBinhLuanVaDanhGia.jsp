@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cài đặt</title>
+    <title>Admin - Quản lý Bình luận và đánh giá</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
@@ -25,12 +25,10 @@
         }
 
         #HeaderSection {
-            width: 1200px;
             margin: auto;
         }
 
         #ContentSection {
-            width: 1200px;
             margin: auto;
         }
 
@@ -77,12 +75,15 @@
         .sidebar ul li:hover {
             background-color: #555;
         }
+        .sidebar .background {
+            background-color: #555;
+        }
 
         .sidebar ul li:nth-child(5) {
             background-color: #555;
         }
 
-        .sidebar ul li a {
+        .sidebar ul a {
             color: white;
             text-decoration: none;
         }
@@ -112,7 +113,7 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -540px;
+            right: -650px;
             border-radius: 5px;
         }
 
@@ -170,7 +171,7 @@
         }
 
         .management-section {
-            margin: 10px 20px;
+            margin: 0;
         }
 
         .management-section h2 {
@@ -208,27 +209,38 @@
             text-align: left;
         }
 
-        .management-section .delete-button {
-            color: #fff;
-            background-color: #dc3545;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-left: 30px;
-        }
+        /*.management-section .delete-button {*/
+        /*    color: #fff;*/
+        /*    background-color: #dc3545;*/
+        /*    border: none;*/
+        /*    padding: 5px 10px;*/
+        /*    cursor: pointer;*/
+        /*    border-radius: 5px;*/
+        /*    margin-left: 30px;*/
+        /*}*/
 
-        .management-section .delete-button:hover {
-            background-color: #c82333;
+        /*.management-section .delete-button:hover {*/
+        /*    background-color: #c82333;*/
+        /*}*/
+
+        table th,
+        table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
         #management-table th {
-            background-color: #42c0e7;
+            height: 50px;
+            background-color: #4CAF50; /* Màu nền cho tiêu đề cột */
+            color: white; /* Màu chữ cho tiêu đề cột */
+            font-weight: bold; /* Làm đậm chữ cho tiêu đề */
         }
 
         #management-table tr:hover {
             background-color: #e9ecef;
         }
+
 
         #management-table button {
             background-color: #dc3545;
@@ -261,6 +273,13 @@
         .dangxuat:hover {
             background-color: #666;
         }
+
+        .container2 {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -285,16 +304,36 @@
         <div class="sidebar">
             <h3>Quản lý</h3>
             <ul>
-                <li><i class="fas fa-tachometer-alt icon"></i><a href="DashBoard">Dashboard</a></li>
-                <li><i class="fas fa-box icon"></i><a href="QuanLySanPham">Quản lý sản phẩm</a></li>
-                <li><i class="fas fa-shopping-cart icon"></i><a href="QuanLyDonHang">Quản lý đơn hàng</a></li>
-                <li><i class="fas fa-users icon"></i><a href="QuanLiKhachHang">Quản lý khách hàng</a></li>
-                <li><i class="fas fa-comments icon"></i><a href="QuanLiBinhLuanVaDanhGia">Quản lý bình luận và
-                    đánh giá</a></li>
+                <a href="DashBoard">
+                    <li><i class="fas fa-tachometer-alt icon"></i>Dashboard</li>
+                </a>
+                <a href="QuanLySanPham">
+                    <li><i class="fas fa-box icon"></i>Quản lý sản phẩm</li>
+                </a>
+                <a href="QuanLyDonHang">
+                    <li><i class="fas fa-shopping-cart icon"></i>Quản lý đơn hàng</li>
+                </a>
+                <a href="QuanLiKhachHang">
+                    <li><i class="fas fa-users icon"></i>Quản lý khách hàng</li>
+                </a>
+                <a href="QuanLiBinhLuanVaDanhGia">
+                    <li class="background"><i class="fas fa-comments icon"></i>Quản lý bình luận và
+                        đánh giá
+                    </li>
+                </a>
+                <a href="QuanLiUser">
+                    <li><i class="fas fa-users icon"></i>Quản lý tài khoản
+                    </li>
+                </a>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
+
                     <li><i class="fas fa-info-circle icon"></i><a href="QuanLiGioiThieu">Chỉnh sửa thông
-                        tin giới thiệu</a></li>
+                        tin giới thiệu
+                    </a></li>
+
+                    <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
+
                 </ul>
                 <form method="post" action="logout">
                     <button class="dangxuat" id="logout" type="submit"><i
@@ -306,6 +345,7 @@
         <div class="content">
             <div class="management-section">
                 <h2>Quản lý bình luận:</h2>
+                <div class="container2">
                 <div class="filter-section">
                     <form action="QuanLiBinhLuanVaDanhGia" method="get">
                         <label>Chọn sản phẩm:</label>
@@ -370,6 +410,7 @@
                 </table>
             </div>
         </div>
+        </div>
     </div>
 </div>
 </body>
@@ -384,7 +425,7 @@
     }
 
     function confirmDelete() {
-        return confirm("Bạn có chắc chắn muốn xóa khách hàng và user này không?");
+        return confirm("Bạn có chắc chắn muốn xóa bình luận và đánh giá này không?");
     }
 </script>
 </html>
