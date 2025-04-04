@@ -705,6 +705,7 @@
         .contentInfo {
             margin-top: 10px;
             border: 1px solid #e5e7eb;
+            background-color: #f7f7f7;
         }
 
         .contentInfo .footerSub {
@@ -837,7 +838,7 @@
         <div class="nav">
             <ul>
                 <li>
-                    <a href="#">
+                    <a href="TatCaDonHang">
                         Tất cả
                     </a>
                 </li>
@@ -885,13 +886,13 @@
 
             <div class="content">
                 <div class="item">
-                    <a href="#" style="text-decoration: none;">
+                    <a title="Xem sản phẩm" href="#" style="text-decoration: none;">
                         <img alt="Gương chiếu hậu xe Wave" height="100"
                              src="https://storage.googleapis.com/a1aa/image/1D61S1-gC7TwBfgk8zv6EvND3RtPf2wcjgP_t7FCc_4.jpg"
                              width="100"/>
                     </a>
                     <div class="details">
-                        <h3>
+                        <h3 title="Xem sản phẩm">
                             <a href="#" style="text-decoration: none; color: black;">Gương chiếu hậu xe Wave cặp trái
                                 phải (có bán lẻ bên trái và phải) gắn được
                                 nhiều xe.</a>
