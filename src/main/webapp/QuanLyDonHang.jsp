@@ -18,12 +18,10 @@
         }
 
         #HeaderSection {
-            width: 1200px;
             margin: auto;
         }
 
         #ContentSection {
-            width: 1200px;
             margin: auto;
         }
 
@@ -107,7 +105,7 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -540px;
+            right: -650px;
             border-radius: 5px;
         }
 
@@ -226,7 +224,14 @@
         }
 
         table th {
-            background-color: #f9f9f9;
+            /*background-color: #f9f9f9;*/
+            background-color: #4CAF50; /* Màu nền cho tiêu đề cột */
+            color: white; /* Màu chữ cho tiêu đề cột */
+            font-weight: bold; /* Làm đậm chữ cho tiêu đề */
+
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1; /* Hiệu ứng hover cho hàng */
         }
 
         .status {
@@ -473,14 +478,18 @@
                         đánh giá
                     </li>
                 </a>
+                <a href="QuanLiUser">
+                    <li><i class="fas fa-users icon"></i>Quản lý tài khoản
+                    </li>
+                </a>
                 <li onclick="toggleSubMenu()" style="cursor: pointer;"><i class="fas fa-cog icon"></i>Cài đặt</li>
                 <ul id="subMenu" class="submenu">
 
-                    <a href="QuanLiGioiThieu">
-                        <li><i class="fas fa-info-circle icon"></i>Chỉnh sửa thông
+                        <li><i class="fas fa-info-circle icon"></i><a href="QuanLiGioiThieu">Chỉnh sửa thông
                             tin giới thiệu
-                        </li>
-                    </a>
+                        </a></li>
+
+                    <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
 
                 </ul>
                 <form method="post" action="logout">
@@ -524,13 +533,16 @@
                     <c:forEach var="o" items="${orders}">
                         <tr>
                             <td><a style="text-decoration: none; color:black;"
+                                   title="Nhấn để xem thông tin chi tiết đơn hàng"
                                    href="ChiTietDonHang?orderID=${o.orderID}">${o.orderID}</a></td>
                             <td>${o.orderDate}</td>
                             <td>
                                 <a style="text-decoration: none; color:black;"
+                                   title="Nhấn để xem thông tin chi tiết đơn hàng"
                                    href="ChiTietDonHang?orderID=${o.orderID}">${o.nameCustomer}-${o.phone}</a>
                             </td>
                             <td><a style="text-decoration: none; color:black;"
+                                   title="Nhấn để xem thông tin chi tiết đơn hàng"
                                    href="ChiTietDonHang?orderID=${o.orderID}">${o.name}</a>
                             </td>
                             <td><fmt:formatNumber value="${o.totalAmount}" type="number" pattern="#,##0 VND"/></td>
@@ -575,5 +587,13 @@
 </div>
 </body>
 <script>
+    function toggleSubMenu() {
+        var subMenu = document.getElementById("subMenu");
+        if (subMenu.style.display === "none" || subMenu.style.display === "") {
+            subMenu.style.display = "block";
+        } else {
+            subMenu.style.display = "none";
+        }
+    }
 </script>
 </html>

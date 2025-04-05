@@ -29,7 +29,6 @@
         /*id 1*/
         #headerSection {
             margin: auto;
-            width: 1200px;
         }
 
         .header {
@@ -282,8 +281,6 @@
             display: flex;
             justify-content: center;
             margin-top: -6px;
-            padding-left: 100px;
-            padding-right: 100px;
 
         }
 
@@ -368,7 +365,6 @@
         /*id 2*/
         #ContentSection {
             margin: auto;
-            width: 1200px;
             display: flex;
             background-color: white;
         }
@@ -380,14 +376,14 @@
             justify-items: center;
             text-align: center;
             margin-top: -9px;
-            margin-left: 430px;
+            margin-left: 600px;
             position: absolute;
         }
 
         .content-filter select {
             height: 20px;
             margin-top: 14px;
-            margin-right: 15px;
+            margin-right: 30px;
             border-radius: 5px;
         }
 
@@ -486,13 +482,13 @@
         }
 
         .product {
-            width: 197px;
+            width: 250px;
             margin: 10px;
             text-align: center;
             float: right;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             /* Bóng */
-            border-radius: 10px;
+            border-radius: 15px;
         }
 
         .product-name a {
@@ -523,10 +519,11 @@
         }
 
         .product img {
-            width: 197px;
-            height: 270px;
+            width: 240px;
+            height: 260px;
             background-color: #e0e0e0;
             border-radius: 10px;
+            margin-top: 5px;
         }
 
         .product-name {
@@ -574,7 +571,6 @@
             padding-bottom: 20px;
             margin-left: auto;
             margin-right: auto;
-            width: 1200px;
             background-color: white;
         }
 
@@ -649,7 +645,6 @@
 
         /*id 4*/
         #footerSection {
-            width: 1200px;
             margin-top: 20px;
             margin: auto;
         }
@@ -786,7 +781,7 @@
 
         .resultCountP {
             position: absolute;
-            right: 155px;
+            right: 80px;
             top: 262px;
         }
 
@@ -861,6 +856,11 @@
             </div>
             <a href="GioiThieu">GIỚI THIỆU</a>
             <div class="search-container">
+                <form method="get" action="TrangChu">
+                    <input type="text" placeholder="Tìm kiếm..." id="search-input" name="search"
+                           value="${ser}">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
             </div>
             <div class="icons">
                 <a href="show-cart"><span>Giỏ Hàng ${sessionScope.cart!=null?sessionScope.cart.totalQuantity:0} <i

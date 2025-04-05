@@ -23,26 +23,45 @@ public class loginServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         HttpSession session = request.getSession();
-        // Kiểm tra thông tin đăng nhập
-        User adminUser = new User();
         UserDao userDao = new UserDao();
-        adminUser = userDao.findByPhone("0123456789");
-        if (adminUser.getPhone().equals(phone) && adminUser.getPassword().equals(password)) {
-            session.setAttribute("user", adminUser); // Lưu đối tượng admin vào session
-            session.setAttribute("au", true); // Đánh dấu là admin
-            response.sendRedirect("DashBoard"); // Chuyển đến trang quản trị
-        } else {
-            User user = userDao.findByPhone(phone);
+
+        // Kiểm tra thông tin đăng nhập
+        User adminUser = userDao.findByPhone("0123456789");
+        if (adminUser != null && adminUser.getPhone().equals(phone)) {
+            if (adminUser.getPassword().equals(password)) {
+                session.setAttribute("user", adminUser); // Lưu đối tượng admin vào session
+                session.setAttribute("au", true); // Đánh dấu là admin
+                response.sendRedirect("DashBoard"); // Chuyển đến trang quản trị
+                return;
+            } else {
+                request.setAttribute("phoneError", "Số điện thoại hoặc mật khẩu không đúng.");
+                request.setAttribute("passwordError", "Mật khẩu không đúng. Vui lòng nhập lại.");
+                request.setAttribute("phone", phone); // Giữ lại số điện thoại trong khung nhập
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+        }
+
+        User user = userDao.findByPhone(phone);
+        if (user != null) {
             boolean isLogin = userDao.checkLogin(user.getPhone(), password);
-            System.out.println("is" + isLogin);
             if (isLogin) {
                 session.setAttribute("user", user); // Lưu đối tượng user vào session
                 session.setAttribute("au", false); // Đánh dấu không phải admin
                 response.sendRedirect("TrangChu"); // Chuyển đến trang người dùng
             } else {
-                response.sendRedirect("login?PassWord=Sai");
+                request.setAttribute("phoneError", "Số điện thoại hoặc mật khẩu không đúng.");
+                request.setAttribute("passwordError", "Mật khẩu không đúng. Vui lòng nhập lại.");
+                request.setAttribute("phone", phone); // Giữ lại số điện thoại trong khung nhập
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                dispatcher.forward(request, response);
             }
+        } else {
+            request.setAttribute("phoneError", "Số điện thoại không tồn tại.");
+            request.setAttribute("phone", phone); // Giữ lại số điện thoại trong khung nhập
+            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher.forward(request, response);
         }
     }
-
 }
