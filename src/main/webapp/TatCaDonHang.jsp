@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Khương
-  Date: 3/30/2025
-  Time: 11:42 PM
+  Date: 4/3/2025
+  Time: 7:42 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -802,7 +802,7 @@
         <div class="nav">
             <ul>
                 <li>
-                    <a href="TatCaDonHang">
+                    <a href="TatCaDonHang" class="active">
                         Tất cả
                     </a>
                 </li>
@@ -812,7 +812,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="ChoGiaoHang" class="active">
+                    <a href="ChoGiaoHang">
                         Chờ giao hàng
                     </a>
                 </li>
@@ -837,9 +837,9 @@
                 </div>
                 <div class="right">
                     <div class="shipping-status">
-                        <a href="#"> <i class="fas fa-truck">
-                        </i></a>
-                        <span title="Xem chi tiết"> <a href="#"> Đơn vị vận chuyển lấy hàng thành công</a>
+                       <i class="fas fa-truck">
+                        </i>
+                        <span> Trạng thái
        </span>
                         <span class="status">
         CHỜ GIAO HÀNG
@@ -872,12 +872,6 @@
                             <fmt:formatNumber value="150000" type="number" pattern="#,##0 VND"/>
                         </p>
                     </div>
-                </div>
-                <div class="note">
-                    Đơn hàng sẽ được giao đến bạn trước
-                    <span class="date">
-                        29-03-2025
-                    </span>
                 </div>
             </div>
             <div class="footerSub">
@@ -922,3 +916,4 @@
 </body>
 
 </html>
+
