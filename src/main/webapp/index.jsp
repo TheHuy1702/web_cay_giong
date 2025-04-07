@@ -588,46 +588,46 @@
         }
 
         /* gợi ý cho tìm kiếm */
-        .search-suggestions {
-            margin-right: 54px;
-            margin-top: 38px;
-            position: absolute;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            /* Màu viền tương tự các phần khác */
-            border-radius: 5px;
-            /* Thêm bo góc để mềm mại */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* Thêm hiệu ứng đổ bóng */
-            max-height: 250px;
-            /* Tăng chiều cao tối đa để phù hợp hơn */
-            overflow-y: auto;
-            width: 220px;
-            /* Để phù hợp với chiều rộng container */
-            z-index: 200;
-            /* Tăng z-index để chắc chắn hiển thị trên các thành phần khác */
-        }
+        /*.search-suggestions {*/
+        /*    margin-right: 54px;*/
+        /*    margin-top: 38px;*/
+        /*    position: absolute;*/
+        /*    background-color: #ffffff;*/
+        /*    border: 1px solid #ccc;*/
+        /*    !* Màu viền tương tự các phần khác *!*/
+        /*    border-radius: 5px;*/
+        /*    !* Thêm bo góc để mềm mại *!*/
+        /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+        /*    !* Thêm hiệu ứng đổ bóng *!*/
+        /*    max-height: 250px;*/
+        /*    !* Tăng chiều cao tối đa để phù hợp hơn *!*/
+        /*    overflow-y: auto;*/
+        /*    width: 220px;*/
+        /*    !* Để phù hợp với chiều rộng container *!*/
+        /*    z-index: 200;*/
+        /*    !* Tăng z-index để chắc chắn hiển thị trên các thành phần khác *!*/
+        /*}*/
 
-        .search-suggestions a {
-            display: block;
-            padding: 10px 12px;
-            /* Điều chỉnh padding cho cân đối */
-            font-size: 14px;
-            /* Cỡ chữ nhỏ gọn */
-            text-decoration: none;
-            color: #333;
-            /* Màu chữ đậm hơn một chút */
-            transition: background-color 0.3s ease, color 0.3s ease;
-            /* Hiệu ứng mượt */
-            text-align: left;
-        }
+        /*.search-suggestions a {*/
+        /*    display: block;*/
+        /*    padding: 10px 12px;*/
+        /*    !* Điều chỉnh padding cho cân đối *!*/
+        /*    font-size: 14px;*/
+        /*    !* Cỡ chữ nhỏ gọn *!*/
+        /*    text-decoration: none;*/
+        /*    color: #333;*/
+        /*    !* Màu chữ đậm hơn một chút *!*/
+        /*    transition: background-color 0.3s ease, color 0.3s ease;*/
+        /*    !* Hiệu ứng mượt *!*/
+        /*    text-align: left;*/
+        /*}*/
 
-        .search-suggestions a:hover {
-            background-color: #f5f5f5;
-            /* Màu nền khi hover đồng bộ với giao diện */
-            color: #45a049;
-            /* Đồng bộ với màu hover của navbar */
-        }
+        /*.search-suggestions a:hover {*/
+        /*    background-color: #f5f5f5;*/
+        /*    !* Màu nền khi hover đồng bộ với giao diện *!*/
+        /*    color: #45a049;*/
+        /*    !* Đồng bộ với màu hover của navbar *!*/
+        /*}*/
 
         /*.navbar c {*/
         /*    margin-right: 54px;*/
@@ -687,6 +687,24 @@
         .dangxuat:hover {
             color: red; /* Màu nền khi hover */
             transform: scale(1.01); /* Phóng to khi hover */
+        }
+
+        .suggestions-box {
+            position: absolute;
+            background: #4CAF50;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .suggestion-item {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
         }
 
     </style>
@@ -749,8 +767,9 @@
             <div class="search-container">
                 <form method="get" action="TrangChu">
                     <input type="text" placeholder="Tìm kiếm..." id="search-input" name="search"
-                           value="${ser}">
+                           value="${ser}" autocomplete="off">
                     <button type="submit"><i class="fa fa-search"></i></button>
+                    <div id="suggestions" class="suggestions-box"></div>
                 </form>
             </div>
 
@@ -1124,5 +1143,39 @@
 
     // Cài đặt chuyển ảnh sau mỗi 5 giây
     setInterval(changeImage, 5000);
+
+    // gợi ý tìm kiếm
+    const input = document.getElementById("search-input");
+    const suggestionsBox = document.getElementById("suggestions");
+
+    input.addEventListener("keyup", function () {
+        const query = this.value.trim();
+        if (query.length === 0) {
+            suggestionsBox.innerHTML = "";
+            return;
+        }
+
+        fetch("SuggestServlet?query=" + encodeURIComponent(query))
+                .then(response => response.json())
+            .then(data => {
+                suggestionsBox.innerHTML = "";
+                data.forEach(name => {
+                    const div = document.createElement("div");
+                    div.classList.add("suggestion-item");
+                    div.textContent = name;
+                    div.addEventListener("click", () => {
+                        input.value = name;
+                        suggestionsBox.innerHTML = "";
+                    });
+                    suggestionsBox.appendChild(div);
+                });
+            });
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".search-container")) {
+            suggestionsBox.innerHTML = "";
+        }
+    });
 </script>
 </html>
