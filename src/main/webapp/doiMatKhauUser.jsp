@@ -490,7 +490,14 @@
 
         <div class="content">
             <h2>Đổi mật khẩu</h2>
-            <form method="post" action="change-password">
+            <c:if test="${not empty error}">
+                <p style="color:red;">${error}</p>
+            </c:if>
+            <c:if test="${not empty message}">
+                <p style="color:green;">${message}</p>
+            </c:if>
+
+            <form method="post" action="doiMatKhau">
                 <label for="currentPassword">Mật khẩu hiện tại:</label>
                 <input type="password" id="currentPassword" name="currentPassword" required>
 
