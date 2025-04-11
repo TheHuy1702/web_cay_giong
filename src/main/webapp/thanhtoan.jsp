@@ -11,6 +11,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <title>Thanh Toán</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy danh sách tỉnh khi trang được tải
+            $.get("address?type=provinces", function (data) {
+                $.each(data, function (index, province) {
+                    $('#provinceSelect').append($('<option>', {
+                        value: province.ProvinceID,
+                        text: province.ProvinceName
+                    }));
+                });
+            });
+
+            // Khi tỉnh được chọn, lấy danh sách quận
+            $('#provinceSelect').change(function () {
+                var provinceId = $(this).val();
+                // console.log("Selected provinceId:", provinceId);
+                $('#districtSelect').empty().append($('<option>', {value: "", text: "Chọn quận"}));
+                $('#wardSelect').empty().append($('<option>', {value: "", text: "Chọn xã"}));
+
+                if (provinceId) {
+                    $.get("address?type=districts&id=" + provinceId, function (data) {
+                        $.each(data, function (index, district) {
+                            $('#districtSelect').append($('<option>', {
+                                value: district.id,
+                                text: district.name
+                            }));
+                        });
+                    }).fail(function () {
+                        console.log("Lỗi khi lấy quận.");
+                    });
+                }
+            });
+
+            // Khi quận được chọn, lấy danh sách xã/phường
+            $('#districtSelect').change(function () {
+                var districtId = $(this).val();
+                $('#wardSelect').empty().append($('<option>', {value: "", text: "Chọn xã"}));
+
+                if (districtId) {
+                    $.get("address?type=wards&id=" + districtId, function (data) {
+                        $.each(data, function (index, ward) {
+                            $('#wardSelect').append($('<option>', {
+                                value: ward.id,
+                                text: ward.name
+                            }));
+                        });
+                    }).fail(function () {
+                        console.log("Lỗi khi lấy xã/phường.");
+                    });
+                }
+            });
+            // Cập nhật tên khi tỉnh, quận, xã được chọn
+            $('#provinceSelect, #districtSelect, #wardSelect').change(function () {
+                $('#provinceName').val($('#provinceSelect option:selected').text());
+                $('#districtName').val($('#districtSelect option:selected').text());
+                $('#wardName').val($('#wardSelect option:selected').text());
+            });
+        });
+    </script>
     <style>
         body {
             margin: 0;
@@ -338,6 +398,17 @@
         .unshow {
             display: none;
         }
+
+        .popup-input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -349,10 +420,8 @@
         <span>OneH2K / Thanh toán</span>
     </div>
 
-
     <div class="address-section">
         <div class="address-info">
-
 
             <div id="address-display">
                 <p><strong>Địa chỉ nhận hàng</strong></p>
@@ -376,11 +445,25 @@
                        required>
                 <input type="text" id="phone-number" class="popup-input" placeholder="Số điện thoại" name="phonenumber"
                        required>
-                <input type="text" id="address" class="popup-input" placeholder="Số nhà, tên đường, xã/ thị trấn"
+                <input type="text" id="address" class="popup-input" placeholder="Số nhà, tên đường"
                        name="address"
                        required>
-                <input type="text" id="district" class="popup-input" placeholder="Quận/Huyện" name="district" required>
-                <input type="text" id="city" class="popup-input" placeholder="Tỉnh/Thành phố" name="city" required>
+                <input type="hidden" id="provinceName" name="provinceName">
+                <input type="hidden" id="districtName" name="districtName">
+                <input type="hidden" id="wardName" name="wardName">
+
+                <select id="provinceSelect" name="provinceId">
+                    <option value="">Chọn tỉnh</option>
+                </select>
+                <label for="districtSelect">Quận/Huyện:</label>
+                <select id="districtSelect" name="districtId">
+                    <option value="">Chọn quận</option>
+                </select>
+                <label for="wardSelect">Xã/Phường:</label>
+                <select id="wardSelect" name="wardCode">
+                    <option value="">Chọn xã</option>
+                </select>
+
                 <div class="popup-buttons">
                     <button type="button" class="cancel-button" onclick="closePopup()">Hủy</button>
                     <button type="submit" class="save-button">Lưu</button>
@@ -458,6 +541,7 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
 
 <script>
     function openPopup() {
