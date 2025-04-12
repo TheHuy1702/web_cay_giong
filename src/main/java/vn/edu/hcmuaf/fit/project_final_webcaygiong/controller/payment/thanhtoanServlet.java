@@ -20,8 +20,13 @@ public class thanhtoanServlet extends HttpServlet {
         if (user != null) {
             CustomerDao customerDao = new CustomerDao();
             Customer customer = customerDao.getCustomerWithUID(user.getUserID());
-            // Kiểm tra giá trị của các biến
+            // Kiểm tra giá trị của các biến.
             request.setAttribute("customer", customer);
+            // Hiện thị phí ship.
+            String serviceFeeParam = request.getParameter("serviceFee");
+            Integer serviceFee = serviceFeeParam != null ? Integer.parseInt(serviceFeeParam) : 0;
+            request.setAttribute("serviceFee", serviceFee);
+
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("thanhtoan.jsp");
         dispatcher.forward(request, response);

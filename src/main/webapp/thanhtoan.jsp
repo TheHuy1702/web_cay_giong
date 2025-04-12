@@ -1,3 +1,4 @@
+<%@ page import="org.json.JSONObject" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -441,9 +442,9 @@
         <form method="post" action="UpdateAddress">
             <div class="popup-content">
                 <div class="popup-header">Thay đổi địa chỉ nhận hàng</div>
-                <input type="text" id="full-name" class="popup-input" placeholder="Họ tên người nhận" name="fullname"
+                <input type="text" id="full-name" class="popup-input" placeholder="Họ tên người nhận" name="fullName"
                        required>
-                <input type="text" id="phone-number" class="popup-input" placeholder="Số điện thoại" name="phonenumber"
+                <input type="text" id="phone-number" class="popup-input" placeholder="Số điện thoại" name="phoneNumber"
                        required>
                 <input type="text" id="address" class="popup-input" placeholder="Số nhà, tên đường"
                        name="address"
@@ -486,6 +487,12 @@
             <tbody id="product-list">
 
             <c:forEach var="p" items="${sessionScope.cart.list}">
+
+                <form method="post" action="UpdateAddress">
+                    <input type="hidden" id="prodName" name="prodName" value="${p.name}">
+                    <input type="hidden" id="prodQuantity" name="prodQuantity" value="${p.quantity}">
+                </form>
+
                 <tr>
                     <td>
                         <div class="product-info">
@@ -525,12 +532,15 @@
             </tr>
             <tr>
                 <td>Phí vận chuyển:</td>
-                <td class="total-price">15.000 VNĐ</td>
+                <td class="total-price">
+                    <p><fmt:formatNumber
+                            value="${serviceFee}" type="number" pattern="#,##0 VND"/></p>
+                </td>
             </tr>
             <tr>
                 <td><strong>Tổng thanh toán:</strong></td>
                 <td id="final-total" class="total-price"><strong><fmt:formatNumber
-                        value="${sessionScope.cart.total+15000}" type="number" pattern="#,##0 VND"/></strong></td>
+                        value="${sessionScope.cart.total+serviceFee}" type="number" pattern="#,##0 VND"/></strong></td>
             </tr>
         </table>
         <form action="Order" method="POST" onsubmit="return confirmThanhToan();">
