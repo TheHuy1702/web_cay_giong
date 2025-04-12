@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Khương
-  Date: 3/30/2025
-  Time: 11:42 PM
+  Date: 4/5/2025
+  Time: 10:22 AM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -424,141 +424,245 @@
             margin-left: 20px;
         }
 
-        .nav ul {
+        .container1 {
+            margin: 0 auto;
+            padding: 24px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header1 {
             display: flex;
-            padding: 0;
-            margin: 0;
-            list-style: none;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
             border-bottom: 1px solid #e5e7eb;
+
         }
 
-        .nav li {
-            padding: 10px 20px;
-        }
-
-        .nav a {
+        .header1 a {
+            color: #4A5568;
+            font-size: 14px;
             text-decoration: none;
-            color: #4b5563;
         }
-        .nav a:hover {
-            color: #ef4444;
+        .header1 a:hover {
+            color: red;
         }
 
-        .nav a.active {
-            color: #ef4444;
-            border-bottom: 2px solid #ef4444;
+        .header1 a i {
+            margin-right: 4px;
+        }
+
+        .header1 .order-info {
+            font-size: 14px;
+        }
+
+        .header1 .order-info .status {
+            color: #E53E3E;
+            margin-left: 8px;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timeline .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline .step .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #48BB78;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline .step .icon i {
+            color: white;
+        }
+
+        .timeline .step .text {
+            margin-top: 8px;
+            text-align: center;
+            color: #4A5568;
+            font-size: 14px;
+        }
+
+        .timeline .step .date {
+            color: #A0AEC0;
+            font-size: 12px;
+        }
+
+        .timeline .line {
+            flex: 1;
+            height: 2px;
+            background-color: #48BB78;
+            margin: 0 8px;
+        }
+
+        /* Container2 */
+        .container2 {
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .header2,
-        .footerSub {
-            padding: 20px;
-            border-bottom: 1px solid #e5e7eb;
+        .address,
+        .order-summary {
+            border-bottom: 2px dashed #d1d5db;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
         }
 
-        .header2 {
+        .header2 .flex,
+        .order-summary .flex {
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
-        }
-
-        .header2 .left {
-            display: flex;
             align-items: center;
         }
 
-        .header2 .left i {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .header2 .right {
+        .header2 .flex .bars {
             display: flex;
-            justify-content: space-between;
+            gap: 4px;
         }
 
-        .header2 .shipping-status i {
-            color: #10b981;
-            margin-right: 5px;
+        .header2 .flex .bars div {
+            width: 16px;
+            height: 4px;
         }
 
-        .header2 .shipping-status a {
-            text-decoration: none;
-            color: #10b981;
+        .header2 .flex .bars .green {
+            background-color: #3ac824;
         }
 
-        .header2 .shipping-status a:hover {
-            color: #ef4444;
+        .header2 .flex .bars .blue {
+            background-color: #3b82f6;
         }
 
-        .header2 .shipping-status .status {
-            color: #ef4444;
-            margin-left: 5px;
-        }
-
-        .content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content .item {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        .content .item img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .content .item .details {
-            margin-left: 20px;
-            margin-top: -20px;
-            flex: 1;
-        }
-
-        .content .item .details h2 {
+        .header2 .text-right p {
             margin: 0;
-            color: #4b5563;
+            font-size: 14px;
         }
 
-        .content .item .details p {
-            margin: 5px 0;
-            color: #6b7280;
+        .address h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .content .item .price {
+        .address p {
+            margin: 0;
+        }
+
+        .address .font-semibold {
+            font-weight: 600;
+        }
+
+        .order-summary .flex {
+            align-items: center;
+        }
+
+        .order-summary .flex img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 16px;
+            border-radius: 10px;
+        }
+
+        .order-summary .flex .ml-auto {
+            margin-left: auto;
             text-align: right;
         }
 
-        .content .item .price .original {
+        .order-summary .flex .line-through {
             text-decoration: line-through;
-            color: #9ca3af;
-        }
-
-        .content .item .price .discounted {
-            color: #ef4444;
-            font-size: 20px;
-        }
-
-        .content .note {
             color: #6b7280;
         }
 
-        .content .note .date {
-            color: #3b82f6;
-        }
-
-        .footerSub {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footerSub .total {
+        .order-summary .flex .text-red-500 {
             color: #ef4444;
-            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .order-summary .border-t-2 {
+            border-top: 2px dashed #d1d5db;
+            padding-top: 16px;
+        }
+
+        .order-summary .border-t-2 .flex {
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .order-summary .border-t-2 .font-bold {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .order-summary .border-t-2 .text-red-500 {
+            color: #ef4444;
+        }
+
+        .order-summary .bg-yellow-100 {
+            background-color: #fef3c7;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 16px;
+        }
+
+        .order-summary .bg-yellow-100 p {
+            margin: 0;
+            color: #d97706;
+        }
+
+        .order-summary .bg-yellow-100 .text-red-500 {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .order-summary .mt-4 {
+            margin-top: 16px;
+        }
+
+        .order-summary .mt-4 p {
+            margin: 0;
+        }
+
+        .order-summary .mt-4 .font-semibold {
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .buttons button {
+            padding: 4px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .buttons .bg-red-500 {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        .buttons .bg-gray-200 {
+            background-color: #e5e7eb;
         }
 
         #footerSection {
@@ -664,16 +768,6 @@
             background-color: #8BC34A;
             color: white;
             transform: scale(1.1);
-        }
-
-        .contentInfo {
-            margin-top: 10px;
-            border: 1px solid #e5e7eb;
-            background-color: #f7f7f7;
-        }
-
-        .contentInfo .footerSub {
-            border-top: 1px solid #e5e7eb;
         }
     </style>
 </head>
@@ -799,94 +893,127 @@
         </a>
     </aside>
     <section>
-        <div class="nav">
-            <ul>
-                <li>
-                    <a href="TatCaDonHang">
-                        Tất cả
-                    </a>
-                </li>
-                <li>
-                    <a href="ChoXacNhanDonHang">
-                        Chờ xác nhận (1)
-                    </a>
-                </li>
-                <li>
-                    <a href="ChoGiaoHang" class="active">
-                        Chờ giao hàng
-                    </a>
-                </li>
-                <li>
-                    <a href="DonHangHoanThanh">
-                        Hoàn thành
-                    </a>
-                </li>
-                <li>
-                    <a href="DonHangDaHuy">
-                        Đã hủy
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="contentInfo">
-            <div class="header2">
-                <div class="left">
-                    <i class="fas fa-store" style="color: #45a049;">
-                    </i>
-                    <span><a href="TrangChu" style="color: black; text-decoration: none; font-weight: bold;">OneH2K</a></span>
-                </div>
-                <div class="right">
-                    <div class="shipping-status">
-                        <a href="#"> <i class="fas fa-truck">
-                        </i></a>
-                        <span title="Xem chi tiết"> <a href="#"> Đơn vị vận chuyển lấy hàng thành công</a>
-       </span>
-                        <span class="status">
-        CHỜ GIAO HÀNG
-       </span>
-                    </div>
-                </div>
-            </div>
 
-            <div class="content">
-                <div class="item">
-                    <a title="Xem sản phẩm" href="#" style="text-decoration: none;">
-                        <img alt="Gương chiếu hậu xe Wave" height="100"
-                             src="https://storage.googleapis.com/a1aa/image/1D61S1-gC7TwBfgk8zv6EvND3RtPf2wcjgP_t7FCc_4.jpg"
-                             width="100"/>
-                    </a>
-                    <div class="details">
-                        <h3 title="Xem sản phẩm">
-                            <a href="#" style="text-decoration: none; color: black;">Gương chiếu hậu xe Wave cặp trái phải (có bán lẻ bên trái và phải) gắn được
-                                nhiều xe.</a>
-                        </h3>
-                        <p>
-                            Số lượng: x1
-                        </p>
-                    </div>
-                    <div class="price">
-                        <p class="original">
-                            <fmt:formatNumber value="${190000}" type="number" pattern="#,##0 VND"/>
-                        </p>
-                        <p class="discounted">
-                            <fmt:formatNumber value="150000" type="number" pattern="#,##0 VND"/>
-                        </p>
-                    </div>
-                </div>
-                <div class="note">
-                    Đơn hàng sẽ được giao đến bạn trước
-                    <span class="date">
-                        29-03-2025
-                    </span>
+        <div class="container1">
+            <div class="header1">
+                <a href="DonHangHoanThanh"><i class="fas fa-arrow-left"></i> TRỞ LẠI</a>
+                <div class="order-info">
+                    <span>MÃ ĐƠN HÀNG: 250328RT5YV4AF</span>
+                    <span class="status">| ĐÃ GIAO</span>
                 </div>
             </div>
-            <div class="footerSub">
-                <div class="total">
-                    Thành tiền:
-                    <fmt:formatNumber value="150000" type="number" pattern="#,##0 VND"/>
+            <div class="timeline">
+                <div class="step">
+                    <div class="icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="text">Đơn Hàng Đã Đặt</div>
+                    <div class="date">16:19 28-03-2025</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="text">Đã Xác Nhận Thông Tin Thanh Toán</div>
+                    <div class="date">16:49 28-03-2025</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <div class="icon"><i class="fas fa-truck"></i></div>
+                    <div class="text">Đã Giao Cho ĐVVC</div>
+                    <div class="date">20:00 29-03-2025</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <div class="icon"><i class="fas fa-box"></i></div>
+                    <div class="text">Chờ Giao Hàng</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <div class="icon"><i class="fas fa-star"></i></div>
+                    <div class="text">Đánh Giá</div>
                 </div>
             </div>
         </div>
+
+
+        <div class="container2">
+            <div class="header2">
+                <div class="flex">
+                    <div class="bars">
+                        <div class="green"></div>
+                        <div class="blue"></div>
+                        <div class="green"></div>
+                        <div class="blue"></div>
+                        <div class="green"></div>
+                        <div class="blue"></div>
+                        <div class="green"></div>
+                        <div class="blue"></div>
+                        <div class="green"></div>
+                        <div class="blue"></div>
+                    </div>
+                    <div class="text-right">
+                        <p>SPX Express</p>
+                        <p>SPXVN057230169173</p>
+                    </div>
+                </div>
+            </div>
+            <div class="address">
+                <h1>Địa Chỉ Nhận Hàng</h1>
+                <p class="font-semibold">Khương Nguyễn</p>
+                <p>(+84)</p>
+                <p> Phường Long Thạnh Mỹ, Thành Phố Thủ Đức, TP. Hồ Chí Minh</p>
+            </div>
+            <div class="order-summary">
+                <div class="flex">
+                    <h2><i class="fas fa-store" style="margin-right: 10px;">
+                    </i><a href="TrangChu" style="text-decoration: none; color: black;">OnH2K</a></h2>
+                    <div class="buttons">
+                        <button class="bg-gray-200">Xem sản phẩm</button>
+                    </div>
+                </div>
+                <div class="flex" style="margin-bottom: 20px;">
+                    <img src="https://storage.googleapis.com/a1aa/image/n9PTFWP2dWIXBlo1DDys8mFyZT3Gf1L8xaJRVsontOo.jpg"
+                         alt="Gương chiếu hậu xe Wave" />
+                    <div>
+                        <a href="" title="Xem sản phẩm" style="color: black; text-decoration: none;">
+                            <p class="font-semibold">
+                            <h4>Gương chiếu hậu xe Wave cặp trái phải (có bán lẻ bên trái và phải) gắn được nhiều xe
+                            </h4>
+                            </p>
+                        </a>
+                        <p>Số lượng: <span>x1</span></p>
+                    </div>
+                    <div class="ml-auto">
+                        <p class="line-through">₫19.955</p>
+                        <p class="text-red-500">₫15.800</p>
+                    </div>
+                </div>
+                <div class="border-t-2">
+                    <div class="flex">
+                        <p>Tổng tiền hàng</p>
+                        <p>₫15.800</p>
+                    </div>
+                    <div class="flex">
+                        <p>Phí vận chuyển</p>
+                        <p>₫16.500</p>
+                    </div>
+                    <div class="flex">
+                        <p>Giảm giá phí vận chuyển</p>
+                        <p>-₫16.500</p>
+                    </div>
+                    <div class="flex font-bold">
+                        <p>Thành tiền</p>
+                        <p class="text-red-500">₫15.800</p>
+                    </div>
+                </div>
+                <div class="bg-yellow-100">
+                    <p>Vui lòng thanh toán <span class="text-red-500">₫15.800</span> khi nhận hàng.</p>
+                </div>
+                <div class="mt-4">
+                    <p class="font-semibold">Phương thức Thanh toán</p>
+                    <p>Thanh toán khi nhận hàng</p>
+                </div>
+            </div>
+        </div>
+
     </section>
 </main>
 <div id="footerSection" class="custom-bg">
@@ -922,3 +1049,4 @@
 </body>
 
 </html>
+
