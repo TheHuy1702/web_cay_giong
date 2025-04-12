@@ -460,7 +460,7 @@
                     <a href="#" style="color: red"><b>Hồ Sơ</b></a>
                     <a href="#">Ngân Hàng</a>
                     <a href="#">Địa Chỉ</a>
-                    <a href="#">Đổi Mật Khẩu</a>
+                    <a href="send-otp-email">Đổi Mật Khẩu</a>
 
                 </div>
             </div>
@@ -496,7 +496,7 @@
             </form>
 
                 <label>Email:</label>
-                <p>${u.email}<a class="change-link" onclick="openEmailPopup()">Thay Đổi</a></p>
+                <p>${u.email}<a class="change-link" href="send-otp-email?action=updateEmail" onclick="openEmailPopup()">Thay Đổi</a></p>
 
                 <div class="popup-overlay" id="email-popup">
                     <form id="emailCus" action="UpdateEmail" method="POST">
@@ -514,7 +514,7 @@
 
 
                 <label>Số điện thoại</label>
-                <p>${customer.phone}<a class="change-link" onclick="openPhonePopup()">Thay Đổi</a></p>
+                <p>${customer.phone}<a class="change-link" href="send-otp-email?action=updatePhone" onclick="openPhonePopup()">Thay Đổi</a></p>
                 <div class="popup-overlay" id="phone-popup">
                     <form id="phoneCus" action="UpdatePhone" method="POST">
                         <div class="popup-content">
@@ -583,6 +583,23 @@
 <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i>
     <div>Lên đầu trang</div>
 </button>
+<c:if test="${sessionScope.openPopup == 'email'}">
+    <script>
+        window.onload = function() {
+            openEmailPopup();
+        }
+    </script>
+    <c:remove var="openPopup" scope="session" />
+</c:if>
+
+<c:if test="${sessionScope.openPopup == 'phone'}">
+    <script>
+        window.onload = function() {
+            openPhonePopup();
+        }
+    </script>
+    <c:remove var="openPopup" scope="session" />
+</c:if>
 </body>
 <script>
     function openEmailPopup() {
