@@ -23,6 +23,17 @@ public class UserDao {
         return users;
     }
 
+    public User findUserID(int userID) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createQuery("SELECT * FROM users where userID=?")
+                        .bind(0, userID)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+
 
     public User findUsername(String name) {
         return JDBIConnect.get().withHandle(h ->
@@ -113,11 +124,55 @@ public class UserDao {
         );
     }
 
+    public User findByEmail(String email) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createQuery("SELECT * FROM users WHERE email = ?")
+                        .bind(0, email)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public void insertGoogleUser(User user) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO users (name, email, googleId, createAt, updateAt) VALUES (?, ?, ?, ?, ?)";
+            h.createUpdate(sql)// ID của người dùng từ Google OAuth
+                    .bind(0, user.getName())
+                    .bind(1, user.getEmail())
+                    .bind(2, user.getGoogleId())
+                    .bind(3, user.getCreateAt())
+                    .bind(4, user.getUpdateAt())
+                    .execute();
+        });
+    }
+
+    public void updateGoogleId(int userId, String googleId) {
+        JDBIConnect.get().useHandle(h -> {
+            h.createUpdate("UPDATE users SET googleId = ?, updateAt = ? WHERE userID = ?")
+                    .bind(0, googleId)
+                    .bind(1, new Date())
+                    .bind(2, userId)
+                    .execute();
+        });
+    }
+
+    public User findByGoogleId(String googleId) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createQuery("SELECT * FROM users WHERE googleId = ?")
+                        .bind(0, googleId)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
-        List<User> listAll = userDao.getAllUsers();
-        for (User c : listAll) {
-            System.out.println(c);
-        }
+//        List<User> listAll = userDao.getAllUsers();
+//        for (User c : listAll) {
+//            System.out.println(c);
+//        }
+        System.out.println(userDao.findUserID(2));
     }
 }

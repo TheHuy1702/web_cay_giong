@@ -3,6 +3,10 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -176,6 +180,17 @@ public class ProductDao {
                         .mapToBean(Product.class).list());
         return products;
     }
+    // Gợi ý sp tìm được
+    public List<String> getSuggestions(String keyword) {
+        List<String> suggestions = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT name FROM products WHERE name LIKE :keyword LIMIT 5")
+                        .bind("keyword", "%" + keyword + "%")
+                        .mapTo(String.class)
+                        .list()
+        );
+        return suggestions;
+    }
+
 
     public static void main(String[] args) {
         // test lấy các sản phẩm cùng loại.

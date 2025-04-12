@@ -1,15 +1,17 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubCategories;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ProductSevrlet", value = "/TrangChu")
@@ -18,17 +20,28 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // tìm kiem.
-//        String searchName = request.getParameter("search");
-//        List<Product> productsSearch;
-//        // Nếu có từ khóa tìm kiếm, gọi phương thức timKiem
-//        if (searchName != null && !searchName.isEmpty()) {
-//            productsSearch = productDao.timKiem(searchName);
-//        } else {
-//            productsSearch = null;
+//        //Gợi ý tìm kiếm
+//        String query = request.getParameter("GoiYTimKiem");
+//        List<String> suggestions = new ArrayList<>();
+//
+//        if (query != null && !query.trim().isEmpty()) {
+//            suggestions = productDao.getSuggestions(query); // trả về danh sách tên sản phẩm gợi ý
 //        }
-//        request.setAttribute("ser", searchName);
-//        request.setAttribute("productsSearch", productsSearch);
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        new Gson().toJson(suggestions, response.getWriter());
+        // tìm kiem.
+        String searchName = request.getParameter("search");
+        List<Product> productsSearch;
+        // Nếu có từ khóa tìm kiếm, gọi phương thức timKiem
+        if (searchName != null && !searchName.isEmpty()) {
+            productsSearch = productDao.timKiem(searchName);
+        } else {
+            productsSearch = null;
+        }
+        request.setAttribute("ser", searchName);
+        request.setAttribute("productsSearch", productsSearch);
         // Lấy tất cả sản phẩm
         List<Product> products = productDao.getAllProducts();
         request.setAttribute("products", products);

@@ -33,15 +33,19 @@ public class UpdateAddressServlet extends HttpServlet {
         String city = request.getParameter("provinceName");
         String ward = request.getParameter("wardName");
 
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+
         if (user != null) {
+
             // Cập nhật địa chỉ cho khách hàng
             customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city);
             response.sendRedirect("thanhtoan?update=success");
         } else {
             response.sendRedirect("login");
         }
+
     }
 }

@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
         body {
@@ -21,9 +21,9 @@
         }
 
         .container {
-            width: 80%;
             margin: 0 auto;
             padding-top: 20px;
+            min-height: 460px;
         }
 
         .header {
@@ -31,34 +31,112 @@
             align-items: center;
             background-color: #4caf50;
             color: white;
-            padding: 10px;
-            font-size: 18px;
+            font-size: 16px;
             position: relative;
         }
 
-        .ten {
-            color: black;
+        .cart {
+            height: 50px;
+            color: limegreen;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 1.5;
+            font-size: 20px;
         }
 
         .header span {
             margin-left: 40px;
         }
 
-        .back-button {
-            position: absolute;
-            left: 30px;
-            top: 20px;
-            color: black;
-            font-size: 24px;
-            text-decoration: none;
+        .navbar {
+            display: flex;
+            background-color: #4CAF50;
+            align-items: center;
         }
 
-        .table-container {
-            margin-top: 20px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .navbar a {
+            color: white;
+            padding: 24px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            background-color: #45a049;
+        }
+
+        .navbar .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .navbar .dropdown-content {
+            margin-top: 22px;
+            display: none;
+            position: absolute;
+            background-color: #4CAF50;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .navbar .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .navbar .dropdown-content a:hover {
+            background-color: #45a049;
+        }
+
+        .navbar .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .navbar .search-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            margin-top: -6px;
+            margin-right: 300px;
+            margin-left: 200px;
+
+        }
+
+        .navbar input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .navbar .search-container button {
+            padding: 6px 10px;
+            margin-top: 8px;
+            margin-right: 16px;
+            background: #ddd;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .navbar .search-container button:hover {
+            background: #ccc;
+        }
+
+        .navbar .icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .icons a {
+            padding: 0 10px;
         }
 
         table {
@@ -256,6 +334,7 @@
             margin-top: 20px;
             font-size: 1.2em;
             font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .buy-btn {
@@ -278,18 +357,156 @@
             border: none;
             border-radius: 7px;
         }
+
+        #footerSection {
+            margin-top: 20px;
+            margin: auto;
+        }
+
+        .custom-bg {
+            background-color: #8BC34A;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: start;
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .footer-container h2 {
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .footer-container p {
+            margin-bottom: 10px;
+        }
+
+        .footer-container a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-container .contact-info {
+            flex: 1;
+        }
+
+        .footer-container .map {
+            flex: 1;
+            display: flex;
+            margin-top: -200px;
+            margin-left: 100px;
+        }
+
+        .footer-container .map iframe {
+            width: 250px;
+            height: 175px;
+            border: 1px solid white;
+            margin-top: 10px;
+            border-radius: 6px;
+        }
+
+        .footer-container .separator {
+            display: none;
+            margin: 10px 0px;
+        }
+
+        .footer-container .credits {
+            flex: 1;
+            text-align: right;
+        }
+
+        .footer-container .credits p {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                flex-direction: row;
+                text-align: left;
+            }
+
+            .footer-container .separator {
+                display: block;
+                border-left: 1px solid white;
+                height: 200px;
+            }
+        }
+
+
+        .alert-warning {
+            height: 160px;
+            color: red;
+            font-size: 25px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
     </style>
 </head>
 
 <body>
 
 <div class="container">
+    <div class="cart">Giỏ Hàng</div>
     <div class="header">
-        <div class="ten">OneH2K</div>
-        <span>Giỏ Hàng</span>
-    </div>
-    <a class="back-button" href="TrangChu"><i class="fas fa-home"></i></a>
+        <div class="navbar">
+            <a href="TrangChu"><i class="fas fa-home"></i> TRANG CHỦ</a>
+            <div class="dropdown">
+                <a href="#"><i class="fas fa-seedling"></i> SẢN PHẨM <i class="fa fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="category?cid=1">GIỐNG CÂY ĂN QUẢ</a>
+                    <a href="category?cid=2">GIỐNG CÂY CẢNH</a>
+                    <a href="category?cid=3">GIỐNG CÂY DƯỢC LIỆU</a>
+                    <a href="category?cid=4">GIỐNG HOA</a>
+                    <a href="category?cid=6">GIỐNG CÂY MỚI LẠ</a>
+                    <a href="category?cid=5">GIỐNG CÂY CÔNG NGHIỆP</a>
+                </div>
+            </div>
+            <a href="GioiThieu">GIỚI THIỆU</a>
 
+
+            <div class="search-container">
+                <form method="get" action="TrangChu">
+                    <input type="text" placeholder="Tìm kiếm..." id="search-input" name="search"
+                           value="${ser}">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+
+
+            <div class="icons">
+                <div id="user-info">
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.user}">
+            <span id="user-welcome" style="color: white;">
+                Xin chào, <c:out value="${sessionScope.user.name}"/>
+            </span>
+                            <i class="fas fa-user" id="user-icon"
+                               style="color: white; background-color: #ddd; padding: 7px; border-radius: 100%;"></i>
+                            <form method="post" action="logout">
+                                <button class="dangxuat" id="logout" type="submit">ĐĂNG XUẤT</button>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <span id="user-welcome" style="display: none; color: white;"></span>
+                            <i class="fas fa-user" id="user-icon"
+                               style="display: none; color: white; background-color: #ddd; padding: 7px; border-radius: 100%;"></i>
+                            <a href="login" id="login-link">ĐĂNG NHẬP</a>
+                            <a href="register" id="register-link">ĐĂNG KÝ</a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+    </div>
     <table id="cart-table">
         <tr>
             <th>
@@ -351,6 +568,11 @@
             </tr>
         </c:forEach>
     </table>
+    <c:if test="${empty sessionScope.cart.list}">
+        <div class="alert-warning">
+            Chưa chọn sản phẩm
+        </div>
+    </c:if>
     <div class="total-container">
    <span>
     Tổng Giá: <fmt:formatNumber value="${sessionScope.cart.total}" type="number" pattern="#,##0 VND"/>
@@ -359,8 +581,32 @@
             Mua Ngay
         </a>
     </div>
-
-
+</div>
+<div id="footerSection" class="custom-bg">
+    <footer class="footer-container">
+        <div class="contact-info">
+            <h2>Liên hệ chúng tôi</h2>
+            <p><i class="fas fa-map-marker-alt"></i> DC: Cư xá C, Trường đại học Nông Lâm, Khu phố 6, Phường
+                Linh
+                Trung, TP. Thủ Đức, TP. Hồ Chí Minh</p>
+            <p><i class="fas fa-phone-alt"></i> SĐT liên hệ: 0707188079</p>
+            <p><i class="fas fa-envelope"></i> EMAIL: <a
+                    href="mailto:22130000@st.hcmuaf.edu.vn">22130000@st.hcmuaf.edu.vn</a></p>
+            <p><i class="fas fa-globe"></i> WEBSITE: <a href="https://OneH2K.vn">https://OneH2K.vn</a></p>
+        </div>
+        <div class="separator"></div>
+        <div class="credits">
+            <p>&copy; 2024 OneH2K.Vn |</p>
+            <p>Cửa hàng bán cây giống</p>
+            <p style="padding-top: 20px;">___________________</p>
+            <p class="text-sm" style="padding-top: 40px;">Thiết kế bởi OneH2K</p>
+            <div class="map">
+                <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1959.1072550471563!2d106.78855811579251!3d10.871282831661734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317527b5a31ff523%3A0x4ab7fc7a54bec4a4!2zQ8awIHjDoSBDLCBLVFggVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBOw7RuZyBMw6Jt!5e0!3m2!1svi!2s!4v1732027299631!5m2!1svi!2s"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </footer>
 </div>
 
 </body>
