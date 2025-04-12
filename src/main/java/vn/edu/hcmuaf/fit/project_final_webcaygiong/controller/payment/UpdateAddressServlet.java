@@ -37,10 +37,13 @@ public class UpdateAddressServlet extends HttpServlet {
         int districtId = Integer.parseInt(request.getParameter("districtId"));
         String wardCode = request.getParameter("wardCode");
 
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+
         if (user != null) {
+
             // Cập nhật địa chỉ cho khách hàng
             customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city);
             try {

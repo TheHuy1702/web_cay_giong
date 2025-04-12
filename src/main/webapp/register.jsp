@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #ff7675, #6c5ce7);
+            background: linear-gradient(135deg, #00b894, #6c5ce7, #ff7675);
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -37,15 +37,16 @@
         }
 
         .back-home:hover {
-            color: #09ba97;
+            color: #f60a36;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 350px;
+            padding-left: 40px;
+            padding-right: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 400px;
             text-align: center;
             animation: fadeIn 1s ease-out;
         }
@@ -66,7 +67,8 @@
             color: transparent;
             font-size: 36px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            margin-top: 20px;
             animation: slideIn 1s ease-out;
         }
 
@@ -134,13 +136,14 @@
         }
 
         .extra-options {
+            margin-bottom: 20px;
             margin-top: 10px;
             font-size: 14px;
             color: #333;
         }
 
         .extra-options a {
-            color: #ffdd57;
+            color: #333;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
@@ -169,6 +172,66 @@
 
         .fa-eye:hover {
             color: #00b894;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .social-btn {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn.facebook {
+            background-color: #3b5998;
+            color: #fff;
+        }
+
+        .social-btn.google {
+            background-color: #db4437;
+            color: #fff;
+        }
+
+        .social-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-btn i {
+            margin-right: 8px;
+        }
+
+        .or-divider {
+            margin: 15px 0;
+            color: #333;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .or-divider::before, .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+            margin: auto;
+        }
+
+        .or-divider::before {
+            margin-right: 10px;
+        }
+
+        .or-divider::after {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -200,6 +263,11 @@
             </div>
         </div>
         <button type="submit" class="btn">Đăng Ký</button>
+        <div class="or-divider">--------- hoặc ---------</div>
+        <div class="social-buttons">
+            <button type="button" class="social-btn facebook"><i class="fab fa-facebook-f"></i>Facebook</button>
+            <button type="button" class="social-btn google"><i class="fab fa-google"></i>Google</button>
+        </div>
         <p class="extra-options">Đã có tài khoản? <a href="login">Đăng nhập</a></p>
         <% if(request.getAttribute("error") != null) { %>
         <p class="error-message"><%= request.getAttribute("error") %></p>

@@ -12,11 +12,12 @@ public class Customer implements Serializable {
     private String district;
     private String city;
     private Date createAt;
+    private String gender;
 
     public Customer() {
     }
 
-    public Customer(int customerID, int userID, String nameCustomer, String phone, String address, String district, String city, Date createAt) {
+    public Customer(int customerID, int userID, String nameCustomer, String phone, String address, String district, String city, Date createAt, String gender) {
         this.customerID = customerID;
         this.userID = userID;
         this.nameCustomer = nameCustomer;
@@ -25,6 +26,7 @@ public class Customer implements Serializable {
         this.district = district;
         this.city = city;
         this.createAt = createAt;
+        this.gender = gender;
     }
 
     public int getCustomerID() {
@@ -91,6 +93,15 @@ public class Customer implements Serializable {
         this.createAt = createAt;
     }
 
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return
@@ -101,6 +112,7 @@ public class Customer implements Serializable {
                         ", " + address +
                         ", " + district +
                         ", " + city +
+                        ", " + gender+
                         ", " + createAt;
     }
 }

@@ -6,13 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #ff7675, #6c5ce7);
+            background: linear-gradient(135deg, #00b894, #6c5ce7, #ff7675); /* Màu gradient mới */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -38,16 +39,15 @@
         }
 
         .back-home:hover {
-            color: #09ba97;
+            color: #f60a36;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 350px;
-            text-align: center;
+            padding: 10px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 400px;
             animation: fadeIn 1s ease-out;
         }
 
@@ -62,13 +62,14 @@
         }
 
         h2 {
-            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7); /* Sử dụng gradient cho chữ */
+            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7);
             -webkit-background-clip: text;
-            color: transparent; /* Đặt màu chữ thành transparent để gradient có thể hiện lên */
+            color: transparent;
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 20px;
             animation: slideIn 1s ease-out;
+            text-align: center;
         }
 
         @keyframes slideIn {
@@ -84,7 +85,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
             animation: formGroupAnimation 1s ease-out;
         }
@@ -100,14 +101,15 @@
         }
 
         .form-group input {
-            margin-top: 5px;
+            margin-top: 10px;
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .form-group input:focus {
@@ -119,7 +121,7 @@
         .btn {
             background-color: #00b894;
             color: #fff;
-            padding: 12px;
+            padding: 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -134,14 +136,70 @@
             box-shadow: 0 0 15px rgba(0, 183, 148, 0.7);
         }
 
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            color: #333;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 48%; /* Giảm width để hai nút nằm ngang hàng */
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-social:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-social i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .btn-facebook {
+            background-color: #1877f2;
+            color: #fff;
+        }
+
+        .btn-google {
+            background-color: #db4437;
+            color: #fff;
+        }
+
         .extra-options {
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
-            color: #333; /* Đặt màu chữ tối cho phần này */
+            color: #fff;
+        }
+
+        .extra-option {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .extra-option a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .extra-option a:hover {
+            color: #00b894;
+            text-decoration: underline;
         }
 
         .extra-options a {
-            color: #ffdd57; /* Màu nổi bật cho các liên kết */
+            color: #333;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
@@ -183,6 +241,36 @@
             font-size: 12px;
             margin-top: 5px;
         }
+
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .or-separator {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .or-separator::before,
+        .or-separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+            margin: auto;
+        }
+
+        .or-separator::before {
+            margin-right: 10px;
+        }
+
+        .or-separator::after {
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -191,26 +279,6 @@
     <a href="TrangChu" class="back-home"><i class="fas fa-home"></i> Trang chủ</a>
     <div class="container">
         <h2>Đăng Nhập</h2>
-        <%--        <form method="post" action="login" id="loginForm">--%>
-        <%--            <div class="form-group">--%>
-        <%--                <label for="phone">Số điện thoại</label>--%>
-        <%--                <input type="text" id="phone" placeholder="Số điện thoại" required name="phone" value="${phone}">--%>
-        <%--                <p class="text-danger" id="phoneError">${phoneError}</p>--%>
-        <%--            </div>--%>
-        <%--            <div class="form-group">--%>
-        <%--                <label for="password">Mật khẩu</label>--%>
-        <%--                <div style="position: relative;">--%>
-        <%--                    <input type="password" id="password" placeholder="Mật khẩu" required name="password">--%>
-        <%--                    <i id="togglePassword" class="fas fa-eye"></i>--%>
-        <%--                </div>--%>
-        <%--                <p class="text-danger" id="passwordError">${passwordError}</p>--%>
-        <%--            </div>--%>
-        <%--            <button class="btn" type="submit">Đăng Nhập</button>--%>
-        <%--            <div class="extra-options">--%>
-        <%--                <p style="color: #333;">Quên mật khẩu? <a href="forgot_pass">Nhấn vào đây</a></p>--%>
-        <%--                <p style="color: #333;">Chưa có tài khoản? <a href="register">Đăng ký</a></p>--%>
-        <%--            </div>--%>
-        <%--        </form>--%>
         <form method="post" action="login" id="loginForm">
             <div class="form-group">
                 <label for="phone">Số điện thoại</label>
@@ -223,29 +291,29 @@
                     <input type="password" id="password" placeholder="Mật khẩu" required name="password">
                     <i id="togglePassword" class="fas fa-eye"></i>
                 </div>
-                <p class="text-danger" id="passwordError"></p>
+                <p class="text-danger" id="passwordError">${passwordError}</p>
+            </div>
+            <div class="extra-options">
+                <p style="color: #333;"><a href="forgot_pass">Quên mật khẩu ?</a></p>
             </div>
             <button class="btn" type="submit">Đăng Nhập</button>
-            <div class="extra-options">
-                <p style="color: #333;">Quên mật khẩu? <a href="forgot_pass">Nhấn vào đây</a></p>
-                <p style="color: #333;">Chưa có tài khoản? <a href="register">Đăng ký</a></p>
+            <div class="or-separator">--------- hoặc ---------</div>
+            <div class="social-buttons">
+                <button class="btn btn-social btn-facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </button>
+                <div id="googleSignInButton" class="btn btn-social btn-google">
+                    <i class="fab fa-google"></i> Google
+                </div>
+            </div>
+            <div class="extra-option">
+                <p style="color: #333;">Chưa có tài khoản ? <a href="register">Đăng ký</a></p>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    // document.addEventListener("DOMContentLoaded", () => {
-    //     const togglePassword = document.getElementById("togglePassword");
-    //     const passwordField = document.getElementById("password");
-    //
-    //     togglePassword.addEventListener("click", () => {
-    //         const type = passwordField.type === "password" ? "text" : "password";
-    //         passwordField.type = type;
-    //         togglePassword.classList.toggle("fa-eye-slash");
-    //     });
-    // });
-
     document.addEventListener("DOMContentLoaded", () => {
         const togglePassword = document.getElementById("togglePassword");
         const passwordField = document.getElementById("password");
@@ -286,6 +354,41 @@
             }
         });
     });
+
+    function handleCredentialResponse(response) {
+        // Gửi credential đến servlet để xác minh
+        fetch('google-login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'credential=' + encodeURIComponent(response.credential)
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    window.onload = function () {
+        google.accounts.id.initialize({
+            client_id: "579929879000-f6b0veahlid3g4d5n4imdj9q0f6i8s13.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById("googleSignInButton"),
+            {
+                theme: "filled_blue",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                width: "300" // Điều chỉnh kích thước phù hợp
+            }
+        );
+    };
 </script>
 
 </body>
