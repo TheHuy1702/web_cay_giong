@@ -299,9 +299,9 @@
             <button class="btn" type="submit">Đăng Nhập</button>
             <div class="or-separator">--------- hoặc ---------</div>
             <div class="social-buttons">
-                <button class="btn btn-social btn-facebook">
+                <a id="facebookSignInButton" class="btn btn-social btn-facebook">
                     <i class="fab fa-facebook-f"></i> Facebook
-                </button>
+                </a>
                 <div id="googleSignInButton" class="btn btn-social btn-google">
                     <i class="fab fa-google"></i> Google
                 </div>

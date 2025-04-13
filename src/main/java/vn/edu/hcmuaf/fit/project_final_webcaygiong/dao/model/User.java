@@ -13,11 +13,13 @@ public class User implements Serializable {
     private String verifiCode;
     private Date verifiExpines;
     private String email;
+    private String googleId;
+    private String facebookId;
 
     public User() {
     }
 
-    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email) {
+    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId, String facebookId) {
         this.userID = userID;
         this.name = name;
         this.password = password;
@@ -27,6 +29,8 @@ public class User implements Serializable {
         this.verifiCode = verifiCode;
         this.verifiExpines = verifiExpines;
         this.email = email;
+        this.googleId = googleId;
+        this.facebookId = facebookId;
     }
 
     public String getEmail() { return email; }
@@ -101,6 +105,14 @@ public class User implements Serializable {
         this.verifiExpines = verifiExpines;
     }
 
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -110,11 +122,11 @@ public class User implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", createAt=" + createAt +
                 ", updateAt=" + updateAt +
-                ", email='" + email + '\'' +
                 ", verifiCode='" + verifiCode + '\'' +
                 ", verifiExpines=" + verifiExpines +
                 ", email='" + email + '\'' +
                 ", googleId='" + googleId + '\'' +
+                ", facebookId='" + facebookId + '\'' +
                 '}';
     }
 }
