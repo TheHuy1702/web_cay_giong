@@ -249,6 +249,10 @@
             <input type="text" id="phone" name="phone" placeholder="Số điện thoại" required>
         </div>
         <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
             <label for="password">Mật khẩu</label>
             <div style="position: relative;">
                 <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
