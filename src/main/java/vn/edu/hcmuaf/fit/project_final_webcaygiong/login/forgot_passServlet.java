@@ -4,75 +4,81 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
-
 import java.io.IOException;
-import java.sql.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "forgot_passServlet", value = "/forgot_pass")
 public class forgot_passServlet extends HttpServlet {
+    private UserDao userDao = new UserDao();
+    private EmailService emailService = new EmailService();
+    private static final Logger logger = Logger.getLogger(forgot_passServlet.class.getName());
 
-    private UserDao userDao;
-
-    @Override
-    public void init() throws ServletException {
-        userDao = new UserDao();  // Tạo đối tượng UserDao để truy cập cơ sở dữ liệu
-    }
-
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        String phone = request.getParameter("phone");
-
-        if ("sendCode".equals(action)) {
-            handleSendCode(request, response, phone);
-        } else if ("validateCode".equals(action)) {
-            String code = request.getParameter("code");
-            handleValidateCode(request, response, phone, code);
-        }
-    }
-
-    private void handleSendCode(HttpServletRequest request, HttpServletResponse response, String phone) throws IOException, ServletException {
-        User user = userDao.findByPhone(phone);
-        if (user == null) {
-            request.setAttribute("phoneError", "Số điện thoại không tồn tại, vui lòng nhập lại.");
-        } else {
-            // Tạo mã xác minh ngẫu nhiên (4 chữ số)
-            String verificationCode = String.format("%04d", (int) (Math.random() * 9000) + 1000);
-
-//            // Tạo thời gian hết hạn mã (1 ngày)
-            Date expirationDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
-            // Tạo thời gian hết hạn mã (1 phút)
-//            Date expirationDate = new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(1));
-
-            // Cập nhật mã xác minh vào cơ sở dữ liệu
-            boolean isUpdated = userDao.updateOrInsertVerificationCode(phone, verificationCode, expirationDate);
-            if (isUpdated) {
-                request.setAttribute("codeMessage", "Mã của bạn là: " + verificationCode);
-                request.setAttribute("phone", phone);  // Giữ lại số điện thoại đã nhập
-                request.setAttribute("codeError", null);  // Đảm bảo không có lỗi khi gửi mã
-            } else {
-                request.setAttribute("phoneError", "Có lỗi xảy ra khi gửi mã. Vui lòng thử lại.");
-            }
-        }
         request.getRequestDispatcher("forgot_pass.jsp").forward(request, response);
     }
 
-    private void handleValidateCode(HttpServletRequest request, HttpServletResponse response, String phone, String code) throws IOException, ServletException {
-        // Kiểm tra mã xác minh có hợp lệ không
-        if (userDao.isVerificationCodeValid(phone, code)) {
-            // Nếu mã hợp lệ, chuyển hướng tới trang đổi mật khẩu
-            response.sendRedirect("reset_pass.jsp?phone=" + phone);  // Gửi số điện thoại đến trang reset_pass.jsp
-        } else {
-            // Nếu mã không hợp lệ, yêu cầu người dùng thử lại
-            request.setAttribute("codeError", "Mã code không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.");
-            request.setAttribute("phone", phone);  // Giữ lại số điện thoại đã nhập
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
+
+        // Validate email format first
+        if (!isValidEmail(email)) {
+            request.setAttribute("error", "Email không hợp lệ");
+            request.getRequestDispatcher("forgot_pass.jsp").forward(request, response);
+            return;
+        }
+
+        User user = userDao.findByEmail(email);
+
+        if (user == null) {
+            request.setAttribute("error", "Email không tồn tại trong hệ thống");
+            request.getRequestDispatcher("forgot_pass.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            String token = UUID.randomUUID().toString();
+            Date expiryDate = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000); // 24 tiếng
+
+            TokenForgotPassword tokenEntity = new TokenForgotPassword(0, user.getUserID(), false, token, expiryDate);
+            if (!userDao.savePasswordResetToken(tokenEntity)) {
+                throw new Exception("Không thể lưu token vào database");
+            }
+
+            String resetLink = request.getScheme() + "://" + request.getServerName() +
+                    (request.getServerPort() != 80 ? ":" + request.getServerPort() : "") +
+                    request.getContextPath() + "/reset_pass?token=" + token;
+
+            if (!emailService.sendResetPasswordEmail(email, resetLink)) {
+                throw new Exception("Gửi email thất bại");
+            }
+
+            // Ghi log thành công
+            logger.info("Đã gửi email reset mật khẩu đến: " + email);
+
+            // Hiển thị thông báo thành công
+            request.setAttribute("success",
+                    "<h3>Yêu cầu thành công!</h3>" +
+                            "<p>Chúng tôi đã gửi liên kết đặt lại mật khẩu đến <strong>" + email + "</strong></p>" +
+                            "<p>Vui lòng <strong>kiểm tra hộp thư đến</strong> và làm theo hướng dẫn.</p>" +
+                            "<p>Nếu không thấy email, hãy kiểm tra thư mục <strong>Spam/Junk</strong></p>");
+
+            request.getRequestDispatcher("forgot_pass.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Lỗi trong quá trình reset mật khẩu", e);
+            request.setAttribute("error", "Đã xảy ra lỗi: " + e.getMessage());
             request.getRequestDispatcher("forgot_pass.jsp").forward(request, response);
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
     }
 }

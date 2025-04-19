@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -7,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quên Mật Khẩu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="icon" href="Ảnh/anhlogo.jpg" type="image/x-icon">
     <style>
         body {
@@ -142,7 +144,7 @@
             color: #ff7675;
             font-size: 14px;
             margin-top: 8px;
-            display: none; /* Ẩn mặc định */
+            display: none;
         }
 
         .alert {
@@ -150,7 +152,6 @@
             border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
-            display: none; /* Ẩn mặc định */
         }
 
         .alert-danger {
@@ -172,6 +173,46 @@
             color: #aaa;
             font-size: 18px;
         }
+
+        .mail-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .mail-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .mail-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .mail-btn i {
+            font-size: 16px;
+        }
+
+        .gmail-btn {
+            background-color: #DB4437;
+        }
+
+        .outlook-btn {
+            background-color: #0078D4;
+        }
+
+        .yahoo-btn {
+            background-color: #720e9e;
+        }
     </style>
 </head>
 
@@ -180,103 +221,79 @@
 <div class="container">
     <h2>Quên Mật Khẩu</h2>
 
-    <%-- Thông báo - ẩn mặc định --%>
-    <div class="alert alert-danger" id="errorAlert" style="display:none;">${error}</div>
-    <div class="alert alert-success" id="successAlert" style="display:none;">${success}</div>
-
-    <form method="post" action="forgot_pass" id="forgotForm">
-        <div class="form-group" id="emailGroup">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Nhập email đã đăng ký" required
-                   value="${email != null ? email : ''}">
-            <i class="fas fa-envelope email-icon"></i>
-            <span class="text-danger" id="emailError">${emailError}</span>
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">
+                ${error}
         </div>
+    </c:if>
 
-        <button type="submit" class="reset-btn">
-            <i class="fas fa-key"></i> Đặt lại mật khẩu
-        </button>
-    </form>
+    <c:if test="${not empty success}">
+        <div class="alert alert-success">
+                ${success}
+        </div>
+        <div class="mail-buttons">
+            <a href="https://mail.google.com" class="mail-btn gmail-btn" target="_blank">
+                <i class="bi bi-envelope"></i> Gmail
+            </a>
+            <a href="https://outlook.live.com" class="mail-btn outlook-btn" target="_blank">
+                <i class="bi bi-envelope"></i> Outlook
+            </a>
+            <a href="https://mail.yahoo.com" class="mail-btn yahoo-btn" target="_blank">
+                <i class="bi bi-envelope"></i> Yahoo
+            </a>
+        </div>
+    </c:if>
+
+    <c:if test="${empty success}">
+        <form method="post" action="forgot_pass" id="forgotForm">
+            <div class="form-group" id="emailGroup">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email đã đăng ký" required
+                       value="${email != null ? email : ''}">
+                <i class="fas fa-envelope email-icon"></i>
+                <span class="text-danger" id="emailError">${emailError}</span>
+            </div>
+
+            <button type="submit" class="reset-btn">
+                <i class="fas fa-key"></i> Đặt lại mật khẩu
+            </button>
+        </form>
+    </c:if>
 </div>
 
 <script>
     // Hiển thị lỗi email nếu có
     const emailError = document.getElementById('emailError');
-    if (emailError.textContent.trim() !== '') {
+    if (emailError && emailError.textContent.trim() !== '') {
         emailError.style.display = 'block';
         document.getElementById('emailGroup').classList.add('error');
     }
 
     // Validate form trước khi submit
-    document.getElementById('forgotForm').addEventListener('submit', function (e) {
-        const email = document.getElementById('email').value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const emailGroup = document.getElementById('emailGroup');
-        const emailError = document.getElementById('emailError');
+    const forgotForm = document.getElementById('forgotForm');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', function (e) {
+            const email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailGroup = document.getElementById('emailGroup');
+            const emailError = document.getElementById('emailError');
 
-        // Reset trạng thái lỗi trước khi validate
-        emailGroup.classList.remove('error');
-        emailError.style.display = 'none';
-        emailError.textContent = '';
+            // Reset trạng thái lỗi trước khi validate
+            emailGroup.classList.remove('error');
+            emailError.style.display = 'none';
+            emailError.textContent = '';
 
-        if (!emailRegex.test(email)) {
-            e.preventDefault();
-            emailGroup.classList.add('error');
-            emailError.textContent = 'Vui lòng nhập địa chỉ email hợp lệ!';
-            emailError.style.display = 'block';
-            return false;
-        }
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                emailGroup.classList.add('error');
+                emailError.textContent = 'Vui lòng nhập địa chỉ email hợp lệ!';
+                emailError.style.display = 'block';
+                return false;
+            }
 
-        return true;
-    });
-
-        // Hiển thị thông báo nếu có nội dung
-        window.onload = function() {
-        const errorAlert = document.getElementById('errorAlert');
-        const successAlert = document.getElementById('successAlert');
-
-        if(errorAlert.textContent.trim() !== '') {
-        errorAlert.style.display = 'block';
+            return true;
+        });
     }
-        if(successAlert.textContent.trim() !== '') {
-        successAlert.style.display = 'block';
-    }
-    };
-        // Hiển thị thông báo nếu có nội dung
-        window.onload = function() {
-        const errorAlert = document.getElementById('errorAlert');
-        const successAlert = document.getElementById('successAlert');
-
-        if(errorAlert && errorAlert.textContent.trim() !== '') {
-        errorAlert.style.display = 'block';
-    }
-        if(successAlert && successAlert.textContent.trim() !== '') {
-        successAlert.style.display = 'block';
-    }
-    };
-
-        // Validate form trước khi submit
-        document.getElementById('forgotForm').addEventListener('submit', function(e) {
-        const email = document.getElementById('email').value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const emailGroup = document.getElementById('emailGroup');
-        const emailError = document.getElementById('emailError');
-
-        // Reset trạng thái lỗi trước khi validate
-        emailGroup.classList.remove('error');
-        emailError.style.display = 'none';
-        emailError.textContent = '';
-
-        if(!emailRegex.test(email)) {
-        e.preventDefault();
-        emailGroup.classList.add('error');
-        emailError.textContent = 'Vui lòng nhập địa chỉ email hợp lệ!';
-        emailError.style.display = 'block';
-        return false;
-    }
-
-        return true;
-    });
 </script>
 </body>
 </html>

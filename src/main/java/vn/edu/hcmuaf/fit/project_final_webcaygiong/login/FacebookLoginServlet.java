@@ -13,49 +13,51 @@ import java.util.Date;
 
 @WebServlet(name = "FacebookLoginServlet", value = "/facebook_login")
 public class FacebookLoginServlet extends HttpServlet {
-        private UserDao userDao = new UserDao();
-
         @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String facebookId = request.getParameter("facebookId");
+        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            String code = request.getParameter("code");
 
-            // Check if user exists by facebookId
-            User user = userDao.findByFacebookId(facebookId);
+            if (code == null || code.isEmpty()) {
+                response.sendRedirect("login");
+                return;
+            }
 
-            if (user == null) {
-                // Check if email exists (for users who might have registered with email)
-                if (email != null && !email.isEmpty()) {
-                    user = userDao.emailExists(email);
-                    if (user != null) {
-                        // Update existing user with facebookId
-                        user.setFacebookId(facebookId);
-                        userDao.updateFacebookId(user.getUserID(), facebookId);
+            try {
+                FacebookLogin FB = new FacebookLogin();
+                String accessToken = FB.getToken(code);
+                User fbUser = FB.getUserInfo(accessToken);
+
+                UserDao userDao = new UserDao();
+                User existingUser = userDao.findByFacebookId(fbUser.getFacebookId());
+
+                if (existingUser == null) {
+                    // Kiểm tra email đã tồn tại chưa
+                    if (fbUser.getEmail() != null) {
+                        existingUser = userDao.findByEmail(fbUser.getEmail());
+                        if (existingUser != null) {
+                            // Cập nhật facebookId cho user đã tồn tại
+                            userDao.updateFacebookId(existingUser.getUserID(), fbUser.getFacebookId());
+                        }
+                    }
+
+                    if (existingUser == null) {
+                        // Tạo user mới nếu không tìm thấy
+                        userDao.insertFacebookUser(fbUser);
+                        existingUser = userDao.findByFacebookId(fbUser.getFacebookId());
                     }
                 }
 
-                if (user == null) {
-                    // Create new user
-                    user = new User();
-                    user.setName(name);
-                    user.setEmail(email);
-                    user.setFacebookId(facebookId);
-                    user.setCreateAt(new Date());
-                    user.setUpdateAt(new Date());
+                // Tạo session
+                HttpSession session = request.getSession();
+                session.setAttribute("user", existingUser);
 
-                    userDao.insertFacebookUser(user);
+                // Chuyển hướng về trang chủ
+                response.sendRedirect("TrangChu");
 
-                    // Get the newly created user
-                    user = userDao.findByFacebookId(facebookId);
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("login?error=facebook_login_failed");
             }
-
-            // Store user in session
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-
-            // Redirect to home page or previous page
-            response.sendRedirect("TrangChu");
         }
     }
