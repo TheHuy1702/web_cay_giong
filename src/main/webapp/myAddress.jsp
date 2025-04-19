@@ -12,6 +12,66 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy danh sách tỉnh khi trang được tải
+            $.get("address?type=provinces", function (data) {
+                $.each(data, function (index, province) {
+                    $('#provinceSelect').append($('<option>', {
+                        value: province.ProvinceID,
+                        text: province.ProvinceName
+                    }));
+                });
+            });
+
+            // Khi tỉnh được chọn, lấy danh sách quận
+            $('#provinceSelect').change(function () {
+                var provinceId = $(this).val();
+                // console.log("Selected provinceId:", provinceId);
+                $('#districtSelect').empty().append($('<option>', {value: "", text: "Chọn quận"}));
+                $('#wardSelect').empty().append($('<option>', {value: "", text: "Chọn xã"}));
+
+                if (provinceId) {
+                    $.get("address?type=districts&id=" + provinceId, function (data) {
+                        $.each(data, function (index, district) {
+                            $('#districtSelect').append($('<option>', {
+                                value: district.id,
+                                text: district.name
+                            }));
+                        });
+                    }).fail(function () {
+                        console.log("Lỗi khi lấy quận.");
+                    });
+                }
+            });
+
+            // Khi quận được chọn, lấy danh sách xã/phường
+            $('#districtSelect').change(function () {
+                var districtId = $(this).val();
+                $('#wardSelect').empty().append($('<option>', {value: "", text: "Chọn xã"}));
+
+                if (districtId) {
+                    $.get("address?type=wards&id=" + districtId, function (data) {
+                        $.each(data, function (index, ward) {
+                            $('#wardSelect').append($('<option>', {
+                                value: ward.id,
+                                text: ward.name
+                            }));
+                        });
+                    }).fail(function () {
+                        console.log("Lỗi khi lấy xã/phường.");
+                    });
+                }
+            });
+            // Cập nhật tên khi tỉnh, quận, xã được chọn
+            $('#provinceSelect, #districtSelect, #wardSelect').change(function () {
+                $('#provinceName').val($('#provinceSelect option:selected').text());
+                $('#districtName').val($('#districtSelect option:selected').text());
+                $('#wardName').val($('#wardSelect option:selected').text());
+            });
+        });
+    </script>
 
     <style>
         body {
@@ -70,15 +130,6 @@
 
         }
 
-        /* .user {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            padding: 10px;
-            right: -450px;
-
-            border-radius: 5px;
-        } */
 
         .user .logout-menu {
             width: 135px;
@@ -99,10 +150,6 @@
             font-size: 14px;
             width: fit-content;
         }
-
-        /* .user:hover .logout-menu {
-            display: block;
-        } */
         #ContentSection {
             margin: auto;
             padding-top: 10px;
@@ -348,12 +395,6 @@
             display: flex;
 
         }
-        /* .thongtin{
-            margin-bottom: 10px;
-        }
-        .donMua{
-            margin-bottom: 10px;
-        } */
         .change-link {
             color: #4CAF50;
             text-decoration: none;
@@ -492,30 +533,42 @@
             <button id="toggleFormBtn" class="save-btn" style="margin-bottom: 15px;">➕ Thêm địa chỉ</button>
 
             <div id="addressFormWrapper" style="display: none;">
-                <h3>Thêm địa chỉ giao hàng</h3>
-                <form method="post" action="add-address">
-                    <label>Tỉnh/Thành:</label>
-                    <select id="province" name="province" class="form-control"></select>
+                <h2>Địa chỉ giao hàng</h2>
+                <form id="addressForm" method="post" action="diaChi">
+                    <label for="provinceSelect">Tỉnh/Thành:</label>
+                    <select id="provinceSelect" name="provinceId" required>
+                        <option value="">Chọn tỉnh/thành</option>
+                    </select><br><br>
 
-                    <label>Quận/Huyện:</label>
-                    <select id="district" name="district" class="form-control"></select>
+                    <label for="districtSelect">Quận/Huyện:</label>
+                    <select id="districtSelect" name="districtId" required >
+                        <option value="">Chọn quận/huyện</option>
+                    </select><br><br>
 
-                    <label>Phường/Xã:</label>
-                    <select id="ward" name="ward" class="form-control"></select>
+                    <label for="wardSelect">Phường/Xã:</label>
+                    <select id="wardSelect" name="wardCode" required >
+                        <option value="">Chọn phường/xã</option>
+                    </select><br><br>
 
-                    <label>Địa chỉ chi tiết:</label>
-                    <input type="text" name="detail" class="form-control" required>
+                    <label for="street">Số nhà, tên đường:</label>
+                    <input type="text" id="street" name="address" required><br><br>
+                    <input type="hidden" id="provinceName" name="provinceName">
+                    <input type="hidden" id="districtName" name="districtName">
+                    <input type="hidden" id="wardName" name="wardName">
 
-                    <br>
-                    <button type="submit" class="btn btn-success">Lưu địa chỉ</button>
+
+                    <button type="submit">Lưu</button>
                 </form>
             </div>
+                <h3>Danh sách địa chỉ đã thêm:</h3>
+            <section>
+                <form method="get" action="diaChi">
+                <div>
+                    <p>${customer.nameCustomer}, ${customer.address},${customer.ward}, ${customer.city}, ${customer.district}</p>
+                </div>
+                </form>
+            </section>
 
-            <h3>Danh sách địa chỉ đã thêm</h3>
-            <div id="addressList" style="text-align: left; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
-                <p>Chưa có địa chỉ nào được thêm.</p>
-            </div>
-        </div>
 
     </div>
 </DIV>
@@ -545,6 +598,7 @@
         </div>
     </footer>
 </div>
+</DIV>
 <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i>
     <div>Lên đầu trang</div>
 </button>
@@ -562,39 +616,5 @@
             this.textContent = '➕ Thêm địa chỉ';
         }
     });
-
-    const api = "https://provinces.open-api.vn/api/";
-
-    $.getJSON(api + "?depth=1", function (data) {
-        data.forEach(province => {
-            $('#province').append(new Option(province.name, province.code));
-        });
-    });
-
-    $('#province').on('change', function () {
-        let code = $(this).val();
-        $('#district').empty();
-        $('#ward').empty();
-        $.getJSON(api + "p/" + code + "?depth=2", function (data) {
-            data.districts.forEach(d => {
-                $('#district').append(new Option(d.name, d.code));
-            });
-        });
-    });
-
-    $('#district').on('change', function () {
-        let code = $(this).val();
-        $('#ward').empty();
-        $.getJSON(api + "d/" + code + "?depth=2", function (data) {
-            data.wards.forEach(w => {
-                $('#ward').append(new Option(w.name, w.name));
-            });
-        });
-    });
-
-
-
-
-
 </script>
 </html>
