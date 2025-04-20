@@ -19,17 +19,27 @@ public class myAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CustomerDao customerDao = new CustomerDao();
         String fullName = request.getParameter("name");
+        Customer customer;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         // Kiểm tra xem đã đăng nhập hay chưa
         if (user != null) {
             // Cập nhật địa chỉ cho khách hàng
+            customer = customerDao.getCustomerWithUID(user.getUserID());
+            System.out.println("bjvhv111g"+customer);
 
+            if(customer == null){
+                System.out.println("bjvhvg"+customer);
+
+               customerDao.createCus(user.getUserID(), fullName);
+            }else{
                 customerDao.updateInfoCustomer(user.getUserID(), fullName);
+                response.sendRedirect("taiKhoanCuaToi?update=success");
+            }
 
 
-            response.sendRedirect("taiKhoanCuaToi?update=success");
+
         } else {
             response.sendRedirect("login");
         }
@@ -45,22 +55,29 @@ public class myAccountServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         if (user!= null) {
             customer = customerDao.getCustomerWithUID(user.getUserID());
+//            if(customer == null){
+//                request.setAttribute("customer", null);
+//            }else{
+//                request.setAttribute("customer", customer);
+//            }
+            request.setAttribute("customer", customer);
+
 
 //            System.out.println(customer.getCustomerID());
 //            System.out.println(customer.getNameCustomer());
 //            System.out.println(customer.getPhone());
 //            System.out.println(customer.getGender());
-            request.setAttribute("customer", customer);
+//            request.setAttribute("customer", customer);
 //            String emailDis = user.getEmail();
-            request.setAttribute("user", user);
+//            request.setAttribute("user", user);
 //            System.out.println(emailDis);
 
 
 
 
-            UserDao userDao=new UserDao();
-            User user2=userDao.findUserID(user.getUserID());
-            request.setAttribute("u",user2);
+//            UserDao userDao=new UserDao();
+//            User user2=userDao.findUserID(user.getUserID());
+//            request.setAttribute("u",user2);
 
 
         }
