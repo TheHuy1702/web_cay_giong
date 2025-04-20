@@ -890,18 +890,18 @@
         <div class="nav">
             <ul>
                 <li>
-                    <a href="TatCaDonHang">
-                        Tất cả
+                    <a href="TatCaDonHang?status=all">
+                        Tất cả (${slAll!=null?slAll:0})
                     </a>
                 </li>
                 <li>
-                    <a href="ChoXacNhanDonHang">
-                        Chờ xác nhận (1)
+                    <a href="ChoXacNhanDonHang?status=Chờ xác nhận">
+                        Chờ xác nhận (${slChoXN!=null?slChoXN:0})
                     </a>
                 </li>
                 <li>
-                    <a href="ChoGiaoHang">
-                        Chờ giao hàng
+                    <a href="ChoGiaoHang?status=Đã xác nhận">
+                        Chờ giao hàng (${slChoGH!=null?slChoGH:0})
                     </a>
                 </li>
                 <li>
@@ -910,8 +910,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="DonHangDaHuy">
-                        Đã hủy
+                    <a href="DonHangDaHuy?status=Đã hủy">
+                        Đã hủy (${slHuy!=null?slHuy:0})
                     </a>
                 </li>
             </ul>

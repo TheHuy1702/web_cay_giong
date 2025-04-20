@@ -908,7 +908,7 @@
             <ul>
                 <li>
                     <a href="TatCaDonHang?status=all">
-                        Tất cả
+                        Tất cả (${slAll!=null?slAll:0})
                     </a>
                 </li>
                 <li>
@@ -918,17 +918,17 @@
                 </li>
                 <li>
                     <a href="ChoGiaoHang?status=Đã xác nhận">
-                        Chờ giao hàng
+                        Chờ giao hàng (${slChoGH!=null?slChoGH:0})
                     </a>
                 </li>
                 <li>
                     <a href="DonHangHoanThanh?status=Đã giao">
-                        Hoàn thành
+                        Hoàn thành (${slDaGiao!=null?slDaGiao:0})
                     </a>
                 </li>
                 <li>
                     <a href="DonHangDaHuy?status=Đã hủy">
-                        Đã hủy
+                        Đã hủy (${slHuy!=null?slHuy:0})
                     </a>
                 </li>
             </ul>
@@ -1008,7 +1008,7 @@
                         </div>
                         <div class="actions">
                             <button class="cancel" onclick="showRatingForm(${o.orderID})">
-                                Hủy Đơn Hàng ${o.orderID}
+                                Hủy Đơn Hàng
                             </button>
                         </div>
                     </div>

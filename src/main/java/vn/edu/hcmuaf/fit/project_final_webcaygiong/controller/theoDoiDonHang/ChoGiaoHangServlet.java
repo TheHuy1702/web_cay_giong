@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "ChoXacNhanDonHangServlet", value = "/ChoXacNhanDonHang")
-public class ChoXacNhanDonHangServlet extends HttpServlet {
+@WebServlet(name = "ChoGiaoHangServlet", value = "/ChoGiaoHang")
+public class ChoGiaoHangServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +28,7 @@ public class ChoXacNhanDonHangServlet extends HttpServlet {
         if (user != null) {
             int userID = user.getUserID();
             Customer customer = customerDao.getCustomerWithUID(userID);
-            if (status != null && status.equals("Chờ xác nhận")) {
+            if (status != null && status.equals("Đã xác nhận")) {
                 orders = dao.dsOrderWithStatusOfCus(status, customer.getCustomerID());
                 // Lấy danh sách OrderItems cho từng đơn hàng.
                 OrderDao orderDao = new OrderDao();
@@ -38,18 +38,18 @@ public class ChoXacNhanDonHangServlet extends HttpServlet {
                     order.put("orderItems", orderItems); // Thêm danh sách OrderItems vào từng đơn hàng
                 }
                 int slHuy = dao.soluongDHTheoTrangThai("Đã hủy", customer.getCustomerID());
+                int slChoXN = dao.soluongDHTheoTrangThai("Chờ xác nhận", customer.getCustomerID());
                 int slAll = dao.soluongDHTheoTrangThai("all", customer.getCustomerID());
-                int slChoGH = dao.soluongDHTheoTrangThai("Đã xác nhận", customer.getCustomerID());
                 int slDaGiao = dao.soluongDHTheoTrangThai("Đã giao", customer.getCustomerID());
 
-                request.setAttribute("slHuy", slHuy);
-                request.setAttribute("slAll", slAll);
-                request.setAttribute("slChoGH", slChoGH);
-                request.setAttribute("slDaGiao", slDaGiao);
                 request.setAttribute("orders", orders);
                 request.setAttribute("slDH", orders.size());
+                request.setAttribute("slHuy", slHuy);
+                request.setAttribute("slChoXN", slChoXN);
+                request.setAttribute("slAll", slAll);
+                request.setAttribute("slDaGiao", slDaGiao);
             }
-            RequestDispatcher dispatcher = request.getRequestDispatcher("ChoXacNhanDonHang.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ChoGiaoHang.jsp");
             dispatcher.forward(request, response);
         } else {
             response.sendRedirect("login");

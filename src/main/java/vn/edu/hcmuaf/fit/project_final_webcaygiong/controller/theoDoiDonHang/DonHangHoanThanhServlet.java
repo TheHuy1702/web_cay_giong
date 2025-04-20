@@ -30,8 +30,8 @@ public class DonHangHoanThanhServlet extends HttpServlet {
         if (user != null) {
             int userID = user.getUserID();
             Customer customer = customerDao.getCustomerWithUID(userID);
-            if (status != null && !status.isEmpty()) {
-                orders = dao.dsOrderWithStatusOfCus(status, customer.getCustomerID()); // Tìm kiếm theo từ khóa
+            if (status != null && !status.isEmpty()  && status.equals("Đã giao")) {
+                orders = dao.dsOrderWithStatusOfCus(status, customer.getCustomerID());
                 // Lấy danh sách OrderItems cho từng đơn hàng.
                 OrderDao orderDao = new OrderDao();
                 for (Map<String, Object> order : orders) {
@@ -39,8 +39,17 @@ public class DonHangHoanThanhServlet extends HttpServlet {
                     List<Map<String, Object>> orderItems = orderDao.getOrderItemsByOrderID(orderId);
                     order.put("orderItems", orderItems); // Thêm danh sách OrderItems vào từng đơn hàng
                 }
+                int slHuy=dao.soluongDHTheoTrangThai("Đã hủy", customer.getCustomerID());
+                int slChoXN=dao.soluongDHTheoTrangThai("Chờ xác nhận", customer.getCustomerID());
+                int slChoGH=dao.soluongDHTheoTrangThai("Đã xác nhận", customer.getCustomerID());
+                int slAll=dao.soluongDHTheoTrangThai("all", customer.getCustomerID());
+
                 request.setAttribute("orders", orders);
                 request.setAttribute("slDH", orders.size());
+                request.setAttribute("slHuy", slHuy);
+                request.setAttribute("slChoXN", slChoXN);
+                request.setAttribute("slChoGH", slChoGH);
+                request.setAttribute("slAll", slAll);
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher("DonHangHoanThanh.jsp");
             dispatcher.forward(request, response);
