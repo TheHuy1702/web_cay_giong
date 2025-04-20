@@ -316,6 +316,25 @@
         .dangxuat:hover {
             background-color: #666;
         }
+
+        .suggestions-box {
+            position: absolute;
+            background: #4CAF50;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .suggestion-item {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
     </style>
 </head>
 <body>
@@ -430,13 +449,73 @@
                 <div class="head-list">
                     <h2>Danh sách sản phẩm</h2>
                     <div class="search-container">
-                        <form action="QuanLySanPham" method="get">
-                            <input type="text" name="search"
-                                   placeholder="Tìm kiếm tên">
-                            <button class="timkiem" type="submit">Tìm kiếm</button>
+                        <form method="get" action="QuanLySanPham">
+                            <input type="text" placeholder="Tìm kiếm..." id="search-input" name="search"
+                                   value="${ser}" autocomplete="off">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                            <div id="suggestions" class="suggestions-box"></div>
                         </form>
                     </div>
                 </div>
+
+                <c:if test="${not empty productsSearch}">
+
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Ảnh sản phẩm chính</th>
+                            <th>Ảnh sản phẩm phụ</th>
+                            <th>Danh mục</th>
+                            <th>Giới thiệu</th>
+                            <th>Thông tin sản phẩm</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="product" items="${productsSearch}">
+
+                            <tr>
+                                <td>${product.name}</td>
+                                <td><fmt:formatNumber value="${product.price}" type="number" pattern="#,##0 VND"/></td>
+                                <td>${product.stock}</td>
+                                <td><img alt="${product.name}" height="50"
+                                         src="${product.imageMain}" width="50"/></td>
+
+
+                                <td>
+                                    <div class="subimgen">
+                                        <c:forEach var="sim" items="${subImages}">
+                                            <c:if test="${product.productID == sim.productID}">
+                                                <img alt="${sim.imageID}" height="50"
+                                                     src="${sim.imageSub}" width="50"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </div>
+                                </td>
+
+
+                                <td>${dsCategories[product.categoryID-1].nameCategory}</td>
+                                <td>${product.introduce}</td>
+                                <td>${product.infoPro}</td>
+                                <td>
+                                    <form action="QuanLySanPham" method="post" onsubmit="return confirmDelete();">
+                                        <input type="hidden" name="productIdXoa" value="${product.productID}">
+                                        <button type="submit" name="action" value="delet">Xóa</button>
+                                    </form>
+
+
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        <!-- Thêm các sản phẩm khác tại đây -->
+                        </tbody>
+                    </table>
+
+                </c:if>
 
                 <c:if test="${empty products}">
                     Không có sản phẩm nào
@@ -486,36 +565,19 @@
                                 <td>${product.introduce}</td>
                                 <td>${product.infoPro}</td>
                                 <td>
-
-                                        <%--                                    <form action="QuanLySanPham" method="post" onsubmit="return confirmDelete();">--%>
-                                        <%--                                        <input type="hidden" name="productId" value="${product.productID}">--%>
-                                        <%--                                        <button type="submit" name="action" value="edit">Sửa</button>--%>
-                                        <%--                                    </form>--%>
-                                        <%--                                    <a href="EditProduct?id=${product.productID}" class="btn btn-edit">Sửa</a>--%>
-
-
-                                        <%--                                            <form action="EditProduct" method="get" onsubmit="return confirmEdit();">--%>
-                                        <%--                                                <input type="hidden" name="id" value="${product.productID}">--%>
-                                        <%--                                                <input type="hidden" name="name" value="${product.name}">--%>
-                                        <%--                                                <input type="hidden" name="price" value="${product.price}">--%>
-                                        <%--                                                <input type="hidden" name="stock" value="${product.stock}">--%>
-                                        <%--                                                <input type="hidden" name="imageMain" value="${product.imageMain}">--%>
-                                        <%--&lt;%&ndash;                                                <input type="hidden" name="image" value="${product.image}">&ndash;%&gt;--%>
-                                        <%--                                                <input type="hidden" name="introduce" value="${product.introduce}">--%>
-                                        <%--                                                <input type="hidden" name="infoPro" value="${product.infoPro}">--%>
-                                        <%--                                                <button type="submit" name="action" value="edit">Sửa</button>--%>
-                                        <%--                                            </form>--%>
-
                                     <form action="QuanLySanPham" method="post" onsubmit="return confirmDelete();">
                                         <input type="hidden" name="productIdXoa" value="${product.productID}">
                                         <button type="submit" name="action" value="delet">Xóa</button>
+                                    </form>
+                                    <form action="QuanLySanPham" method="post" onsubmit="return confirmEdit();" onclick="addEditEvent()">
+                                        <input type="hidden" name="productIdSua" value="${product.productID}">
+                                        <button type="submit" name="action" value="update">Sửa</button>
                                     </form>
 
 
                                 </td>
                             </tr>
                         </c:forEach>
-                        <!-- Thêm các sản phẩm khác tại đây -->
                         </tbody>
                     </table>
 
@@ -524,6 +586,7 @@
         </div>
     </div>
 </div>
+
 </body>
 <script>
     function toggleManageProduct() {
@@ -557,7 +620,10 @@
 
     function addEditEvent(editButton) {
         editButton.addEventListener('click', function () {
-            addButton.textContent = "Cập nhật sản phẩm"; // Đổi nút thành "Cập nhật sản phẩm"
+            const manageSection = document.querySelector('.manage-product');
+            manageSection.style.display = manageSection.style.display === 'none' || manageSection.style.display === '' ? 'block' : 'none';
+            addButton.textContent = "Cập nhật sản phẩm";
+            // Đổi nút thành "Cập nhật sản phẩm"
         });
     }
 
@@ -576,6 +642,40 @@
             subMenu.style.display = "none";
         }
     }
+
+    // gợi ý tìm kiếm
+    const input = document.getElementById("search-input");
+    const suggestionsBox = document.getElementById("suggestions");
+
+    input.addEventListener("keyup", function () {
+        const query = this.value.trim();
+        if (query.length === 0) {
+            suggestionsBox.innerHTML = "";
+            return;
+        }
+
+        fetch("SuggestServlet?query=" + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                suggestionsBox.innerHTML = "";
+                data.forEach(name => {
+                    const div = document.createElement("div");
+                    div.classList.add("suggestion-item");
+                    div.textContent = name;
+                    div.addEventListener("click", () => {
+                        input.value = name;
+                        suggestionsBox.innerHTML = "";
+                    });
+                    suggestionsBox.appendChild(div);
+                });
+            });
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".search-container")) {
+            suggestionsBox.innerHTML = "";
+        }
+    });
 </script>
 
 </html>

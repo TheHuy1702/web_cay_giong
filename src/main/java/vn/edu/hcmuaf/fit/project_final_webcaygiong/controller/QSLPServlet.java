@@ -8,12 +8,16 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLSPDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiSanPham;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+@MultipartConfig
 @WebServlet(name = "QSLPServlet", value = "/QuanLySanPham")
 public class QSLPServlet extends HttpServlet {
     private QLSPDao qlspDao = new QLSPDao();
@@ -74,7 +78,36 @@ public class QSLPServlet extends HttpServlet {
             String productId = request.getParameter("productIdXoa");
             qlspDao.deleteProductById(Integer.parseInt(productId));
             response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
+        } else if ("update".equals(action)) {
+            String productId = request.getParameter("productIdSua");
+            Product product = qlspDao.getProduct(Integer.parseInt(productId));
+            List<Categories> dsCategories = categoryDao.getAllCategories(); // <-- Thêm dòng này
+
+            request.setAttribute("product", product);
+            request.setAttribute("dsCategories", dsCategories); // <-- Và dòng này
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("suaSanPham.jsp");
+            dispatcher.forward(request, response);
+        } else if ("capnhat".equals(action)) {
+            // Lấy dữ liệu từ form
+            int productID = Integer.parseInt(request.getParameter("productID"));
+            String name = request.getParameter("name");
+            double price = Double.parseDouble(request.getParameter("price"));
+            String imageMain = request.getParameter("oldImage"); // Giữ ảnh cũ nếu chưa chọn ảnh mới
+            int stock = Integer.parseInt(request.getParameter("stock"));
+            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            String introduce = request.getParameter("introduce");
+            String infoPro = request.getParameter("infoPro");
+
+
+            QuanLiSanPham product = new QuanLiSanPham(productID, name, price, imageMain, stock, categoryID, introduce, infoPro);
+            qlspDao.update(product, productID);
+
+            // ✅ Nhớ redirect lại trang quản lý sản phẩm sau khi cập nhật
+            response.sendRedirect("QuanLySanPham?capnhat=thanhcong");
         }
+
+
 
     }
 }
