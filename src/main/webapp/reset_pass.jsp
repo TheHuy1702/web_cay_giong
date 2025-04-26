@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -170,8 +171,12 @@
 <a href="login.jsp" class="back-home"><i class="fas fa-arrow-left"></i></a>
 <div class="container">
     <h2>Đổi Mật Khẩu</h2>
+        <%-- Thêm thông báo lỗi --%>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" style="display: block;">${errorMessage}</div>
+        </c:if>
     <form method="post" action="reset_pass">
-        <input type="hidden" name="phone" value="${param.phone}"/>
+        <input type="hidden" name="token" value="${token}"/>
         <div class="form-group">
             <label for="new-password">Mật khẩu mới</label>
             <div style="position: relative;">
