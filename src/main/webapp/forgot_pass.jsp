@@ -14,7 +14,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #6c5ce7, #ff7675);
+            background: linear-gradient(135deg, #00b894, #2ecc71, #27ae60); /* Green gradient */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -40,16 +40,15 @@
         }
 
         .back-home:hover {
-            color: #09ba97;
+            color: #2ecc71;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 350px;
-            text-align: center;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 400px;
             animation: fadeIn 1s ease-out;
         }
 
@@ -63,13 +62,14 @@
         }
 
         h2 {
-            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7);
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             -webkit-background-clip: text;
             color: transparent;
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 20px;
             animation: slideIn 1s ease-out;
+            text-align: center;
         }
 
         @keyframes slideIn {
@@ -87,6 +87,16 @@
             margin-bottom: 25px;
             text-align: left;
             position: relative;
+            animation: formGroupAnimation 1s ease-out;
+        }
+
+        @keyframes formGroupAnimation {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .form-group label {
@@ -98,18 +108,19 @@
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
         }
 
         .form-group input:focus {
-            border-color: #00b894;
+            border-color: #2ecc71;
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 183, 148, 0.6);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
         }
 
         .form-group.error input {
@@ -118,9 +129,9 @@
 
         .reset-btn {
             width: 100%;
-            padding: 14px;
-            background-color: #09ba97;
-            font-size: 16px;
+            padding: 15px;
+            background-color: #2ecc71;
+            font-size: 18px;
             font-weight: bold;
             color: #fff;
             border: none;
@@ -131,20 +142,15 @@
         }
 
         .reset-btn:hover {
-            background-color: #068a70;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(9, 186, 151, 0.4);
-        }
-
-        .reset-btn:active {
-            transform: translateY(0);
+            background-color: #27ae60;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.7);
         }
 
         .text-danger {
-            color: #ff7675;
+            color: red;
             font-size: 14px;
-            margin-top: 8px;
-            display: none;
+            margin-top: 5px;
         }
 
         .alert {
@@ -152,6 +158,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
+            text-align: center;
         }
 
         .alert-danger {
@@ -177,25 +184,27 @@
         .mail-buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .mail-btn {
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 10px 15px;
+            border-radius: 8px;
             text-decoration: none;
             color: white;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             transition: all 0.3s;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .mail-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
         }
 
         .mail-btn i {
@@ -212,6 +221,30 @@
 
         .yahoo-btn {
             background-color: #720e9e;
+        }
+
+        .or-separator {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .or-separator::before,
+        .or-separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+            margin: auto;
+        }
+
+        .or-separator::before {
+            margin-right: 10px;
+        }
+
+        .or-separator::after {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -231,6 +264,7 @@
         <div class="alert alert-success">
                 ${success}
         </div>
+        <div class="or-separator">Truy cập email của bạn</div>
         <div class="mail-buttons">
             <a href="https://mail.google.com" class="mail-btn gmail-btn" target="_blank">
                 <i class="bi bi-envelope"></i> Gmail
