@@ -381,7 +381,7 @@
                     onclick="toggleManageProduct()">Thêm sản
                 phẩm
             </button>
-            <a href="LichSu.jsp" class="btn btn-secondary" style="margin-left: 10px;">
+            <a href="LichSu" class="btn btn-secondary" style="margin-left: 10px;">
                 <i class="fas fa-history"></i> Lịch sử
             </a>
             <form action="QuanLySanPham" method="post">

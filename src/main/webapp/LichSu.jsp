@@ -6,6 +6,8 @@
     <title>Lịch sử thao tác</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <style>
         body {
@@ -61,7 +63,7 @@
         <td><%= history.getTimeAction() %></td>
         <td><%= history.getUserAction() %></td>
         <td>
-            <button class="btn btn-info btn-sm" onclick="alert('Chi tiết cũ: <%= history.getOldData() != null ? history.getOldData() : "Không có" %>')">
+            <button class="btn btn-info btn-sm" onclick='showDetail(<%= history.getOldData() != null ? history.getOldData() : "{}" %>)'>
                 Xem chi tiết
             </button>
         </td>
@@ -76,5 +78,41 @@
     <% } %>
     </tbody>
 </table>
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <!-- Center màn hình -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Chi tiết sản phẩm cũ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- Nội dung chi tiết sẽ nhét vô đây bằng JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script>
+    function showDetail(data) {
+        try {
+            var message = "<ul class='list-group'>";
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    message += "<li class='list-group-item'><strong>" + key + ":</strong> " + data[key] + "</li>";
+                }
+            }
+            message += "</ul>";
+
+            document.getElementById('modalBodyContent').innerHTML = message;
+            var myModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            myModal.show();
+        } catch (e) {
+            alert("Dữ liệu chi tiết không hợp lệ!");
+        }
+    }
+</script>
 </html>
