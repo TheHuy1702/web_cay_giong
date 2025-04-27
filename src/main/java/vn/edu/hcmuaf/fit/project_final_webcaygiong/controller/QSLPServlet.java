@@ -76,8 +76,6 @@ public class QSLPServlet extends HttpServlet {
                 request.setAttribute("error", "Dữ liệu không hợp lệ!");
                 response.sendRedirect("QuanLySanPham?them=thatBai");
             }else {
-//                Product product = dao.addProduct(name, price, imageMan, stock, categoryId, introduce, infoPro);
-// ➡️ Thêm log vào History
                 qlspDao.insertHistory("them", product.getProductID(), product.getName(), null, "admin"); // hoặc lấy user từ session
 
                 response.sendRedirect("QuanLySanPham?them=thanhcong");
@@ -87,17 +85,15 @@ public class QSLPServlet extends HttpServlet {
             Product product = qlspDao.getProduct(Integer.parseInt(productId)); // Lấy dữ liệu cũ để lưu log
 
             qlspDao.deleteProductById(Integer.parseInt(productId));
-
-            // ➡️ Thêm log vào History
             qlspDao.insertHistory("xoa", product.getProductID(), product.getName(), convertProductToJson(product), "admin");
             response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
         } else if ("update".equals(action)) {
             String productId = request.getParameter("productIdSua");
             Product product = qlspDao.getProduct(Integer.parseInt(productId));
-            List<Categories> dsCategories = categoryDao.getAllCategories(); // <-- Thêm dòng này
+            List<Categories> dsCategories = categoryDao.getAllCategories();
 
             request.setAttribute("product", product);
-            request.setAttribute("dsCategories", dsCategories); // <-- Và dòng này
+            request.setAttribute("dsCategories", dsCategories);
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("suaSanPham.jsp");
             dispatcher.forward(request, response);
