@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao;
 
+import com.google.gson.Gson;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiSanPham;
@@ -11,6 +12,11 @@ import java.util.List;
 public class QLSPDao {
     List<Product> products;
     List<SubImage> subImages;
+    private String convertProductToJson(Product product) {
+        Gson gson = new Gson();
+        return gson.toJson(product);
+    }
+
 
 
     public QLSPDao() {
@@ -93,4 +99,26 @@ public class QLSPDao {
         QLSPDao dao = new QLSPDao();
         System.out.println(dao.getProduct(1));
     }
+
+    public void insertHistory(String actionType, int productId, String productName, String oldData, String userAction) {
+        try {
+            JDBIConnect.get().withHandle(handle -> {
+                handle.createUpdate("INSERT INTO history (actionType, productID, name, oldData, userAction) " +
+                                "VALUES (?, ?, ?, ?, ?)")
+                        .bind(0, actionType)
+                        .bind(1, productId)
+                        .bind(2, productName)
+                        .bind(3, oldData)
+                        .bind(4, userAction)
+                        .execute();
+                return null;
+            });
+        } catch (Exception e) {
+            System.err.println("Error inserting history: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 }
+

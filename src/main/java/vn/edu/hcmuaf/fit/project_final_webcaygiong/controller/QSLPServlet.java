@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -54,6 +55,7 @@ public class QSLPServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+
         // nút xoá
         String action = request.getParameter("action");
         if ("them".equals(action)) {
@@ -73,10 +75,21 @@ public class QSLPServlet extends HttpServlet {
             if (name == null || name.trim().isEmpty() || price <= 0 || stock < 0) {
                 request.setAttribute("error", "Dữ liệu không hợp lệ!");
                 response.sendRedirect("QuanLySanPham?them=thatBai");
+            }else {
+//                Product product = dao.addProduct(name, price, imageMan, stock, categoryId, introduce, infoPro);
+// ➡️ Thêm log vào History
+                qlspDao.insertHistory("them", product.getProductID(), product.getName(), null, "admin"); // hoặc lấy user từ session
+
+                response.sendRedirect("QuanLySanPham?them=thanhcong");
             }
         } else if ("delet".equals(action)) {
             String productId = request.getParameter("productIdXoa");
+            Product product = qlspDao.getProduct(Integer.parseInt(productId)); // Lấy dữ liệu cũ để lưu log
+
             qlspDao.deleteProductById(Integer.parseInt(productId));
+
+            // ➡️ Thêm log vào History
+            qlspDao.insertHistory("xoa", product.getProductID(), product.getName(), convertProductToJson(product), "admin");
             response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
         } else if ("update".equals(action)) {
             String productId = request.getParameter("productIdSua");
@@ -93,21 +106,29 @@ public class QSLPServlet extends HttpServlet {
             int productID = Integer.parseInt(request.getParameter("productID"));
             String name = request.getParameter("name");
             double price = Double.parseDouble(request.getParameter("price"));
-            String imageMain = request.getParameter("oldImage"); // Giữ ảnh cũ nếu chưa chọn ảnh mới
+            String imageMain = request.getParameter("oldImage");
             int stock = Integer.parseInt(request.getParameter("stock"));
             int categoryID = Integer.parseInt(request.getParameter("categoryID"));
             String introduce = request.getParameter("introduce");
             String infoPro = request.getParameter("infoPro");
 
+            // ➡️ Lấy thông tin cũ trước khi update
+            Product oldProduct = qlspDao.getProduct(productID);
 
-            QuanLiSanPham product = new QuanLiSanPham(productID, name, price, imageMain, stock, categoryID, introduce, infoPro);
-            qlspDao.update(product, productID);
+            QuanLiSanPham newProduct = new QuanLiSanPham(productID, name, price, imageMain, stock, categoryID, introduce, infoPro);
+            qlspDao.update(newProduct, productID);
 
-            // ✅ Nhớ redirect lại trang quản lý sản phẩm sau khi cập nhật
+            // ➡️ Ghi log vào History
+            qlspDao.insertHistory("sua", productID, name, convertProductToJson(oldProduct), "admin");
+
             response.sendRedirect("QuanLySanPham?capnhat=thanhcong");
         }
 
 
 
+    }
+    private String convertProductToJson(Product product) {
+        Gson gson = new Gson();
+        return gson.toJson(product);
     }
 }
