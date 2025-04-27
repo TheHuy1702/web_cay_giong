@@ -178,6 +178,16 @@ if(customer==null){
                     .execute();
         });
     }
+
+    public void createCusEmail(int userID, String email) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, email, createAt) VALUES (?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,email )
+                    .execute();
+        });
+    }
 }
 
 

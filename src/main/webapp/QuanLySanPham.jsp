@@ -381,6 +381,9 @@
                     onclick="toggleManageProduct()">Thêm sản
                 phẩm
             </button>
+            <a href="LichSu" class="btn btn-secondary" style="margin-left: 10px;">
+                <i class="fas fa-history"></i> Lịch sử
+            </a>
             <form action="QuanLySanPham" method="post">
                 <div class="manage-product">
                     <h2>Thêm sản phẩm</h2>

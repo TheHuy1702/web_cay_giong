@@ -16,36 +16,28 @@ public class UpdateEmailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        HttpSession session = request.getSession();
-//        User user = (User) session.getAttribute("user");
-//        // Kiểm tra xem đã đăng nhập hay chưa
-//        if (user != null) {
-//            int userID=user.getUserID();
-//            System.out.println("12346"+userID+"\n");
-//            UserDao userDao=new UserDao();
-//            User user2=userDao.findUserID(userID);
-//            System.out.println("4631561656"+user2);
-//            request.setAttribute("u",user2);
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("myAccount.jsp");
-//            dispatcher.forward(request, response);
-//        } else {
-//            response.sendRedirect("login");
-//        }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CustomerDao customerDao = new CustomerDao();
+        Customer customer;
         String email = request.getParameter("nameEmail");
         System.out.println("Email: " + email);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         // Kiểm tra xem đã đăng nhập hay chưa
         if (user != null) {
+            customer = customerDao.getCustomerWithUID(user.getUserID());
+            System.out.println("bjvhv111g"+customer);
 
+            if(customer == null){
+                System.out.println("bjvhvg"+customer);
+
+                customerDao.createCusEmail(user.getUserID(), email);
+            }else{
                 customerDao.updateInfoCustomerEmail(user.getUserID(), email);
-                response.sendRedirect("taiKhoanCuaToi?updateMail=success");
+                response.sendRedirect("taiKhoanCuaToi?updateMail=success");}
         } else {
             response.sendRedirect("login");
         }
