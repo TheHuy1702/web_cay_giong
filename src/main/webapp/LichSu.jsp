@@ -66,6 +66,10 @@
             <button class="btn btn-info btn-sm" onclick='showDetail(<%= history.getOldData() != null ? history.getOldData() : "{}" %>)'>
                 Xem chi tiết
             </button>
+            <form action="Undo" method="post" style="display:inline;">
+                <input type="hidden" name="historyId" value="<%= history.getId() %>">
+                <button type="submit" class="btn btn-danger btn-sm">Undo</button>
+            </form>
         </td>
     </tr>
     <%

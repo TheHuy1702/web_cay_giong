@@ -128,5 +128,38 @@ public class QLSPDao {
                         .list()
         );
     }
+    public HistoryEntry getHistoryById(int historyId) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM history WHERE id = ?")
+                        .bind(0, historyId)
+                        .mapToBean(HistoryEntry.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public void insertProduct(QuanLiSanPham product) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("INSERT INTO products (productID, name, price, imageMain, stock, categoryId, introduce, infoPro) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+                        .bind(0, product.getProductID())
+                        .bind(1, product.getName())
+                        .bind(2, product.getPrice())
+                        .bind(3, product.getImageMain())
+                        .bind(4, product.getStock())
+                        .bind(5, product.getCategoryId())
+                        .bind(6, product.getIntroduce())
+                        .bind(7, product.getInfoPro())
+                        .execute()
+        );
+    }
+
+    public void deleteHistory(int historyId) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("DELETE FROM history WHERE id = ?")
+                        .bind(0, historyId)
+                        .execute()
+        );
+    }
+
 }
 
