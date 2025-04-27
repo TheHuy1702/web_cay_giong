@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao;
 
 import com.google.gson.Gson;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.HistoryEntry;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiSanPham;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
@@ -120,5 +121,12 @@ public class QLSPDao {
     }
 
 
+    public List<HistoryEntry> getAllHistories() {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM history ORDER BY timeAction DESC")
+                        .mapToBean(HistoryEntry.class)
+                        .list()
+        );
+    }
 }
 
