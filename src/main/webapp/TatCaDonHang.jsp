@@ -440,6 +440,7 @@
             text-decoration: none;
             color: #4b5563;
         }
+
         .nav a:hover {
             color: #ef4444;
         }
@@ -510,6 +511,7 @@
             width: 100px;
             height: 100px;
             object-fit: cover;
+            border-radius: 10px;
         }
 
         .content .item .details {
@@ -802,85 +804,103 @@
         <div class="nav">
             <ul>
                 <li>
-                    <a href="TatCaDonHang" class="active">
-                        Tất cả
+                    <a href="TatCaDonHang?status=all" class="active">
+                        Tất cả (${slDH!=null?slDH:0})
                     </a>
                 </li>
                 <li>
-                    <a href="ChoXacNhanDonHang">
-                        Chờ xác nhận (1)
+                    <a href="ChoXacNhanDonHang?status=Chờ xác nhận">
+                        Chờ xác nhận (${slChoXN!=null?slChoXN:0})
                     </a>
                 </li>
                 <li>
-                    <a href="ChoGiaoHang">
-                        Chờ giao hàng
+                    <a href="ChoGiaoHang?status=Đã xác nhận">
+                        Chờ giao hàng (${slChoGH!=null?slChoGH:0})
                     </a>
                 </li>
                 <li>
-                    <a href="DonHangHoanThanh">
-                        Hoàn thành
+                    <a href="DonHangHoanThanh?status=Đã giao">
+                        Hoàn thành (${slDaGiao!=null?slDaGiao:0})
                     </a>
                 </li>
                 <li>
-                    <a href="DonHangDaHuy">
-                        Đã hủy
+                    <a href="DonHangDaHuy?status=Đã hủy">
+                        Đã hủy (${slHuy!=null?slHuy:0})
                     </a>
                 </li>
             </ul>
         </div>
-        <div class="contentInfo">
-            <div class="header2">
-                <div class="left">
-                    <i class="fas fa-store" style="color: #45a049;">
-                    </i>
-                    <span><a href="TrangChu" style="color: black; text-decoration: none; font-weight: bold;">OneH2K</a></span>
-                </div>
-                <div class="right">
-                    <div class="shipping-status">
-                       <i class="fas fa-truck">
-                        </i>
-                        <span> Trạng thái
+        <c:if test="${empty orders}">
+            <div class="alert-warning">
+                Không có.
+            </div>
+        </c:if>
+        <c:if test="${not empty orders}">
+            <c:forEach var="o" items="${orders}">
+                <div class="contentInfo">
+                    <div class="header2">
+                        <div class="left">
+                            <i class="fas fa-store" style="color: #45a049;">
+                            </i>
+                            <span><a href="TrangChu" style="color: black; text-decoration: none; font-weight: bold;">OneH2K</a></span>
+                        </div>
+                        <div class="right">
+                            <div class="shipping-status">
+                                <i class="fas fa-truck">
+                                </i>
+                                <span> Trạng thái
        </span>
-                        <span class="status">
-        CHỜ GIAO HÀNG
-       </span>
+                                <span class="status">
+                                        ${o.status}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <c:forEach var="i" items="${o.orderItems}">
+                        <div class="content">
+                            <div class="item">
+                                <a title="Xem sản phẩm" href="ChiTietSanPham?pid=${i.productID}"
+                                   style="text-decoration: none;">
+                                    <img alt="${i.productName}" height="100"
+                                         src="${i.image}"
+                                         width="100"/>
+                                </a>
+                                <div class="details">
+                                    <h3 title="Xem sản phẩm">
+                                        <a href="ChiTietSanPham?pid=${i.productID}"
+                                           style="text-decoration: none; color: black;">${i.productName}</a>
+                                    </h3>
+                                    <p>
+                                        Giá sản phẩm:
+                                            <fmt:formatNumber value="${i.price}" type="number"
+                                                              pattern="#,##0 VND"/>
+                                    <p>
+                                    <p>
+                                        Số lượng: x${i.quantity}
+                                    </p>
+                                </div>
+                                <div class="price">
+                                    <p class="original">
+                                        <fmt:formatNumber value="${i.quantity*i.price}" type="number"
+                                                          pattern="#,##0 VND"/>
+                                    </p>
+                                    <p class="discounted">
+                                        <fmt:formatNumber value="${i.quantity*i.price*0.8}" type="number"
+                                                          pattern="#,##0 VND"/>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <div class="footerSub">
+                        <div class="total">
+                            Thành tiền:
+                            <fmt:formatNumber value="${o.totalAmount}" type="number" pattern="#,##0 VND"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="content">
-                <div class="item">
-                    <a title="Xem sản phẩm" href="#" style="text-decoration: none;">
-                        <img alt="Gương chiếu hậu xe Wave" height="100"
-                             src="https://storage.googleapis.com/a1aa/image/1D61S1-gC7TwBfgk8zv6EvND3RtPf2wcjgP_t7FCc_4.jpg"
-                             width="100"/>
-                    </a>
-                    <div class="details">
-                        <h3 title="Xem sản phẩm">
-                            <a href="#" style="text-decoration: none; color: black;">Gương chiếu hậu xe Wave cặp trái phải (có bán lẻ bên trái và phải) gắn được
-                                nhiều xe.</a>
-                        </h3>
-                        <p>
-                            Số lượng: x1
-                        </p>
-                    </div>
-                    <div class="price">
-                        <p class="original">
-                            <fmt:formatNumber value="${190000}" type="number" pattern="#,##0 VND"/>
-                        </p>
-                        <p class="discounted">
-                            <fmt:formatNumber value="150000" type="number" pattern="#,##0 VND"/>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="footerSub">
-                <div class="total">
-                    Thành tiền:
-                    <fmt:formatNumber value="150000" type="number" pattern="#,##0 VND"/>
-                </div>
-            </div>
-        </div>
+            </c:forEach>
+        </c:if>
     </section>
 </main>
 <div id="footerSection" class="custom-bg">
