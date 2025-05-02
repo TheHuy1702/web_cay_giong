@@ -9,6 +9,6 @@
 
 <p>${error}</p>
 
-<a href="/">Quay lại trang chủ</a>
+<a href="TrangChu">Quay lại trang chủ</a>
 </body>
 </html>

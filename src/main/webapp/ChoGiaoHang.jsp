@@ -895,7 +895,7 @@
                             <div class="note">
                                 Đơn hàng sẽ được giao đến bạn trước
                                 <span class="date">
-                        29-03-2025
+                                        ${o.expectedDeliveryTime}
                     </span>
                             </div>
                         </div>
