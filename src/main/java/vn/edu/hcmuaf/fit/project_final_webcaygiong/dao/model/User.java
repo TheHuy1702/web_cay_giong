@@ -15,11 +15,16 @@ public class User implements Serializable {
     private String email;
     private String googleId;
     private String facebookId;
+    private String avatar;
 
     public User() {
     }
 
-    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId, String facebookId) {
+    public User(int userID) {
+        this.userID = userID;
+    }
+
+    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId, String facebookId, String avatar) {
         this.userID = userID;
         this.name = name;
         this.password = password;
@@ -31,6 +36,7 @@ public class User implements Serializable {
         this.email = email;
         this.googleId = googleId;
         this.facebookId = facebookId;
+        this.avatar = avatar;
     }
 
     public String getEmail() { return email; }
@@ -113,6 +119,10 @@ public class User implements Serializable {
         this.facebookId = facebookId;
     }
 
+    public String getAvatar() {return avatar;}
+
+    public void setAvatar(String avatar) {this.avatar = avatar;}
+
     @Override
     public String toString() {
         return "User{" +
@@ -127,6 +137,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", googleId='" + googleId + '\'' +
                 ", facebookId='" + facebookId + '\'' +
+                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }
