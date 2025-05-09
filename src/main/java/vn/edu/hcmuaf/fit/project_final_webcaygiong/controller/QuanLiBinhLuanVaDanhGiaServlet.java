@@ -1,9 +1,12 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+import com.google.gson.Gson;
+import com.mysql.cj.util.LogUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.CommentAndReview;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
@@ -64,14 +67,19 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
         String action = request.getParameter("action");
         String starRating = request.getParameter("starRating");
         CommentAndReviewDao commentDao = new CommentAndReviewDao();
-
+        LogUtil log=new LogUtil();
         if ("delete".equals(action)) {
             int commentId = Integer.parseInt(request.getParameter("commentId"));
+            log.log(request,"Xóa bình luận và đánh giá","Cảnh báo","QuanLiBinhLuanVaDanhGia.jsp","Sản Phẩm được đánh giá",convertProductToJson(commentDao.getCommentAndReview(commentId)),"Trống");
             commentDao.deleteCommentAndReview(commentId);
         }
 
         // Chuyển tiếp lại đến trang quản lý bình luận.
         response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
 
+    }
+    private String convertProductToJson(CommentAndReview c) {
+        Gson gson = new Gson();
+        return gson.toJson(c);
     }
 }

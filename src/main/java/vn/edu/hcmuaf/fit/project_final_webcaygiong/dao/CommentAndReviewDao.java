@@ -20,6 +20,12 @@ public class CommentAndReviewDao {
                         .mapToBean(CommentAndReview.class).list());
         return commentAndReview;
     }
+    public CommentAndReview getCommentAndReview(int id) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("select * from commentandreviews where comAndReID = ?")
+                        .bind(0, id)
+                        .mapToBean(CommentAndReview.class).one());
+    }
 
     // lấy ra tất cả comment và đánh giá của sản phẩm nhất định.
     public List<CommentAndReview> getAllCommentOfProduct(int productID) {
@@ -115,5 +121,7 @@ public class CommentAndReviewDao {
             System.out.println(commentAndReview);
         }
         System.out.println(commentAndReviewDao.trungBinhSoSao(2));
+        CommentAndReview c=commentAndReviewDao.getCommentAndReview(1);
+        System.out.println(c);
     }
 }
