@@ -46,7 +46,7 @@ public class VerifyEmailOtpServlet extends HttpServlet {
 
         switch (otpAction) {
             case "changePassword":
-                response.sendRedirect("doiMatkhau");
+                response.sendRedirect("doiMatKhau");
                 break;
             case "updateEmail":
                 session.setAttribute("openPopup", "email");

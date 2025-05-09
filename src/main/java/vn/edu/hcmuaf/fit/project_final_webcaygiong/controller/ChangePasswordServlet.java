@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.PasswordUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
@@ -49,18 +50,20 @@ public class ChangePasswordServlet extends HttpServlet {
         }
 
 
-        // Kiểm tra mật khẩu hiện tại có khớp không
-        if (!currentPassword.equals(currentUser.getPassword())) {
+        // Kiểm tra mật khẩu hiện tại có khớp không(đã sử dụng mã hoá)
+        if (!PasswordUtil.checkPassword(currentPassword, currentUser.getPassword())) {
             request.setAttribute("error", "Mật khẩu hiện tại không đúng.");
             request.getRequestDispatcher("doiMatKhauUser.jsp").forward(request, response);
             return;
         }
 
-        // Cập nhật mật khẩu mới
-        boolean updated = UserDao.updatePassword(phone, newPassword);
+        // Cập nhật mật khẩu mới(đã mã hoá)
+        String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
+        boolean updated = UserDao.updatePassword(phone, hashedNewPassword);
+
 
         if (updated) {
-            currentUser.setPassword(newPassword); // Cập nhật mật khẩu mới trong session
+            currentUser.setPassword(hashedNewPassword);// Cập nhật mật khẩu mới trong session(đã mã hoá)
             session.setAttribute("user", currentUser);
 
             request.setAttribute("message", "Đổi mật khẩu thành công.");
