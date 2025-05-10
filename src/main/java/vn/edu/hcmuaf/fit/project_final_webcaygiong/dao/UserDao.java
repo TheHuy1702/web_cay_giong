@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao;
 
+import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
@@ -54,28 +55,28 @@ public class UserDao {
                         .orElse(null)
         );
 
-        // Kiểm tra xem người dùng có tồn tại.
         if (user != null) {
-            return checkPassword(password, user.getPassword());
+            // Kiểm tra password đã hash
+            return BCrypt.checkpw(password, user.getPassword());
         }
         return false;
     }
 
-    public boolean checkLogin2(String phone, String password) {
-        User user = JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT u.* FROM users u join ActivationToken a ON u.userID = a.userID WHERE a.used = 1  and phone = ?")
-                        .bind(0, phone)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
-
-        // Kiểm tra xem người dùng có tồn tại.
-        if (user != null) {
-            return checkPassword(password, user.getPassword());
-        }
-        return false;
-    }
+//    public boolean checkLogin2(String phone, String password) {
+//        User user = JDBIConnect.get().withHandle(h ->
+//                h.createQuery("SELECT u.* FROM users u join ActivationToken a ON u.userID = a.userID WHERE a.used = 1  and phone = ?")
+//                        .bind(0, phone)
+//                        .mapToBean(User.class)
+//                        .findOne()
+//                        .orElse(null)
+//        );
+//
+//        // Kiểm tra xem người dùng có tồn tại.
+//        if (user != null) {
+//            return checkPassword(password, user.getPassword());
+//        }
+//        return false;
+//    }
 
 
     // Phương thức để kiểm tra mật khẩu
@@ -85,15 +86,17 @@ public class UserDao {
 
     public boolean insertUser(User user) {
         try {
-            return JDBIConnect.get().withHandle(handle -> {
-                String sql = "INSERT INTO users (name, phone, email, password, verifiCode, verifiExpines, createAt, updateAt) " +
-                        "VALUES (:name, :phone, :email, :password, :verifiCode, :verifiExpines, :createAt, :updateAt)";
+            // Hash password trước khi lưu
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            return JDBIConnect.get().withHandle(h -> {
+                String sql = "INSERT INTO users (name, phone, email, password, verifiCode, verifiExpines, createAt, updateAt, active) " +
+                        "VALUES (:name, :phone, :email, :password, :verifiCode, :verifiExpines, :createAt, :updateAt, 0)";
 
-                int rowsAffected = handle.createUpdate(sql)
+                int rowsAffected = h.createUpdate(sql)
                         .bind("name", user.getName())
                         .bind("phone", user.getPhone())
                         .bind("email", user.getEmail())
-                        .bind("password", user.getPassword())
+                        .bind("password", hashedPassword) // Sử dụng password đã hash
                         .bind("verifiCode", user.getVerifiCode())
                         .bind("verifiExpines", user.getVerifiExpines())
                         .bind("createAt", user.getCreateAt())
@@ -271,9 +274,12 @@ public class UserDao {
     }
 
     public boolean updatePassword(int userId, String newPassword) {
+        // Hash password mới trước khi lưu
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
         return JDBIConnect.get().withHandle(handle ->
                 handle.createUpdate("UPDATE users SET password = :password, updateAt = :updateAt WHERE userID = :userID")
-                        .bind("password", newPassword)
+                        .bind("password", hashedPassword)
                         .bind("updateAt", new java.util.Date())
                         .bind("userID", userId)
                         .execute() > 0
@@ -369,6 +375,30 @@ public class UserDao {
         );
     }
 
+    public boolean activateUser(int userId) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createUpdate("UPDATE users SET active = 1 WHERE userID = ?")
+                        .bind(0, userId)
+                        .execute() > 0
+        );
+    }
+
+    public boolean isUserActive(int userId) {
+        return JDBIConnect.get().withHandle(h ->
+                h.createQuery("SELECT active FROM users WHERE userID = ?")
+                        .bind(0, userId)
+                        .mapTo(Boolean.class)
+                        .findOne()
+                        .orElse(false)
+        );
+    }
+
+    // Thêm phương thức checkPassword cho admin (nếu cần)
+    private boolean checkAdminPassword(String inputPassword, String storedPassword) {
+        // Giữ nguyên cách check password cũ cho admin nếu cần
+        return inputPassword.equals(storedPassword);
+    }
+
 
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
@@ -384,6 +414,5 @@ public class UserDao {
 //            System.out.println("Không thành công!");
 //        }
         System.out.println(userDao.findUserByToken("6d93b105-9dae-473f-aaae-b3625b3548c1"));
-        System.out.println(userDao.checkLogin2("0707180788","Hoai#2314"));
     }
 }

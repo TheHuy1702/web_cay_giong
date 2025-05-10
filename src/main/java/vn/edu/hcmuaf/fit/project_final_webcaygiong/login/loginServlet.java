@@ -45,7 +45,7 @@ public class loginServlet extends HttpServlet {
 
         User user = userDao.findByPhone(phone);
         if (user != null) {
-            boolean isLogin = userDao.checkLogin(user.getPhone(), password);
+            boolean isLogin = userDao.checkLogin(phone, password);
             if (isLogin) {
                 session.setAttribute("user", user); // Lưu đối tượng user vào session
                 session.setAttribute("au", false); // Đánh dấu không phải admin
