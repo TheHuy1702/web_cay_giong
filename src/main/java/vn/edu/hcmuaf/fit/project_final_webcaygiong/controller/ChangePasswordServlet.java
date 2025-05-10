@@ -14,9 +14,23 @@ public class ChangePasswordServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("doiMatKhauUser.jsp");
-        dispatcher.forward(request, response);
+
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+
+
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String otpAction = (String) session.getAttribute("otpAction");
+        String targetPage = "changePasswordAdmin".equals(otpAction) ? "doiMatKhauAdmin.jsp" : "doiMatKhauUser.jsp";
+
+        request.getRequestDispatcher(targetPage).forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -38,14 +52,20 @@ public class ChangePasswordServlet extends HttpServlet {
         // Kiểm tra xác nhận mật khẩu
         if (!newPassword.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp.");
-            request.getRequestDispatcher("doiMatKhauUser.jsp").forward(request, response);
+            String otpAction = (String) session.getAttribute("otpAction");
+            String targetPage = "changePasswordAdmin".equals(otpAction) ? "doiMatKhauAdmin.jsp" : "doiMatKhauUser.jsp";
+            request.getRequestDispatcher(targetPage).forward(request, response);
+
             return;
         }
 
 // Kiểm tra độ mạnh của mật khẩu
         if (!isStrongPassword(newPassword)) {
             request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
-            request.getRequestDispatcher("doiMatKhauUser.jsp").forward(request, response);
+            String otpAction = (String) session.getAttribute("otpAction");
+            String targetPage = "changePasswordAdmin".equals(otpAction) ? "doiMatKhauAdmin.jsp" : "doiMatKhauUser.jsp";
+            request.getRequestDispatcher(targetPage).forward(request, response);
+
             return;
         }
 
@@ -53,7 +73,10 @@ public class ChangePasswordServlet extends HttpServlet {
         // Kiểm tra mật khẩu hiện tại có khớp không(đã sử dụng mã hoá)
         if (!PasswordUtil.checkPassword(currentPassword, currentUser.getPassword())) {
             request.setAttribute("error", "Mật khẩu hiện tại không đúng.");
-            request.getRequestDispatcher("doiMatKhauUser.jsp").forward(request, response);
+            String otpAction = (String) session.getAttribute("otpAction");
+            String targetPage = "changePasswordAdmin".equals(otpAction) ? "doiMatKhauAdmin.jsp" : "doiMatKhauUser.jsp";
+            request.getRequestDispatcher(targetPage).forward(request, response);
+
             return;
         }
 
@@ -71,7 +94,10 @@ public class ChangePasswordServlet extends HttpServlet {
             request.setAttribute("error", "Cập nhật mật khẩu thất bại. Vui lòng thử lại.");
         }
 
-        request.getRequestDispatcher("doiMatKhauUser.jsp").forward(request, response);
+        String otpAction = (String) session.getAttribute("otpAction");
+        String targetPage = "changePasswordAdmin".equals(otpAction) ? "doiMatKhauAdmin.jsp" : "doiMatKhauUser.jsp";
+        request.getRequestDispatcher(targetPage).forward(request, response);
+
     }
     private boolean isStrongPassword(String password) {
         // Chấp nhận nhiều ký tự đặc biệt hơn, ví dụ: dấu chấm, phẩy, ngoặc, gạch dưới, v.v.

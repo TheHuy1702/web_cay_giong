@@ -70,16 +70,6 @@
 
         }
 
-        /* .user {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            padding: 10px;
-            right: -450px;
-
-            border-radius: 5px;
-        } */
-
         .user .logout-menu {
             width: 135px;
         }
@@ -340,12 +330,6 @@
             display: flex;
 
         }
-        /* .thongtin{
-            margin-bottom: 10px;
-        }
-        .donMua{
-            margin-bottom: 10px;
-        } */
         .change-link {
             color: #4CAF50;
             text-decoration: none;

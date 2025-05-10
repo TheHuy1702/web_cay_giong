@@ -146,11 +146,13 @@
             display: none;
             position: absolute;
             right: 0;
+            top: 60px; /* Dịch xuống để không bị che */
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 10px;
-            z-index: 1;
+            z-index: 2000; /* Đảm bảo nằm trên content */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ để nổi bật */
         }
 
         .admin-user i {
@@ -163,13 +165,13 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -650px;
-
+            right: -450px;
             border-radius: 5px;
+            z-index: 1000; /* Đảm bảo nằm trên các phần khác */
         }
 
         .admin-user .logout-menu {
-            width: fit-content;
+            width: 135px;
         }
 
         .admin-user .logout-menu:hover {
@@ -211,18 +213,6 @@
         .submenu li:hover {
             background-color: #666;
         }
-
-        .dangxuat {
-            background-color: #333;
-            font-size: 15px;
-            cursor: pointer;
-            padding: 5px;
-            color: white;
-        }
-
-        .dangxuat:hover {
-            background-color: #666;
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -234,6 +224,15 @@
         <div class="admin-user">
             <i class="fas fa-user-circle "></i> <br> Admin
             <div class="logout-menu">
+
+                    <button class="thongtin" id="thongTin" type="submit"> Thông tin tài khoản
+                    </button>
+                    <hr style="border: 1px solid  #ccc;">
+                <form method="get" action="send-otp-email">
+                    <button class="donMua" id="donMua" type="submit"> Đổi mật khẩu
+                    </button>
+                </form>
+                    <hr style="border: 1px solid  #ccc;">
                 <form method="post" action="logout">
                     <button class="dangxuat" id="logout1" type="submit"><i
                             class="fas fa-sign-out-alt"></i> Đăng xuất
