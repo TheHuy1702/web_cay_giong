@@ -62,6 +62,12 @@ public class CommentAndReviewDao {
                         .bind(0, comAndReID)
                         .execute());
     }
+    public void redoCommentAndReview(int commentIdHis) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("UPDATE commentandreviews SET deleted = false WHERE comAndReID = ?")
+                        .bind(0, commentIdHis)
+                        .execute());
+    }
 
     // lấy comment and review theo tên.
     public List<CommentAndReview> getAllCommentOfProductByName(String productName) {

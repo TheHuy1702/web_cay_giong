@@ -75,6 +75,7 @@
         .sidebar ul li:hover {
             background-color: #555;
         }
+
         .sidebar .background {
             background-color: #555;
         }
@@ -242,7 +243,7 @@
         }
 
 
-        #management-table button,  #history-table button {
+        #management-table button, #history-table button {
             background-color: #dc3545;
             color: white;
             border: none;
@@ -262,6 +263,7 @@
             border-radius: 5px;
             margin: 10px;
         }
+
         .dangxuat {
             background-color: #333;
             font-size: 15px;
@@ -280,20 +282,23 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         #historySection {
             display: none;
             margin-bottom: 20px;
         }
-        .bHis{
+
+        .bHis {
             border-radius: 10px;
-            background-color: white;
-            border: 2px solid red;
+            background-color: #dc3545;
+            border: 2px solid #dc3545;
             height: 40px;
-            color: red;
+            color: white;
             font-weight: 550;
             cursor: pointer;
         }
-        .bHis:hover{
+
+        .bHis:hover {
             background-color: red;
             color: white;
         }
@@ -363,34 +368,34 @@
             <div class="management-section">
                 <h2>Quản lý bình luận:</h2>
                 <div class="container2">
-                <div class="filter-section">
-                    <form action="QuanLiBinhLuanVaDanhGia" method="get">
-                        <label>Chọn sản phẩm:</label>
-                        <select name="productID" id="productName" onchange="this.form.submit()">
-                            <option value="">Hiển thị tất cả</option>
-                            <c:forEach var="product" items="${allProducts}">
-                                <option value="${product.productID}"
-                                        <c:if test="${product.productID == selectedProductID}">selected</c:if>>
-                                        ${product.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </form>
-                    <button class="bHis" onclick="toggleHistory()">Lịch sử xóa</button>
-                    <form action="QuanLiBinhLuanVaDanhGia" method="GET">
-                        <label>Chọn số sao:</label>
-                        <select name="starRating" onchange="this.form.submit()">
-                            <option value="">Tất cả</option>
-                            <option value="1" <c:if test="${selectedRatingStar==1}">selected</c:if>>1 Sao</option>
-                            <option value="2" <c:if test="${selectedRatingStar==2}">selected</c:if>>2 Sao</option>
-                            <option value="3" <c:if test="${selectedRatingStar==3}">selected</c:if>>3 Sao</option>
-                            <option value="4" <c:if test="${selectedRatingStar==4}">selected</c:if>>4 Sao</option>
-                            <option value="5" <c:if test="${selectedRatingStar==5}">selected</c:if>>5 Sao</option>
-                        </select>
-                        <input type="hidden" name="productID" value="${selectedProductID}"/>
-                    </form>
-                </div>
-                    <div id="historySection">
+                    <div class="filter-section">
+                        <form action="QuanLiBinhLuanVaDanhGia" method="get">
+                            <label>Chọn sản phẩm:</label>
+                            <select name="productID" id="productName" onchange="this.form.submit()">
+                                <option value="">Hiển thị tất cả</option>
+                                <c:forEach var="product" items="${allProducts}">
+                                    <option value="${product.productID}"
+                                            <c:if test="${product.productID == selectedProductID}">selected</c:if>>
+                                            ${product.name}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </form>
+                        <button class="bHis" onclick="toggleHistory()">Lịch sử xóa</button>
+                        <form action="QuanLiBinhLuanVaDanhGia" method="GET">
+                            <label>Chọn số sao:</label>
+                            <select name="starRating" onchange="this.form.submit()">
+                                <option value="">Tất cả</option>
+                                <option value="1" <c:if test="${selectedRatingStar==1}">selected</c:if>>1 Sao</option>
+                                <option value="2" <c:if test="${selectedRatingStar==2}">selected</c:if>>2 Sao</option>
+                                <option value="3" <c:if test="${selectedRatingStar==3}">selected</c:if>>3 Sao</option>
+                                <option value="4" <c:if test="${selectedRatingStar==4}">selected</c:if>>4 Sao</option>
+                                <option value="5" <c:if test="${selectedRatingStar==5}">selected</c:if>>5 Sao</option>
+                            </select>
+                            <input type="hidden" name="productID" value="${selectedProductID}"/>
+                        </form>
+                    </div>
+                    <div id="historySection" style="display: ${showHistory ? 'block' : 'none'};">
                         <h2>Lịch sử xóa bình luận và đánh giá:</h2>
                         <c:if test="${empty historyList}">
                             <div class="alert-warning">
@@ -414,10 +419,11 @@
                                         <td>${historyItem.content}</td>
                                         <td>${historyItem.ratingStars}</td>
                                         <td>
-                                            <form action="QuanLiBinhLuanVaDanhGia" method="post">
-                                                <input type="hidden" name="commentId" value="${historyItem.comAndReID}"/>
-                                                <input type="hidden" name="action" value="redo"/>
-                                                <button type="submit">Khôi phục</button>
+                                            <form action="QuanLiBinhLuanVaDanhGia" method="post"
+                                                  onsubmit="return confirmRestore();">
+                                                <input type="hidden" name="commentIdHis"
+                                                       value="${historyItem.comAndReID}"/>
+                                                <button type="submit" name="action" value="redo">Khôi phục</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -426,43 +432,44 @@
                             </table>
                         </c:if>
                     </div>
-                <c:if test="${empty listCommentAndReview}">
-                    <div class="alert-warning">
-                        Không tìm thấy bình luận và đánh giá nào
-                    </div>
-                </c:if>
-                <c:if test="${not empty listCommentAndReview}">
-                <table id="management-table">
-                    <thead>
-                    <tr>
-                        <th>Tên</th>
-                        <th>Bình luận</th>
-                        <th>Số sao đánh giá</th>
-                        <th>Xóa bình luận và đánh giá</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="listCommentAndReview" items="${listCommentAndReview}">
-                        <tr>
-                            <td>${listCommentAndReview.name}</td>
-                            <td>${listCommentAndReview.content}</td>
-                            <td>${listCommentAndReview.ratingStars}</td>
-                            <td>
-                                <form action="QuanLiBinhLuanVaDanhGia" method="post" onsubmit="return confirmDelete();">
-                                    <input type="hidden" name="commentId"
-                                           value="${listCommentAndReview.comAndReID}"/>
-                                    <input type="hidden" name="productID" value="${selectedProductID}"/>
-                                    <input type="hidden" name="starRating" value="${selectedRatingStar}"/>
-                                    <button type="submit" name="action" value="delete">Xóa</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                    <c:if test="${empty listCommentAndReview}">
+                        <div class="alert-warning">
+                            Không tìm thấy bình luận và đánh giá nào
+                        </div>
                     </c:if>
-                    </tbody>
-                </table>
+                    <c:if test="${not empty listCommentAndReview}">
+                    <table id="management-table">
+                        <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Bình luận</th>
+                            <th>Số sao đánh giá</th>
+                            <th>Xóa bình luận và đánh giá</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="listCommentAndReview" items="${listCommentAndReview}">
+                            <tr>
+                                <td>${listCommentAndReview.name}</td>
+                                <td>${listCommentAndReview.content}</td>
+                                <td>${listCommentAndReview.ratingStars}</td>
+                                <td>
+                                    <form action="QuanLiBinhLuanVaDanhGia" method="post"
+                                          onsubmit="return confirmDelete();">
+                                        <input type="hidden" name="commentId"
+                                               value="${listCommentAndReview.comAndReID}"/>
+                                        <input type="hidden" name="productID" value="${selectedProductID}"/>
+                                        <input type="hidden" name="starRating" value="${selectedRatingStar}"/>
+                                        <button type="submit" name="action" value="delete">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </c:if>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
@@ -480,6 +487,7 @@
     function confirmDelete() {
         return confirm("Bạn có chắc chắn muốn xóa bình luận và đánh giá này không?");
     }
+
     function toggleHistory() {
         var historySection = document.getElementById("historySection");
         if (historySection.style.display === "none" || historySection.style.display === "") {
@@ -487,6 +495,10 @@
         } else {
             historySection.style.display = "none";
         }
+    }
+
+    function confirmRestore() {
+        return confirm("Bạn có chắc chắn muốn khôi phục bình luận và đánh giá này không?");
     }
 </script>
 </html>

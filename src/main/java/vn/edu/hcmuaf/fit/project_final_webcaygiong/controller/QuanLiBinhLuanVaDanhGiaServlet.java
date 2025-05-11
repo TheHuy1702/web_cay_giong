@@ -28,6 +28,7 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
 
         String sproductID = request.getParameter("productID");
         String starRating = request.getParameter("starRating");
+        String khoiPhuc = request.getParameter("khoiPhuc");
 
         List<CommentAndReview> filteredComments;
         List<CommentAndReview> historyList=commentDao.getAllCommentAndReviewDeleted();
@@ -58,6 +59,7 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
         request.setAttribute("historyList",historyList);
         request.setAttribute("selectedProductID", sproductID); // Lưu ID sản phẩm đã chọn
         request.setAttribute("selectedRatingStar", starRating);
+        request.setAttribute("showHistory", "ThanhCong".equals(khoiPhuc));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiBinhLuanVaDanhGia.jsp");
         dispatcher.forward(request, response);
@@ -74,10 +76,14 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
             int commentId = Integer.parseInt(request.getParameter("commentId"));
             log.log(request,"Xóa bình luận và đánh giá","Cảnh báo","QuanLiBinhLuanVaDanhGia.jsp","Sản Phẩm được đánh giá",convertProductToJson(commentDao.getCommentAndReview(commentId)),"Trống");
             commentDao.deleteCommentAndReview(commentId);
+            // Chuyển tiếp lại đến trang quản lý bình luận.
+            response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
+        }else if("redo".equals(action)){
+            int commentIdHis = Integer.parseInt(request.getParameter("commentIdHis"));
+            log.log(request,"Khôi phục bình luận và đánh giá","Thông báo","QuanLiBinhLuanVaDanhGia.jsp","Sản Phẩm được đánh giá",convertProductToJson(commentDao.getCommentAndReview(commentIdHis)),"Trống");
+            commentDao.redoCommentAndReview(commentIdHis);
+            response.sendRedirect("QuanLiBinhLuanVaDanhGia?khoiPhuc=ThanhCong");
         }
-
-        // Chuyển tiếp lại đến trang quản lý bình luận.
-        response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
     }
     private String convertProductToJson(CommentAndReview c) {
         Gson gson = new Gson();
