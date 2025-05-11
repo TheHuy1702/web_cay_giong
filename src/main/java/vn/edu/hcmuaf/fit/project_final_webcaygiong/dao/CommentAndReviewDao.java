@@ -36,6 +36,13 @@ public class CommentAndReviewDao {
         return commentAndReview;
     }
 
+    public List<CommentAndReview> getAllCommentAndReviewDeleted() {
+        commentAndReview = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("select * from commentandreviews where deleted = true")
+                        .mapToBean(CommentAndReview.class).list());
+        return commentAndReview;
+    }
+
     // thêm comment and reviews.
     public void addCommentAndReview(CommentAndReview comment) {
         JDBIConnect.get().withHandle(handle ->

@@ -230,19 +230,19 @@
             border-bottom: 1px solid #ddd;
         }
 
-        #management-table th {
+        #management-table th, #history-table th {
             height: 50px;
             background-color: #4CAF50; /* Màu nền cho tiêu đề cột */
             color: white; /* Màu chữ cho tiêu đề cột */
             font-weight: bold; /* Làm đậm chữ cho tiêu đề */
         }
 
-        #management-table tr:hover {
+        #management-table tr:hover, #history-table tr:hover {
             background-color: #e9ecef;
         }
 
 
-        #management-table button {
+        #management-table button,  #history-table button {
             background-color: #dc3545;
             color: white;
             border: none;
@@ -251,7 +251,7 @@
             border-radius: 4px;
         }
 
-        #management-table button:hover {
+        #management-table button:hover, #history-table button:hover {
             background-color: #c82333;
         }
 
@@ -279,6 +279,23 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #historySection {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .bHis{
+            border-radius: 10px;
+            background-color: white;
+            border: 2px solid red;
+            height: 40px;
+            color: red;
+            font-weight: 550;
+            cursor: pointer;
+        }
+        .bHis:hover{
+            background-color: red;
+            color: white;
         }
     </style>
 </head>
@@ -359,7 +376,7 @@
                             </c:forEach>
                         </select>
                     </form>
-
+                    <button class="bHis" onclick="toggleHistory()">Lịch sử xóa</button>
                     <form action="QuanLiBinhLuanVaDanhGia" method="GET">
                         <label>Chọn số sao:</label>
                         <select name="starRating" onchange="this.form.submit()">
@@ -373,6 +390,42 @@
                         <input type="hidden" name="productID" value="${selectedProductID}"/>
                     </form>
                 </div>
+                    <div id="historySection">
+                        <h2>Lịch sử xóa bình luận và đánh giá:</h2>
+                        <c:if test="${empty historyList}">
+                            <div class="alert-warning">
+                                Không có lịch sử xóa bình luận và đánh giá.
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty historyList}">
+                            <table id="history-table">
+                                <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Bình luận</th>
+                                    <th>Số sao đánh giá</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="historyItem" items="${historyList}">
+                                    <tr>
+                                        <td>${historyItem.name}</td>
+                                        <td>${historyItem.content}</td>
+                                        <td>${historyItem.ratingStars}</td>
+                                        <td>
+                                            <form action="QuanLiBinhLuanVaDanhGia" method="post">
+                                                <input type="hidden" name="commentId" value="${historyItem.comAndReID}"/>
+                                                <input type="hidden" name="action" value="redo"/>
+                                                <button type="submit">Khôi phục</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:if>
+                    </div>
                 <c:if test="${empty listCommentAndReview}">
                     <div class="alert-warning">
                         Không tìm thấy bình luận và đánh giá nào
@@ -426,6 +479,14 @@
 
     function confirmDelete() {
         return confirm("Bạn có chắc chắn muốn xóa bình luận và đánh giá này không?");
+    }
+    function toggleHistory() {
+        var historySection = document.getElementById("historySection");
+        if (historySection.style.display === "none" || historySection.style.display === "") {
+            historySection.style.display = "block";
+        } else {
+            historySection.style.display = "none";
+        }
     }
 </script>
 </html>

@@ -30,6 +30,7 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
         String starRating = request.getParameter("starRating");
 
         List<CommentAndReview> filteredComments;
+        List<CommentAndReview> historyList=commentDao.getAllCommentAndReviewDeleted();
 
         // Kiểm tra xem sproductID có null hoặc rỗng không
         if (sproductID == null || sproductID.isEmpty()) {
@@ -54,6 +55,7 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
         }
 
         request.setAttribute("listCommentAndReview", filteredComments);
+        request.setAttribute("historyList",historyList);
         request.setAttribute("selectedProductID", sproductID); // Lưu ID sản phẩm đã chọn
         request.setAttribute("selectedRatingStar", starRating);
 
