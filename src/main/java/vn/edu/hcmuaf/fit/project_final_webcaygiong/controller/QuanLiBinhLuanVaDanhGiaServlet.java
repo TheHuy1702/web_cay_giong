@@ -1,9 +1,12 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+import com.google.gson.Gson;
+import com.mysql.cj.util.LogUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.CommentAndReview;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
@@ -25,8 +28,10 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
 
         String sproductID = request.getParameter("productID");
         String starRating = request.getParameter("starRating");
+        String khoiPhuc = request.getParameter("khoiPhuc");
 
         List<CommentAndReview> filteredComments;
+        List<CommentAndReview> historyList=commentDao.getAllCommentAndReviewDeleted();
 
         // Kiểm tra xem sproductID có null hoặc rỗng không
         if (sproductID == null || sproductID.isEmpty()) {
@@ -45,14 +50,16 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
             // Kiểm tra số sao
             if (starRating != null && !starRating.isEmpty()) {
                 int rating = Integer.parseInt(starRating);
-                // Lọc bình luận theo số sao
+                // Lọc bình luận theo số sao và sản phẩm
                 filteredComments = commentDao.getAllCommentOfProductByRatingAndIDP(productID, rating);
             }
         }
 
         request.setAttribute("listCommentAndReview", filteredComments);
+        request.setAttribute("historyList",historyList);
         request.setAttribute("selectedProductID", sproductID); // Lưu ID sản phẩm đã chọn
         request.setAttribute("selectedRatingStar", starRating);
+        request.setAttribute("showHistory", "ThanhCong".equals(khoiPhuc));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiBinhLuanVaDanhGia.jsp");
         dispatcher.forward(request, response);
@@ -64,14 +71,22 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
         String action = request.getParameter("action");
         String starRating = request.getParameter("starRating");
         CommentAndReviewDao commentDao = new CommentAndReviewDao();
-
+        LogUtil log=new LogUtil();
         if ("delete".equals(action)) {
             int commentId = Integer.parseInt(request.getParameter("commentId"));
+            log.log(request,"Xóa bình luận và đánh giá","Cảnh báo","QuanLiBinhLuanVaDanhGia.jsp","Sản Phẩm được đánh giá",convertProductToJson(commentDao.getCommentAndReview(commentId)),"Trống");
             commentDao.deleteCommentAndReview(commentId);
+            // Chuyển tiếp lại đến trang quản lý bình luận.
+            response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
+        }else if("redo".equals(action)){
+            int commentIdHis = Integer.parseInt(request.getParameter("commentIdHis"));
+            log.log(request,"Khôi phục bình luận và đánh giá","Thông báo","QuanLiBinhLuanVaDanhGia.jsp","Sản Phẩm được đánh giá",convertProductToJson(commentDao.getCommentAndReview(commentIdHis)),"Trống");
+            commentDao.redoCommentAndReview(commentIdHis);
+            response.sendRedirect("QuanLiBinhLuanVaDanhGia?khoiPhuc=ThanhCong");
         }
-
-        // Chuyển tiếp lại đến trang quản lý bình luận.
-        response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
-
+    }
+    private String convertProductToJson(CommentAndReview c) {
+        Gson gson = new Gson();
+        return gson.toJson(c);
     }
 }
