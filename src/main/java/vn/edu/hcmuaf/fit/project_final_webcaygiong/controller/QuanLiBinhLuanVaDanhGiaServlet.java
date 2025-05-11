@@ -48,7 +48,7 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
             // Kiểm tra số sao
             if (starRating != null && !starRating.isEmpty()) {
                 int rating = Integer.parseInt(starRating);
-                // Lọc bình luận theo số sao
+                // Lọc bình luận theo số sao và sản phẩm
                 filteredComments = commentDao.getAllCommentOfProductByRatingAndIDP(productID, rating);
             }
         }
@@ -76,7 +76,6 @@ public class QuanLiBinhLuanVaDanhGiaServlet extends HttpServlet {
 
         // Chuyển tiếp lại đến trang quản lý bình luận.
         response.sendRedirect("QuanLiBinhLuanVaDanhGia?starRating=" + starRating + "&productID=" + sproductID + "&Xoa=ThanhCong");
-
     }
     private String convertProductToJson(CommentAndReview c) {
         Gson gson = new Gson();
