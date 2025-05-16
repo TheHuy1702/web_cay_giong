@@ -27,12 +27,16 @@ public class EmailUtility {
                 message.setFrom(new InternetAddress(FROM_EMAIL));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
                 message.setSubject("Kích hoạt tài khoản của bạn");
-
                 String content = "<html><body>"
                         + "<h2>Xin chào!</h2>"
-                        + "<p>Cảm ơn bạn đã đăng ký tài khoản. Vui lòng nhấp vào liên kết bên dưới để kích hoạt tài khoản của bạn:</p>"
-                        + "<p><a href=\"" + activationLink + "\">" + activationLink + "</a></p>"
+                        + "<p>Cảm ơn bạn đã đăng ký tài khoản tại Cây Giống OneH2K.</p>"
+                        + "<p>Vui lòng nhấp vào nút bên dưới để kích hoạt tài khoản:</p>"
+                        + "<p><a href=\"" + activationLink + "\" style=\""
+                        + "display: inline-block; padding: 10px 20px; "
+                        + "background-color: #4CAF50; color: white; "
+                        + "text-decoration: none; border-radius: 5px;\">KÍCH HOẠT TÀI KHOẢN</a></p>"
                         + "<p>Liên kết sẽ hết hạn sau 24 giờ.</p>"
+                        + "<p>Nếu bạn không yêu cầu email này, vui lòng bỏ qua.</p>"
                         + "</body></html>";
 
                 message.setContent(content, "text/html; charset=utf-8");
