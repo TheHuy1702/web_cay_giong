@@ -157,33 +157,6 @@ public class OrderDao {
 
     public static void main(String[] args) {
         OrderDao orderDao = new OrderDao();
-//        List<Order> orders = orderDao.getAllOrderItems();
-//        for (Order order : orders) {
-//            System.out.println(order);
-//        }
-//        List<OrderItems> orderItems = orderDao.getOrderItemsByOrderId(3);
-//        for (OrderItems item : orderItems) {
-//            System.out.println(item);
-//        }
-//        Customer customer = orderDao.getCustomerById(2);
-//        System.out.println(customer);
-//        List<Map<String, Object>> orders2 = orderDao.getOrderItemsByOrderID(1);
-//        if (orders.isEmpty()) {
-//            System.out.println("Không có đơn hàng nào.");
-//        } else {
-//            System.out.println("Danh sách đơn hàng:");
-//            for (Map<String, Object> order : orders2) {
-//                System.out.println("Order ID: " + order.get("orderID"));
-//                System.out.println("itemID: " + order.get("itemID"));
-//                System.out.println("price: " + order.get("price"));
-//                System.out.println("Product Name: " + order.get("productName"));
-//                System.out.println("productName: " + order.get("productID"));
-//                System.out.println("productName: " + order.get("quantity"));
-//                System.out.println("image: " + order.get("image"));
-//                System.out.println("-----------------------------------");
-//            }
-//        }
-//        orderDao.updateOrderTggh(26, "2025-05-05T16:59:59Z");
         System.out.println(orderDao.getDatePrepare(1));
     }
 }
