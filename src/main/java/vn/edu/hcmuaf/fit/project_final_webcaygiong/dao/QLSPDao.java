@@ -81,7 +81,7 @@ public class QLSPDao {
                         .bind(1, product.getPrice())
                         .bind(2, product.getImageMain())
                         .bind(3, product.getStock())
-                        .bind(4, product.getCategoryId())
+                        .bind(4, product.getCategoryID())
                         .bind(5, product.getIntroduce())
                         .bind(6, product.getInfoPro())
                         .bind(7, product.getProductID())
@@ -101,36 +101,36 @@ public class QLSPDao {
         System.out.println(dao.getProduct(1));
     }
 
-    public void insertHistory(String actionType, int productId, String productName, String oldData, String userAction) {
-        try {
-            JDBIConnect.get().withHandle(handle -> {
-                handle.createUpdate("INSERT INTO history (actionType, productID, name, oldData, userAction) " +
-                                "VALUES (?, ?, ?, ?, ?)")
-                        .bind(0, actionType)
-                        .bind(1, productId)
-                        .bind(2, productName)
-                        .bind(3, oldData)
-                        .bind(4, userAction)
-                        .execute();
-                return null;
-            });
-        } catch (Exception e) {
-            System.err.println("Error inserting history: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+//    public void insertHistory(String actionType, int productId, String productName, String oldData, String userAction) {
+//        try {
+//            JDBIConnect.get().withHandle(handle -> {
+//                handle.createUpdate("INSERT INTO history (actionType, productID, name, oldData, userAction) " +
+//                                "VALUES (?, ?, ?, ?, ?)")
+//                        .bind(0, actionType)
+//                        .bind(1, productId)
+//                        .bind(2, productName)
+//                        .bind(3, oldData)
+//                        .bind(4, userAction)
+//                        .execute();
+//                return null;
+//            });
+//        } catch (Exception e) {
+//            System.err.println("Error inserting history: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public List<HistoryEntry> getAllHistories() {
         return JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM history ORDER BY timeAction DESC")
+                handle.createQuery("SELECT * FROM log ORDER BY timeAction DESC")
                         .mapToBean(HistoryEntry.class)
                         .list()
         );
     }
     public HistoryEntry getHistoryById(int historyId) {
         return JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM history WHERE id = ?")
+                handle.createQuery("SELECT * FROM log WHERE id = ?")
                         .bind(0, historyId)
                         .mapToBean(HistoryEntry.class)
                         .findOne()
@@ -146,7 +146,7 @@ public class QLSPDao {
                         .bind(2, product.getPrice())
                         .bind(3, product.getImageMain())
                         .bind(4, product.getStock())
-                        .bind(5, product.getCategoryId())
+                        .bind(5, product.getCategoryID())
                         .bind(6, product.getIntroduce())
                         .bind(7, product.getInfoPro())
                         .execute()
@@ -155,7 +155,7 @@ public class QLSPDao {
 
     public void deleteHistory(int historyId) {
         JDBIConnect.get().withHandle(handle ->
-                handle.createUpdate("DELETE FROM history WHERE id = ?")
+                handle.createUpdate("DELETE FROM log WHERE id = ?")
                         .bind(0, historyId)
                         .execute()
         );
