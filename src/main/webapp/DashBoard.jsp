@@ -213,6 +213,33 @@
         .submenu li:hover {
             background-color: #666;
         }
+
+        .product-list {
+            margin-top: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-list table, .product-list th, .product-list td {
+            border: 1px solid #ddd;
+        }
+
+        .product-list th, .product-list td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .product-list th {
+            background-color: #f2f2f2;
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -298,6 +325,39 @@
                     <h3>Đơn hàng mới</h3>
                     <p>${newOrders}</p>
                 </div>
+            </div>
+            <div class="product-list">
+            <h3>Top sản phẩm được xem nhiều</h3>
+            <c:if test="${not empty topViewed}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng còn lại</th>
+                        <th>Ảnh sản phẩm</th>
+                        <th>Danh mục</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="p" items="${topViewed}">
+
+                        <tr>
+                            <td>${p.name}</td>
+                            <td><fmt:formatNumber value="${p.price}" type="number" pattern="#,##0 VND"/></td>
+                            <td>${p.stock}</td>
+                            <td><img alt="${p.name}" height="50"
+                                     src="${p.imageMain}" width="50"/></td>
+                            <td>${dsCategories[p.categoryID-1].nameCategory}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+            <c:if test="${empty topViewed}">
+                <p>Không có dữ liệu sản phẩm được xem nhiều.</p>
+            </c:if>
+
             </div>
             <div class="chart-container">
                 <h3>Biểu đồ doanh thu trong tháng</h3>

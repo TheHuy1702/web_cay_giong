@@ -82,7 +82,7 @@ public class QSLPServlet extends HttpServlet {
             }else {
                 logUtil.log(request,
                         "Thêm sản phẩm",
-                        "INFO",
+                        "Thông báo",
                         "QSLPServlet",
                         "Product",
                         null,
@@ -99,7 +99,7 @@ public class QSLPServlet extends HttpServlet {
             qlspDao.deleteProductById(Integer.parseInt(productId));
             logUtil.log(request,
                     "Xoá sản phẩm",
-                    "WARN",
+                    "Cảnh báo",
                     "QSLPServlet",
                     "Product",
                     convertProductToJson(product),
@@ -137,7 +137,7 @@ public class QSLPServlet extends HttpServlet {
             // ➡️ Ghi log vào History
             logUtil.log(request,
                     "Cập nhật sản phẩm",
-                    "INFO",
+                    "Cảnh báo",
                     "QSLPServlet",
                     "Product",
                     convertProductToJson(oldProduct),
