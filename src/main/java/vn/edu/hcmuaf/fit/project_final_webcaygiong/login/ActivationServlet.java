@@ -4,47 +4,44 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.ActivationToken;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
-import java.util.Date;
-
-@WebServlet(name = "ActivationServlet", value = "/activate")
+@WebServlet(name = "ActivationServlet", value = "/activation")
 public class ActivationServlet extends HttpServlet {
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String token = request.getParameter("token");
-        System.out.println("1234: "+token);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        if (token == null || token.isEmpty()) {
-            request.setAttribute("error", "Mã kích hoạt không hợp lệ.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+        String token = request.getParameter("token");
+        UserDao userDao = new UserDao();
+
+        // Tìm user theo token
+        User user = userDao.findUserByToken(token);
+
+        if (user == null) {
+            // Token không hợp lệ
+            request.setAttribute("error", "Link kích hoạt không hợp lệ hoặc đã hết hạn");
+            request.getRequestDispatcher("activation_result.jsp").forward(request, response);
             return;
         }
 
-        UserDao userDao = new UserDao();
-
-        User user = userDao.findUserByToken(token);
-        if (user == null) {
-            request.setAttribute("error", "Mã kích hoạt không hợp lệ hoặc đã hết hạn.");
-        } else {
-            boolean tokenValid = userDao.isTokenValid(token); // SỬA TỪ ĐÂY.
-
-            if (!tokenValid) {
-                request.setAttribute("error", "Mã kích hoạt đã hết hạn hoặc không hợp lệ.");
-            } else {
-                boolean activated = userDao.activateUserById(user.getUserID(), token);
-                if (activated) {
-                    userDao.markTokenAsUsed(token);
-                    request.setAttribute("success", "Tài khoản của bạn đã được kích hoạt thành công. Vui lòng đăng nhập.");
-                } else {
-                    request.setAttribute("error", "Không thể kích hoạt tài khoản. Vui lòng thử lại.");
-                }
-            }
+        if (user.isActive()) {
+            // Tài khoản đã kích hoạt
+            request.setAttribute("message", "Tài khoản đã được kích hoạt trước đó");
+            request.getRequestDispatcher("activation_result.jsp").forward(request, response);
+            return;
         }
 
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        // Kích hoạt tài khoản
+        boolean activated = userDao.activateAccount(user.getPhone());
+        if (activated) {
+            userDao.markActivationTokenAsUsed(token);
+            request.setAttribute("success", "Tài khoản đã được kích hoạt thành công!");
+        } else {
+            request.setAttribute("error", "Có lỗi xảy ra khi kích hoạt tài khoản");
+        }
+
+        request.getRequestDispatcher("activation_result.jsp").forward(request, response);
     }
 }
