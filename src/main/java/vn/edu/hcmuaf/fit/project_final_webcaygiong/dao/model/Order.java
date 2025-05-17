@@ -11,6 +11,9 @@ public class Order {
     String status;
     double shippingFee;
     Date createAt;
+    Date expectedDeliveryTime;
+    String cancelBy;
+    Date cancelAt;
 
     public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt) {
         this.orderId = orderId;
@@ -23,7 +26,49 @@ public class Order {
         this.createAt = createAt;
     }
 
+    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, Date expectedDeliveryTime) {
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalAMount = totalAMount;
+        this.status = status;
+        this.shippingFee = shippingFee;
+        this.createAt = createAt;
+        this.expectedDeliveryTime = expectedDeliveryTime;
+    }
+
+    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, Date expectedDeliveryTime, String cancelBy, Date cancelAt) {
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalAMount = totalAMount;
+        this.status = status;
+        this.shippingFee = shippingFee;
+        this.createAt = createAt;
+        this.expectedDeliveryTime = expectedDeliveryTime;
+        this.cancelBy = cancelBy;
+        this.cancelAt = cancelAt;
+    }
+
     public Order() {
+    }
+
+    public String getCancelBy() {
+        return cancelBy;
+    }
+
+    public void setCancelBy(String cancelBy) {
+        this.cancelBy = cancelBy;
+    }
+
+    public Date getCancelAt() {
+        return cancelAt;
+    }
+
+    public void setCancelAt(Date cancelAt) {
+        this.cancelAt = cancelAt;
     }
 
     @Override
@@ -37,7 +82,16 @@ public class Order {
                 ", status='" + status + '\'' +
                 ", shippingFee=" + shippingFee +
                 ", createAt=" + createAt +
+                ", expectedDeliveryTime=" + expectedDeliveryTime +
                 '}';
+    }
+
+    public Date getExpectedDeliveryTime() {
+        return expectedDeliveryTime;
+    }
+
+    public void setExpectedDeliveryTime(Date expectedDeliveryTime) {
+        this.expectedDeliveryTime = expectedDeliveryTime;
     }
 
     public int getOrderId() {

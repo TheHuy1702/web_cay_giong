@@ -10,6 +10,8 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,8 @@ public class ChoXacNhanDonHangServlet extends HttpServlet {
                     int orderId = (int) order.get("orderID");
                     List<Map<String, Object>> orderItems = orderDao.getOrderItemsByOrderID(orderId);
                     order.put("orderItems", orderItems); // Thêm danh sách OrderItems vào từng đơn hàng
+                    String ngay = orderDao.getDatePrepare(orderId);
+                    order.put("ngay",ngay);
                 }
                 int slHuy = dao.soluongDHTheoTrangThai("Đã hủy", customer.getCustomerID());
                 int slAll = dao.soluongDHTheoTrangThai("all", customer.getCustomerID());
@@ -58,5 +62,23 @@ public class ChoXacNhanDonHangServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        OrderDao orderDao = new OrderDao();
+        String sorderID = request.getParameter("orderID");
+        int orderID = Integer.parseInt(sorderID);
+        String actionBy = request.getParameter("actionBy");
+        System.out.println(actionBy);
+        String action = request.getParameter("action");
+        String status = URLEncoder.encode("Chờ xác nhận", StandardCharsets.UTF_8.toString());
+        String update;
+        if (action.equals("huyDon")) {
+            orderDao.updateOrderStatusCancel(orderID, actionBy);
+            update = URLEncoder.encode("daHuy", StandardCharsets.UTF_8.toString());
+            response.sendRedirect("ChoXacNhanDonHang?status=" + status + "&update=" + update);
+        } else {
+            update = URLEncoder.encode("thatbai", StandardCharsets.UTF_8.toString());
+            response.sendRedirect("ChoXacNhanDonHang?status=" + status + "&update=" + update);
+        }
     }
 }

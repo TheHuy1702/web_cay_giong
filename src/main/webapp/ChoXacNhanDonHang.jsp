@@ -751,6 +751,55 @@
         .cancelForm {
             display: none;
         }
+
+        .cancelForm {
+            display: none;
+            position: fixed;
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 5px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .cancelForm .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .cancelForm h2, .cancelForm .fa-exclamation-triangle {
+            text-align: center;
+            font-size: 20px;
+            color: red;
+            padding: 5px;
+        }
+
+        .cancelForm p {
+            text-align: center;
+        }
+
+        .cancelForm button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .cancelForm button:hover {
+            background-color: #45a049;
+        }
+
+        #submitBtn:hover {
+            background-color: red;
+        }
     </style>
 </head>
 
@@ -996,7 +1045,7 @@
                             <div class="note">
                                 Đơn hàng sẽ được chuẩn bị và chuyển đi trước
                                 <span class="date">
-                        29-03-2025
+                        ${o.ngay}
                     </span>
                             </div>
                         </div>
@@ -1014,11 +1063,9 @@
                     </div>
 
                     <div id="cancelForm-${o.orderID}" class="cancelForm">
-                        <form>
-                            <div id="message" class="message">
-                                <i class="fas fa-info-circle"></i>
-                                <span id="messageText"></span>
-                            </div>
+                        <form method="post" action="ChoXacNhanDonHang">
+                            <input type="hidden" name="orderID" value="${o.orderID}">
+                            <input type="hidden" name="actionBy" value="Người mua">
                             <h2>
                                 <i class="fas fa-exclamation-triangle"></i> Xác Nhận Hủy Đơn Hàng
                             </h2>
@@ -1029,7 +1076,7 @@
                                 <button type="button" id="cancelBtn" onclick="hideRatingForm(${o.orderID})">
                                     Quay Lại
                                 </button>
-                                <button type="submit" id="submitBtn">
+                                <button type="submit" id="submitBtn" value="huyDon" name="action">
                                     <i class="fas fa-times-circle"></i> Hủy Đơn Hàng
                                 </button>
                             </div>
