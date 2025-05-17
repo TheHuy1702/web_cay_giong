@@ -101,26 +101,6 @@ public class QLSPDao {
         System.out.println(dao.getProduct(1));
     }
 
-//    public void insertHistory(String actionType, int productId, String productName, String oldData, String userAction) {
-//        try {
-//            JDBIConnect.get().withHandle(handle -> {
-//                handle.createUpdate("INSERT INTO history (actionType, productID, name, oldData, userAction) " +
-//                                "VALUES (?, ?, ?, ?, ?)")
-//                        .bind(0, actionType)
-//                        .bind(1, productId)
-//                        .bind(2, productName)
-//                        .bind(3, oldData)
-//                        .bind(4, userAction)
-//                        .execute();
-//                return null;
-//            });
-//        } catch (Exception e) {
-//            System.err.println("Error inserting history: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
-
-
     public List<HistoryEntry> getAllHistories() {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("SELECT * FROM log ORDER BY timeAction DESC")
