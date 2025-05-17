@@ -9,44 +9,44 @@ public class QuanLiSanPham implements Serializable {
     private double price;
     private String imageMain;
     private int stock;
-    private int categoryId;
+    private int categoryID;
     private Categories categories;
     private String introduce;
     private String infoPro;
     private List<SubImage> subImages;
 
-    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryId, Categories categories, String introduce, String infoPro, List<SubImage> subImages) {
+    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryID, Categories categories, String introduce, String infoPro, List<SubImage> subImages) {
         this.productID = productID;
         this.name = name;
         this.price = price;
         this.imageMain = imageMain;
         this.stock = stock;
-        this.categoryId = categoryId;
+        this.categoryID = categoryID;
         this.categories = categories;
         this.introduce = introduce;
         this.infoPro = infoPro;
         this.subImages = subImages;
     }
 
-    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryId, String introduce, String infoPro, List<SubImage> subImages) {
+    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryID, String introduce, String infoPro, List<SubImage> subImages) {
         this.productID = productID;
         this.name = name;
         this.price = price;
         this.imageMain = imageMain;
         this.stock = stock;
-        this.categoryId = categoryId;
+        this.categoryID = categoryID;
         this.introduce = introduce;
         this.infoPro = infoPro;
         this.subImages = subImages;
     }
 
-    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryId, String introduce, String infoPro) {
+    public QuanLiSanPham(int productID, String name, double price, String imageMain, int stock, int categoryID, String introduce, String infoPro) {
         this.productID = productID;
         this.name = name;
         this.price = price;
         this.imageMain = imageMain;
         this.stock = stock;
-        this.categoryId = categoryId;
+        this.categoryID = categoryID;
         this.introduce = introduce;
         this.infoPro = infoPro;
     }
@@ -63,7 +63,7 @@ public class QuanLiSanPham implements Serializable {
                 ", price=" + price +
                 ", imageMain='" + imageMain + '\'' +
                 ", stock=" + stock +
-                ", categoryId=" + categoryId +
+                ", categoryID=" + categoryID +
                 ", categories=" + categories +
                 ", introduce='" + introduce + '\'' +
                 ", infoPro='" + infoPro + '\'' +
@@ -111,12 +111,12 @@ public class QuanLiSanPham implements Serializable {
         this.stock = stock;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public int getCategoryID() {
+        return categoryID;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryID(int categoryID) {
+        this.categoryID = categoryID;
     }
 
     public Categories getCategories() {
@@ -149,5 +149,9 @@ public class QuanLiSanPham implements Serializable {
 
     public void setSubImages(List<SubImage> subImages) {
         this.subImages = subImages;
+    }
+
+    public Product toProduct() {
+        return new Product(productID, name, price, imageMain, stock, categoryID, introduce, infoPro);
     }
 }

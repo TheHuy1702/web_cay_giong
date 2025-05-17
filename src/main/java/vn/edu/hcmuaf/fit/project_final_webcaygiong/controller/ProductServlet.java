@@ -20,17 +20,6 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        //Gợi ý tìm kiếm
-//        String query = request.getParameter("GoiYTimKiem");
-//        List<String> suggestions = new ArrayList<>();
-//
-//        if (query != null && !query.trim().isEmpty()) {
-//            suggestions = productDao.getSuggestions(query); // trả về danh sách tên sản phẩm gợi ý
-//        }
-//
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        new Gson().toJson(suggestions, response.getWriter());
         // tìm kiem.
         String searchName = request.getParameter("search");
         List<Product> productsSearch;

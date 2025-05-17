@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
 import com.google.gson.Gson;
+import com.mysql.cj.util.LogUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -11,6 +12,7 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiSanPham;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class QSLPServlet extends HttpServlet {
     private QLSPDao qlspDao = new QLSPDao();
     private CategoryDao categoryDao = new CategoryDao();
     private ProductDao productDao = new ProductDao();
+    private LogUtil logUtil = new LogUtil();
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,7 +60,7 @@ public class QSLPServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
-        // nút xoá
+        // nút thêm
         String action = request.getParameter("action");
         if ("them".equals(action)) {
             String name = request.getParameter("addname");
@@ -76,17 +80,33 @@ public class QSLPServlet extends HttpServlet {
                 request.setAttribute("error", "Dữ liệu không hợp lệ!");
                 response.sendRedirect("QuanLySanPham?them=thatBai");
             }else {
-                qlspDao.insertHistory("them", product.getProductID(), product.getName(), null, "admin"); // hoặc lấy user từ session
+                logUtil.log(request,
+                        "Thêm sản phẩm",
+                        "Thông báo",
+                        "QSLPServlet",
+                        "Product",
+                        null,
+                        convertProductToJson(product));
+
 
                 response.sendRedirect("QuanLySanPham?them=thanhcong");
             }
+            // xoá
         } else if ("delet".equals(action)) {
             String productId = request.getParameter("productIdXoa");
             Product product = qlspDao.getProduct(Integer.parseInt(productId)); // Lấy dữ liệu cũ để lưu log
 
             qlspDao.deleteProductById(Integer.parseInt(productId));
-            qlspDao.insertHistory("xoa", product.getProductID(), product.getName(), convertProductToJson(product), "admin");
+            logUtil.log(request,
+                    "Xoá sản phẩm",
+                    "Cảnh báo",
+                    "QSLPServlet",
+                    "Product",
+                    convertProductToJson(product),
+                    null);
+
             response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
+            //sửa sản phẩm
         } else if ("update".equals(action)) {
             String productId = request.getParameter("productIdSua");
             Product product = qlspDao.getProduct(Integer.parseInt(productId));
@@ -115,7 +135,14 @@ public class QSLPServlet extends HttpServlet {
             qlspDao.update(newProduct, productID);
 
             // ➡️ Ghi log vào History
-            qlspDao.insertHistory("sua", productID, name, convertProductToJson(oldProduct), "admin");
+            logUtil.log(request,
+                    "Cập nhật sản phẩm",
+                    "Cảnh báo",
+                    "QSLPServlet",
+                    "Product",
+                    convertProductToJson(oldProduct),
+                    convertProductToJson(newProduct.toProduct()));
+
 
             response.sendRedirect("QuanLySanPham?capnhat=thanhcong");
         }

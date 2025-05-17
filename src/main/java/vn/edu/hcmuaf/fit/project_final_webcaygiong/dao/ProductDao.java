@@ -180,6 +180,7 @@ public class ProductDao {
                         .mapToBean(Product.class).list());
         return products;
     }
+
     // Gợi ý sp tìm được
     public List<String> getSuggestions(String keyword) {
         List<String> suggestions = JDBIConnect.get().withHandle(handle ->
@@ -191,115 +192,40 @@ public class ProductDao {
         return suggestions;
     }
 
+    public List<Product> getTopViewedProducts(int limit) {
+        String sql = """
+                    SELECT 
+                        CAST(SUBSTRING_INDEX(newData, ': ', -1) AS UNSIGNED) AS productId,
+                        COUNT(*) AS viewCount
+                    FROM 
+                        log
+                    WHERE 
+                        actionType = 'Xem sản phẩm'
+                        AND resource = 'Product'
+                    GROUP BY productId
+                    ORDER BY viewCount DESC
+                    LIMIT :limit
+                """;
 
-    public static void main(String[] args) {
-        // test lấy các sản phẩm cùng loại.
-        for (Product product : new ProductDao().getProductSame(1, 1)) {
-            System.out.println(product);
-        }
-        System.out.println(new ProductDao().getProductByID(1));
-//        ProductDao productDao = new ProductDao();
-//        List<Product> products = productDao.getAllProducts();
-//        for (Product product : products) {
-//            System.out.println(product);
-//        }
-//        System.out.println(new ProductDao().totalRows());
-//
-//        for (Product product : new ProductDao().getProductOfPageHoa(3)) {
-//            System.out.println(product);
-//        }
-//        System.out.println(new ProductDao().getProductOfPageHoa(3).size());
+        List<Integer> productIds = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", limit)
+                        .mapTo(Integer.class)
+                        .list()
+        );
 
-//        // test tìm kiếm.
-//        System.out.println("\n\n\n");
-//        for (Product p : new ProductDao().timKiem("bơ sáp")) {
-//            System.out.println(p);
-//        }
-//        System.out.println(new ProductDao().getSLProducts());
-        ProductDao dao = new ProductDao();
-//        List<Product> products = dao.getProductByCategory(1);
-//        for (Product product : products) {
-//            System.out.println(product);
-//        }
-//        System.out.println(dao.totalRows(1));
-        List<Product> products = dao.getProductByCategory(1);
-        System.out.println(products.size());
+        System.out.println("Top Viewed Product IDs: " + productIds);
 
-        List<Product> products2 = dao.getProductKhac();
-        System.out.println(products2.size());
+        if (productIds.isEmpty()) return new ArrayList<>();
 
-        List<Product> productsXoai = dao.getProductBySubCategory("Giống cây xoài");
-        System.out.println("Số lượng sản phẩm giống cây xoài: " + productsXoai.size());
-
-        List<Product> productsBuoi = dao.getProductBySubCategory("Giống cây bưởi");
-        System.out.println("Số lượng sản phẩm giống cây bưởi: " + productsBuoi.size());
-
-        List<Product> productsCam = dao.getProductBySubCategory("Giống cây cam");
-        System.out.println("Số lượng sản phẩm giống cây cam: " + productsCam.size());
-
-        List<Product> productsQuit = dao.getProductBySubCategory("Giống cây quýt");
-        System.out.println("Số lượng sản phẩm giống cây quýt: " + productsQuit.size());
-
-        List<Product> productsMan = dao.getProductBySubCategory("Giống cây mận");
-        System.out.println("Số lượng sản phẩm giống cây mận: " + productsMan.size());
-
-        List<Product> productsOi = dao.getProductBySubCategory("Giống cây ổi");
-        System.out.println("Số lượng sản phẩm giống cây ổi: " + productsOi.size());
-
-        List<Product> productsHong = dao.getProductBySubCategory("Giống cây hồng");
-        System.out.println("Số lượng sản phẩm giống cây hồng: " + productsHong.size());
-
-        List<Product> productsMit = dao.getProductBySubCategory("Giống cây mít");
-        System.out.println("Số lượng sản phẩm giống cây mít: " + productsMit.size());
-
-        List<Product> productsChanh = dao.getProductBySubCategory("Giống cây chanh");
-        System.out.println("Số lượng sản phẩm giống cây chanh: " + productsChanh.size());
-
-        // Tạo một danh sách mới để chứa tất cả sản phẩm
-        List<Product> allProducts = new ArrayList<>();
-
-// Thêm tất cả sản phẩm vào danh sách allProducts
-        allProducts.addAll(products2);
-        allProducts.addAll(productsXoai);
-        allProducts.addAll(productsBuoi);
-        allProducts.addAll(productsCam);
-        allProducts.addAll(productsQuit);
-        allProducts.addAll(productsMan);
-        allProducts.addAll(productsOi);
-        allProducts.addAll(productsHong);
-        allProducts.addAll(productsMit);
-        allProducts.addAll(productsChanh);
-
-// In ra tổng số lượng sản phẩm trong allProducts
-        System.out.println("Tổng số lượng sản phẩm: " + allProducts.size());
-
-        // Tạo một danh sách để chứa các sản phẩm không có trong allProducts
-        List<Product> missingProducts = new ArrayList<>();
-
-// So sánh và tìm sản phẩm có trong products nhưng không có trong allProducts
-        for (Product product : products) {
-            if (!allProducts.contains(product)) {
-                missingProducts.add(product);
-            }
-        }
-
-        // In ra các sản phẩm không có trong allProducts
-        System.out.println("Sản phẩm có trong products nhưng không có trong allProducts:");
-        for (Product missingProduct : missingProducts) {
-            System.out.println(missingProduct); // Giả sử Product đã override phương thức toString()
-        }
-
-        // test lọc giá.
-        List<Product> productsByPrice = dao.getProductByPrice(1, 100000, 200000);
-        System.out.println("Sản phẩm có giá từ 100.000 đến 200.000:");
-        for (Product product : productsByPrice) {
-            System.out.println(product);
-        }
-        ProductDao productDao = new ProductDao();
-        List<Product> productsd = productDao.getSellProducts();
-        for (Product product : productsd) {
-            System.out.println(product);
-        }
-
+        String sqlProducts = "SELECT * FROM products WHERE productID IN (<ids>)";
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(sqlProducts)
+                        .defineList("ids", productIds)
+                        .mapToBean(Product.class)
+                        .list()
+        );
     }
+
+
 }

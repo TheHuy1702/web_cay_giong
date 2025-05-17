@@ -3,10 +3,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.SubImageDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.cart.Cart;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
 
@@ -68,40 +65,25 @@ public class ChiTietSanPhamServlet extends HttpServlet {
         double tbS = commentDao.trungBinhSoSao(id);
         request.setAttribute("tbSao", tbS);
 
+        // Ghi log xem sản phẩm
+        LogUtil logUtil = new LogUtil();
+        logUtil.log(
+                request,
+                "Xem sản phẩm",
+                "Thông báo",
+                "ChiTietSanPhamServlet",
+                "Product",
+                null,
+                "Product ID: " + id
+        );
+
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("ChiTietSanPham.jsp");
         dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productID = Integer.parseInt(request.getParameter("pid"));
-        String name = request.getParameter("nameCus");
-        String content = request.getParameter("content");
-        int ratingStars = Integer.parseInt(request.getParameter("ratingStars"));
-        // Lấy đối tượng User từ session
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user"); // Lấy đối tượng user từ session
-
-        if (user == null) {
-            // Xử lý trường hợp user không tồn tại trong session
-            response.sendRedirect("Login"); // Chuyển hướng đến trang đăng nhập
-            return;
-        }
-
-        int userID = user.getUserID();
-
-        CommentAndReview comment = new CommentAndReview();
-        comment.setUserID(userID);
-        comment.setName(name);
-        comment.setProductID(productID);
-        comment.setContent(content);
-        comment.setRatingStars(ratingStars);
-
-        CommentAndReviewDao commentDao = new CommentAndReviewDao();
-        commentDao.addCommentAndReview(comment);
-
-        // Chuyển tiếp lại đến trang chi tiết sản phẩm
-        response.sendRedirect("ChiTietSanPham?pid=" + productID);
 
 
     }
