@@ -1,9 +1,13 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller.payment;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CustomerDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.CommentAndReview;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 
@@ -30,15 +34,21 @@ public class UpdateAddressServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-
-
+        LogUtil log = new LogUtil();
+        Customer customer = customerDao.getCustomerWithUID(user.getUserID());
         if (user != null) {
             // Cập nhật địa chỉ cho khách hàng
-            customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city,districtId,wardCode);
+            customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city, districtId, wardCode);
+            log.log(request, "Cập nhật thông tin địa chỉ", "Thông báo", "thanhtoan.jsp", "Thông tin khách hàng", convertProductToJson(customer), convertProductToJson(customerDao.getCustomerWithUID(user.getUserID())));
             response.sendRedirect("thanhtoan?update=thanhcong");
         } else {
             response.sendRedirect("login");
         }
 
+    }
+
+    private String convertProductToJson(Customer c) {
+        Gson gson = new Gson();
+        return gson.toJson(c);
     }
 }

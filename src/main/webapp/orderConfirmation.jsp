@@ -44,7 +44,7 @@
             margin-bottom: 30px;
         }
 
-        .btn-home {
+        .btn-home, .btn-wait {
             display: inline-block;
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -52,13 +52,14 @@
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s;
+            margin: 5px; /* Thêm khoảng cách giữa các nút */
         }
 
-        .btn-home:hover {
+        .btn-home:hover, .btn-wait:hover {
             background-color: #45a049;
         }
 
-        .btn-home i {
+        .btn-home i, .btn-wait i {
             margin-right: 8px;
         }
     </style>
@@ -68,6 +69,7 @@
     <h1>Đặt hàng thành công!</h1>
     <p>Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.</p>
     <a href="TrangChu" class="btn-home"><i class="fas fa-home"></i>Quay về trang chủ</a>
+    <a href="ChoXacNhanDonHang?status=Chờ xác nhận" class="btn-wait"><i class="fas fa-clock"></i>Thông tin đơn hàng</a>
 </div>
 </body>
 </html>

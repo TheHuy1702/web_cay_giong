@@ -3,15 +3,15 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.diaChi;
 import java.io.Serializable;
 
 public class Ward implements Serializable {
-    private int id;
+    private String id;
     private String name;
 
     // Getter và Setter
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

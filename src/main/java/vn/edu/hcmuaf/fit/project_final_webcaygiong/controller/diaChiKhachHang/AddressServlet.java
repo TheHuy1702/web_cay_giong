@@ -95,7 +95,7 @@ public class AddressServlet extends HttpServlet {
                 for (int i = 0; i < wardsArray.length(); i++) {
                     JSONObject wardObject = wardsArray.getJSONObject(i);
                     Ward ward = new Ward();
-                    ward.setId(wardObject.getInt("WardCode"));
+                    ward.setId(wardObject.getString("WardCode"));
                     ward.setName(wardObject.getString("WardName"));
                     wardsList.add(ward);
                 }

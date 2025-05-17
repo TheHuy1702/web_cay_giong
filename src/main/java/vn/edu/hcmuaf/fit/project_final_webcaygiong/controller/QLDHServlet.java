@@ -1,12 +1,16 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.controller.adapter.LocalDateTimeAdapter;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -52,16 +56,26 @@ public class QLDHServlet extends HttpServlet {
         String sorderID = request.getParameter("orderID");
         int orderID = Integer.parseInt(sorderID);
         String action = request.getParameter("action");
+        LogUtil log = new LogUtil();
+        Order or = orderDao.getOrderById(orderID);
         if (action.equals("xacNhan")) {
             orderDao.updateOrderStatus(orderID, "Đã Xác Nhận");
+            log.log(request, "Người bán xác nhận đơn hàng", "Thông báo", "QuanLyDonHang.jsp", "Đơn hàng", convertProductToJson(or), convertProductToJson(orderDao.getOrderById(orderID)));
             response.sendRedirect("QuanLyDonHang?update=daXacNhan");
         } else if (action.equals("huyDon")) {
-            orderDao.updateOrderStatus(orderID, "Đã Hủy");
-//            request.setAttribute("trangThai", true);
+            orderDao.updateOrderStatusCancel(orderID, "Người bán");
+            log.log(request, "Người bán hủy đơn hàng", "Cảnh báo", "QuanLyDonHang.jsp", "Đơn hàng", convertProductToJson(or), convertProductToJson(orderDao.getOrderById(orderID)));
             response.sendRedirect("QuanLyDonHang?update=daHuy");
         } else {
             response.sendRedirect("QuanLyDonHang?update=thatbai");
         }
 
+    }
+
+    private String convertProductToJson(Order c) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()) // Đăng ký TypeAdapter
+                .create(); // Tạo đối tượng Gson
+        return gson.toJson(c);
     }
 }
