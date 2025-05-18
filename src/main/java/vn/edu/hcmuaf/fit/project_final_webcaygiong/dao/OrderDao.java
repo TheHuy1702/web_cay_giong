@@ -5,9 +5,15 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Order;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.OrderItems;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OrderDao {
     List<Order> order;
@@ -26,7 +32,7 @@ public class OrderDao {
     // Lấy đơn hàng theo ID
     public Order getOrderById(int orderId) {
         return JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM orders WHERE orderID = ?")
+                handle.createQuery("SELECT * FROM orders WHERE orderId = ?")
                         .bind(0, orderId)
                         .mapToBean(Order.class)
                         .one());
