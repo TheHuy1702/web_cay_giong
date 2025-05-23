@@ -10,6 +10,9 @@ public class TokenForgotPassword {
     private String token;
     private Date expiryTime;
 
+    public TokenForgotPassword() {
+    }
+
     // Constructor, getters và setters
     public TokenForgotPassword(int id, int userID, boolean used, String token, Date expiryTime) {
         this.id = id;
