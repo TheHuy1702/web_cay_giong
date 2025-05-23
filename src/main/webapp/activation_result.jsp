@@ -208,7 +208,7 @@
                 </div>
                 <div class="action-group">
                     <form action="resendActivation" method="post" style="display: inline;">
-                        <input type="hidden" name="email" value="${user.email}">
+                        <input type="text" name="email" value="${user.email}">
                         <button type="submit" class="btn">Gửi lại link kích hoạt</button>
                     </form>
                     <a href="TrangChu" class="btn btn-outline">Về trang chủ</a>
