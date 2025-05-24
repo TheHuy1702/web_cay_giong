@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QuanLiCustomerDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiCustomers;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @WebServlet(name = "QuanLiKhachHangServlet", value = "/QuanLiKhachHang")
 public class QuanLiKhachHangServlet extends HttpServlet {
+    private LogUtil logUtil = new LogUtil();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,9 +42,25 @@ public class QuanLiKhachHangServlet extends HttpServlet {
             // Tạo đối tượng DAO để thực hiện xóa
             QuanLiCustomerDao customerDao = new QuanLiCustomerDao();
 
+            // Lấy dữ liệu khách hàng cũ trước khi xóa
+            QuanLiCustomers oldCustomer = customerDao.getCustomerByID(customerID);
+            String oldData = oldCustomer != null ? oldCustomer.toString() : "Không tìm thấy khách hàng";
+
+            // Ghi log trước khi xóa
+            logUtil.log(
+                    request,
+                    "Xóa khách hàng",
+                    "Cảnh báo",
+                    "QuanLiKhachHangServlet",
+                    "Customer",
+                    oldData,
+                    null
+            );
+
+
+
             // Xóa khách hàng
             customerDao.deleteCustomer(customerID);
-
             // Chuyển hướng lại đến trang quản lý khách hàng
             response.sendRedirect("QuanLiKhachHang?Xoa=thanhCong");
         }

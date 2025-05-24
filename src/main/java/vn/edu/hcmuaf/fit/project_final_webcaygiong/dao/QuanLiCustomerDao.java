@@ -118,4 +118,14 @@ public class QuanLiCustomerDao {
 
     }
 
+    public QuanLiCustomers getCustomerByID(int id) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM customers WHERE customerID = ?")
+                        .bind(0, id)
+                        .mapToBean(QuanLiCustomers.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
 }
