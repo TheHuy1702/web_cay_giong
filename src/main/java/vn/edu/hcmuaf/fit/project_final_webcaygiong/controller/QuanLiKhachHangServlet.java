@@ -18,20 +18,28 @@ public class QuanLiKhachHangServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QuanLiCustomerDao customerDao = new QuanLiCustomerDao();
         String searchQuery = request.getParameter("search");
+        String action = request.getParameter("action");
 
         List<QuanLiCustomers> customerList;
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            // Tìm kiếm khách hàng theo tên, số điện thoại hoặc mã khách hàng
             customerList = customerDao.searchCustomers(searchQuery);
         } else {
-            // Lấy tất cả khách hàng nếu không có tìm kiếm
             customerList = customerDao.getAllCustomerWithUser();
         }
 
+        // Gán danh sách khách hàng vào request
         request.setAttribute("customerList", customerList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiKhachHang.jsp");
-        dispatcher.forward(request, response);
+
+        // Nếu có yêu cầu xem lịch sử xóa, thêm log vào request
+        if ("lichSuXoa".equals(action)) {
+            List<String> deleteLogs = customerDao.getDeleteCustomerLogs();
+            request.setAttribute("deleteLogs", deleteLogs);
+        }
+
+        // Chỉ forward một lần
+        request.getRequestDispatcher("QuanLiKhachHang.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

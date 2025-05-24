@@ -485,7 +485,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Thêm dữ liệu lịch sử ở đây -->
+                    <c:if test="${not empty deleteLogs}">
+                        <h3>Lịch sử xoá khách hàng</h3>
+                        <ul>
+                            <c:forEach var="log" items="${deleteLogs}">
+                                <li>${log}</li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                     </tbody>
                 </table>
             </div>
