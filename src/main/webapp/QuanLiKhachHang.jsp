@@ -263,6 +263,18 @@
         /*    background-color: red;*/
         /*}*/
 
+        #historyTable{
+            background-color: #4CAF50;
+            height: 50px;
+            color: white; /* Màu chữ cho tiêu đề cột */
+            font-weight: bold; /* Làm đậm chữ cho tiêu đề */
+        }
+
+        #historyTable tr:hover{
+            background-color: #e9ecef;
+
+        }
+
         #customerTable th {
             background-color: #4CAF50;
             height: 50px;
@@ -449,7 +461,35 @@
             </ul>
         </div>
         <div class="content">
-            <h2>Quản lý khách hàng</h2>
+            <h2>Quản lý khách hàng
+                <button onclick="toggleHistory()" style="margin-left: 20px; background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 4px;">
+                    Lịch sử
+                </button>
+            </h2>
+            <div class="customer-list">
+
+            <div id="historyTable" style="display: none; margin-top: 20px;">
+                <div class="list-search">
+                    <h3>Danh sách khách hàng</h3>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mã khách hàng</th>
+                        <th>Tên khách hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Thêm dữ liệu lịch sử ở đây -->
+                    </tbody>
+                </table>
+            </div>
+            </div>
             <div class="customer-list">
                 <div class="list-search">
                     <h3>Danh sách khách hàng</h3>
@@ -532,6 +572,17 @@
     function confirmDelete() {
         return confirm("Bạn có chắc chắn muốn xóa khách hàng và user này không?");
     }
+
+
+        function toggleHistory() {
+        var historyTable = document.getElementById("historyTable");
+        if (historyTable.style.display === "none" || historyTable.style.display === "") {
+        historyTable.style.display = "block";
+    } else {
+        historyTable.style.display = "none";
+    }
+    }
+
 </script>
 
 </html>
