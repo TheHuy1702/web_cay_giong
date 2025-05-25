@@ -1,17 +1,24 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller.theoDoiDonHang;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.controller.adapter.LocalDateTimeAdapter;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CustomerDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.OrderDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLDHDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.CommentAndReview;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Order;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -68,17 +75,25 @@ public class ChoXacNhanDonHangServlet extends HttpServlet {
         String sorderID = request.getParameter("orderID");
         int orderID = Integer.parseInt(sorderID);
         String actionBy = request.getParameter("actionBy");
-        System.out.println(actionBy);
         String action = request.getParameter("action");
         String status = URLEncoder.encode("Chờ xác nhận", StandardCharsets.UTF_8.toString());
         String update;
+        Order or = orderDao.getOrderById(orderID);
+        LogUtil log = new LogUtil();
         if (action.equals("huyDon")) {
             orderDao.updateOrderStatusCancel(orderID, actionBy);
             update = URLEncoder.encode("daHuy", StandardCharsets.UTF_8.toString());
+            log.log(request,"Người mua hủy đơn hàng","Cảnh báo","ChoXacNhanDonHang.jsp","Đơn hàng",convertProductToJson(or), convertProductToJson(orderDao.getOrderById(orderID)));
             response.sendRedirect("ChoXacNhanDonHang?status=" + status + "&update=" + update);
         } else {
             update = URLEncoder.encode("thatbai", StandardCharsets.UTF_8.toString());
             response.sendRedirect("ChoXacNhanDonHang?status=" + status + "&update=" + update);
         }
+    }
+    private String convertProductToJson(Order c) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()) // Đăng ký TypeAdapter
+                .create(); // Tạo đối tượng Gson
+        return gson.toJson(c);
     }
 }

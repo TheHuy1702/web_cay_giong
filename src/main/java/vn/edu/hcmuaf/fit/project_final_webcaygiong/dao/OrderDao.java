@@ -157,6 +157,11 @@ public class OrderDao {
 
     public static void main(String[] args) {
         OrderDao orderDao = new OrderDao();
-        System.out.println(orderDao.getDatePrepare(1));
+        System.out.println(orderDao.getDatePrepare(30));
+        System.out.println(orderDao.getOrderById(30));
+        List<Order> ds = orderDao.getAllOrderItems();
+        for(Order o:ds){
+            System.out.println(o);
+        }
     }
 }

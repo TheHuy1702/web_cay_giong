@@ -1,19 +1,21 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Order {
+public class Order implements Serializable {
     private int orderId;
     private int customerId;
     private int userId;
-    Date orderDate;
-    double totalAMount;
-    String status;
-    double shippingFee;
-    Date createAt;
-    Date expectedDeliveryTime;
-    String cancelBy;
-    Date cancelAt;
+    private Date orderDate;
+    private double totalAMount;
+    private  String status;
+    private  double shippingFee;
+    private   Date createAt;
+    private LocalDateTime expectedDeliveryTime;
+    private  String cancelBy;
+    private  Date cancelAt;
 
     public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt) {
         this.orderId = orderId;
@@ -26,7 +28,7 @@ public class Order {
         this.createAt = createAt;
     }
 
-    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, Date expectedDeliveryTime) {
+    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, LocalDateTime expectedDeliveryTime) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.userId = userId;
@@ -38,7 +40,7 @@ public class Order {
         this.expectedDeliveryTime = expectedDeliveryTime;
     }
 
-    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, Date expectedDeliveryTime, String cancelBy, Date cancelAt) {
+    public Order(int orderId, int customerId, int userId, Date orderDate, double totalAMount, String status, double shippingFee, Date createAt, LocalDateTime expectedDeliveryTime, String cancelBy, Date cancelAt) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.userId = userId;
@@ -83,14 +85,16 @@ public class Order {
                 ", shippingFee=" + shippingFee +
                 ", createAt=" + createAt +
                 ", expectedDeliveryTime=" + expectedDeliveryTime +
+                ", cancelBy='" + cancelBy + '\'' +
+                ", cancelAt=" + cancelAt +
                 '}';
     }
 
-    public Date getExpectedDeliveryTime() {
+    public LocalDateTime getExpectedDeliveryTime() {
         return expectedDeliveryTime;
     }
 
-    public void setExpectedDeliveryTime(Date expectedDeliveryTime) {
+    public void setExpectedDeliveryTime(LocalDateTime expectedDeliveryTime) {
         this.expectedDeliveryTime = expectedDeliveryTime;
     }
 

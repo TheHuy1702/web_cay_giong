@@ -42,6 +42,72 @@ public class QLDHDao {
                         .list());
     }
 
+    // Hàm lấy ra danh sách đơn hàng theo trạng thái của khách hàng.
+    public List<Map<String, Object>> dsOrderWithStatusOfCus(String status, int cusID) {
+        String query = " SELECT DISTINCT  o.orderID,p.productID, p.imageMain,  o.customerID, o.userID, o.orderDate, c.nameCustomer, c.phone as cusPhone, p.name as productName,o.totalAmount, o.status, o.expectedDeliveryTime FROM orders o JOIN customers c ON o.customerID = c.customerID JOIN orderitems oi ON o.orderID = oi.orderID JOIN products p ON oi.productID = p.productID WHERE o.status = ? AND o.customerID = ? GROUP BY o.orderID  ORDER BY o.orderDate DESC";
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, status)
+                        .bind(1, cusID)
+                        .map((rs, ctx) -> {
+                            Map<String, Object> result = new HashMap<>();
+                            result.put("orderID", rs.getInt("orderID"));
+                            result.put("productID", rs.getInt("productID"));
+                            result.put("imageMain", rs.getString("imageMain"));
+                            result.put("customerID", rs.getInt("customerID"));
+                            result.put("userID", rs.getInt("userID"));
+                            result.put("orderDate", rs.getDate("orderDate"));
+                            result.put("nameCustomer", rs.getString("nameCustomer"));
+                            result.put("phone", rs.getString("cusPhone"));
+                            result.put("name", rs.getString("productName"));
+                            result.put("totalAmount", rs.getDouble("totalAmount"));
+                            result.put("status", rs.getString("status"));
+                            result.put("expectedDeliveryTime", rs.getString("expectedDeliveryTime"));
+                            return result;
+                        })
+                        .list());
+    }
+
+    // Hàm lấy ra danh sách đơn hàng của khách hàng.
+    public List<Map<String, Object>> dsOrderOfCus(int cusID) {
+        String query = " SELECT DISTINCT  o.orderID, p.productID, p.imageMain, o.customerID, o.userID, o.orderDate, c.nameCustomer, c.phone as cusPhone, p.name as productName,o.totalAmount, o.status FROM orders o JOIN customers c ON o.customerID = c.customerID JOIN orderitems oi ON o.orderID = oi.orderID JOIN products p ON oi.productID = p.productID WHERE o.customerID = ? GROUP BY o.orderID  ORDER BY o.orderDate DESC";
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, cusID)
+                        .map((rs, ctx) -> {
+                            Map<String, Object> result = new HashMap<>();
+                            result.put("orderID", rs.getInt("orderID"));
+                            result.put("productID", rs.getInt("productID"));
+                            result.put("imageMain", rs.getString("imageMain"));
+                            result.put("customerID", rs.getInt("customerID"));
+                            result.put("userID", rs.getInt("userID"));
+                            result.put("orderDate", rs.getDate("orderDate"));
+                            result.put("nameCustomer", rs.getString("nameCustomer"));
+                            result.put("phone", rs.getString("cusPhone"));
+                            result.put("name", rs.getString("productName"));
+                            result.put("totalAmount", rs.getDouble("totalAmount"));
+                            result.put("status", rs.getString("status"));
+                            return result;
+                        })
+                        .list());
+    }
+
+    public int soluongDHTheoTrangThai(String status, int cus) {
+        if (status.equals("all")) {
+            return JDBIConnect.get().withHandle(handle ->
+                    handle.createQuery("select count(orderID) from orders where customerID = ?")
+                            .bind(0, cus)
+                            .mapTo(Integer.class).findOne().orElse(0));
+        } else {
+            return JDBIConnect.get().withHandle(handle ->
+                    handle.createQuery("select count(orderID) from orders where status = ? and customerID = ?")
+                            .bind(0, status)
+                            .bind(1, cus)
+                            .mapTo(Integer.class).findOne().orElse(0));
+        }
+    }
+
+
     public Product getAllProduct() {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("select * from products where productID = (select productID from orderitems limit 1) ")
@@ -108,29 +174,22 @@ public class QLDHDao {
 
     public static void main(String[] args) {
         QLDHDao dao = new QLDHDao();
-        List<Map<String, Object>> orders = dao.dsOrder("desc");
-        System.out.println("Sắp xếp theo ngày đặt hàng giảm dần:");
-
-        if (orders.isEmpty()) {
-            System.out.println("Không có đơn hàng nào.");
-        } else {
-            System.out.println("Danh sách đơn hàng:");
-            for (Map<String, Object> order : orders) {
-                System.out.println("Order ID: " + order.get("orderID"));
-                System.out.println("Customer Name: " + order.get("nameCustomer"));
-                System.out.println("Phone: " + order.get("phone"));
-                System.out.println("Product Name: " + order.get("name"));
-                System.out.println("Order Date: " + order.get("orderDate"));
-                System.out.println("Total Amount: " + order.get("totalAmount"));
-                System.out.println("Status: " + order.get("status"));
-                System.out.println("-----------------------------------");
-            }
+        System.out.println(dao.soluongDHTheoTrangThai("all", 2));
+        System.out.println(dao.dsOrderOfCus(2).size());
+        for (Map<String, Object> order : dao.dsOrderOfCus(2)) {
+            System.out.println("Order ID: " + order.get("orderID"));
+            System.out.println("Product ID: " + order.get("productID"));
+            System.out.println("Image Main: " + order.get("imageMain"));
+            System.out.println("Customer ID: " + order.get("customerID"));
+            System.out.println("User ID: " + order.get("userID"));
+            System.out.println("Order Date: " + order.get("orderDate"));
+            System.out.println("Customer Name: " + order.get("nameCustomer"));
+            System.out.println("Phone: " + order.get("phone"));
+            System.out.println("Product Name: " + order.get("name"));
+            System.out.println("Total Amount: " + order.get("totalAmount"));
+            System.out.println("Status: " + order.get("status"));
+            System.out.println("--------------------------"); // Ngăn cách giữa các đơn hàng
         }
-        QLDHDao ql = new QLDHDao();
-//        System.out.println(ql.getAllProduct());
-        List<Map<String, Object>> searchOrders = ql.searchOrders("4");
-        System.out.println(searchOrders);
-
     }
 
 }
