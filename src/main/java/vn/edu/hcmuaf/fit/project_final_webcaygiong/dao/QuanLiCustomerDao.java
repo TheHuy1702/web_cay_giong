@@ -118,4 +118,24 @@ public class QuanLiCustomerDao {
 
     }
 
+    public QuanLiCustomers getCustomerByID(int id) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM customers WHERE customerID = ?")
+                        .bind(0, id)
+                        .mapToBean(QuanLiCustomers.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public List<String> getDeleteCustomerLogs() {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT CONCAT('[', createdAt, '] ', userAction, ' - ', oldData) " +
+                                "FROM log WHERE actionType = 'Xóa khách hàng' ORDER BY createdAt DESC")
+                        .mapTo(String.class)
+                        .list()
+        );
+    }
+
+
 }

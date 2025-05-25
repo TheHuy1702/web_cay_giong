@@ -109,7 +109,6 @@ public class CustomerDao {
         );
     }
 
-
     public static void main(String[] args) {
         CustomerDao customerDao = new CustomerDao();
 //        customerDao.updateInfoCustomerEmail(2, "thththt@gmail.com");
