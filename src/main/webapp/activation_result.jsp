@@ -167,7 +167,22 @@
 
         .action-group {
             margin-top: 30px;
+        }                                                                                                                                                                            input[type="text"] {
+                                                                                                                                                                                         padding: 12px;
+                                                                                                                                                                                         width: 250px;
+                                                                                                                                                                                         border: 2px solid #2ecc71;
+                                                                                                                                                                                         border-radius: 8px;
+                                                                                                                                                                                         font-size: 16px;
+                                                                                                                                                                                         outline: none;
+                                                                                                                                                                                         margin-right: 10px;
+                                                                                                                                                                                         transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                                                                                                                                                                                     }
+
+        input[type="text"]:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
         }
+
 
     </style>
 </head>
@@ -208,7 +223,8 @@
                 </div>
                 <div class="action-group">
                     <form action="resendActivation" method="post" style="display: inline;">
-                        <input type="text" name="email" value="${user.email}">
+                        <input type="text" name="email" value="${user.email}" placeholder="Nhập email của bạn">
+
                         <button type="submit" class="btn">Gửi lại link kích hoạt</button>
                     </form>
                     <a href="TrangChu" class="btn btn-outline">Về trang chủ</a>
