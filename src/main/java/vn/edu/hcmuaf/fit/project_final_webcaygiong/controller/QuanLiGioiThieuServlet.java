@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.IntroductionDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Introduction;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +16,21 @@ public class QuanLiGioiThieuServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 8, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiTrangGioiThieu.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+
+            boolean canEdit = userPermissionDao.hasPermission(userId, 8, 2);
+            request.setAttribute("canEdit", canEdit);
         // Lấy thông tin giới thiệu từ cơ sở dữ liệu
         List<Introduction> introductionList = introductionDao.getIntroduction();
 
@@ -22,6 +38,9 @@ public class QuanLiGioiThieuServlet extends HttpServlet {
         request.setAttribute("introductionList", introductionList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiTrangGioiThieu.jsp");
         dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override

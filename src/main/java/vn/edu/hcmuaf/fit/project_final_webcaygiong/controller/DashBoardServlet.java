@@ -8,6 +8,8 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.DashBoardDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserPermissionDao;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,6 +23,18 @@ public class DashBoardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 1, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("DashBoard.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
         int productsSL = dashBoardDao.getSLProducts();
         request.setAttribute("productsSL", productsSL);
 
@@ -54,6 +68,9 @@ public class DashBoardServlet extends HttpServlet {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("DashBoard.jsp");
         dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override
