@@ -554,70 +554,93 @@
         </div>
         <div class="content">
             <h2>Quản lý tài khoản</h2>
-            <div class="container2">
-                <div class="header2">
-                    <form action="QuanLiTaiKhoanDuocPhanQuyen" method="get">
-                        <input type="text" name="keyword"
-                               placeholder="Tìm kiếm số tên, điện thoại..." value="${keyword}">
-                        <button type="submit">Tìm kiếm</button>
-                    </form>
-                    <div class="right">
-                        <form method="get" action="QuanLiTaiKhoanDuocPhanQuyen">
-                            <select name="sortBy" onchange="this.form.submit()">
-                                <option value="desc" ${sortBy == 'desc' ? 'selected' : ''}>Mới nhất</option>
-                                <option value="asc" ${sortBy == 'asc' ? 'selected' : ''}>Cũ nhất</option>
-                            </select>
-                        </form>
-                    </div>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert-warning">
+                        ${errorMessage}
                 </div>
-                <c:if test="${empty users}">
-                    <div class="alert-warning">
-                        Không tìm thấy tài khoản với tìm kiếm là "${keyword}" nào!
+            </c:if>
+            <c:if test="${empty errorMessage}">
+                <div class="container2">
+                    <div class="header2">
+                        <form action="QuanLiTaiKhoanDuocPhanQuyen" method="get">
+                            <input type="text" name="keyword"
+                                   placeholder="Tìm kiếm số tên, điện thoại..." value="${keyword}">
+                            <button type="submit">Tìm kiếm</button>
+                        </form>
+                        <div class="right">
+                            <form method="get" action="QuanLiTaiKhoanDuocPhanQuyen">
+                                <select name="sortBy" onchange="this.form.submit()">
+                                    <option value="desc" ${sortBy == 'desc' ? 'selected' : ''}>Mới nhất</option>
+                                    <option value="asc" ${sortBy == 'asc' ? 'selected' : ''}>Cũ nhất</option>
+                                </select>
+                            </form>
+                        </div>
                     </div>
-                </c:if>
-                <c:if test="${not empty users}">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Tài khoản</th>
-                            <th>Ngày tạo</th>
-                            <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Trạng thái</th>
-                            <th>Phân quyền</th>
-                            <th>Dừng hoạt động</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="u" items="${users}">
+                    <c:if test="${empty users}">
+                        <div class="alert-warning">
+                            Không tìm thấy tài khoản với tìm kiếm là "${keyword}" nào!
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty users}">
+                        <table>
+                            <thead>
                             <tr>
-                                <td>${u.name}</td>
-                                <td>${u.createAt}</td>
-                                <td>${u.email}</td>
-                                <td>${u.phone}</td>
-                                <td>${u.status}</td>
-                                <td class="text-center">
-                                    <button
-                                            type="button"
-                                            class="permission-btn"
-                                            onclick="openPermissionForm('${u.userID}', '${u.name}')"
-                                            aria-label="Phân quyền cho tài khoản ${u.name}"
-                                    >
-                                        Phân quyền
-                                    </button>
-                                </td>
-                                <td class="text-center">
-                                    <button>Dừng hoạt động</button>
-                                </td>
+                                <th>Tài khoản</th>
+                                <th>Ngày tạo</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Trạng thái</th>
+                                <th>Phân quyền</th>
+                                <th>Dừng hoạt động</th>
                             </tr>
-                        </c:forEach>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="u" items="${users}">
+                                <tr>
+                                    <td>${u.name}</td>
+                                    <td>${u.createAt}</td>
+                                    <td>${u.email}</td>
+                                    <td>${u.phone}</td>
+                                    <td>${u.status}</td>
+                                    <td class="text-center">
+                                        <c:if test="${!canEdit}">
+                                            <button
+                                                    type="button"
+                                                    class="permission-btn"
+                                                    title="Bạn không có quyền này"
+                                                    style="background-color: #cfcfcf; border: none;"
+                                            >
+                                                Phân quyền
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${canEdit}">
+                                            <button
+                                                    type="button"
+                                                    class="permission-btn"
+                                                    onclick="openPermissionForm('${u.userID}', '${u.name}')"
+                                                    aria-label="Phân quyền cho tài khoản ${u.name}"
+                                            >
+                                                Phân quyền
+                                            </button>
+                                        </c:if>
+                                    </td>
+                                    <td class="text-center">
+                                        <c:if test="${!canDelete}">
+                                            <button style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" type="button" disabled>Dừng hoạt động</button>
+                                        </c:if>
+                                        <c:if test="${canDelete}">
+                                            <button>Dừng hoạt động</button>
+                                        </c:if>
 
-                        </tbody>
-                    </table>
-                </c:if>
-            </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
 
-
+                            </tbody>
+                        </table>
+                    </c:if>
+                </div>
+            </c:if>
         </div>
     </div>
 </div>
@@ -668,67 +691,97 @@
                 </tr>
                 <tr>
                     <td>QuanLySanPham</td>
-                    <td><input type="checkbox" name="QuanLySanPham_view"  class="perm-checkbox" data-group="QuanLySanPham"  /></td>
-                    <td><input type="checkbox" name="QuanLySanPham_add"  class="perm-checkbox" data-group="QuanLySanPham"/></td>
-                    <td><input type="checkbox" name="QuanLySanPham_edit" class="perm-checkbox" data-group="QuanLySanPham"/></td>
-                    <td><input type="checkbox" name="QuanLySanPham_delete" class="perm-checkbox" data-group="QuanLySanPham"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLySanPham" aria-label="Chọn tất cả quyền QuanLySanPham"/></td>
+                    <td><input type="checkbox" name="QuanLySanPham_view" class="perm-checkbox"
+                               data-group="QuanLySanPham"/></td>
+                    <td><input type="checkbox" name="QuanLySanPham_add" class="perm-checkbox"
+                               data-group="QuanLySanPham"/></td>
+                    <td><input type="checkbox" name="QuanLySanPham_edit" class="perm-checkbox"
+                               data-group="QuanLySanPham"/></td>
+                    <td><input type="checkbox" name="QuanLySanPham_delete" class="perm-checkbox"
+                               data-group="QuanLySanPham"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLySanPham"
+                               aria-label="Chọn tất cả quyền QuanLySanPham"/></td>
                 </tr>
                 <tr>
                     <td>QuanLyDonHang</td>
-                    <td><input type="checkbox" name="QuanLyDonHang_view" id="QuanLyDonHang_view" class="perm-checkbox" data-group="QuanLyDonHang"/></td>
+                    <td><input type="checkbox" name="QuanLyDonHang_view" id="QuanLyDonHang_view" class="perm-checkbox"
+                               data-group="QuanLyDonHang"/></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLyDonHang_edit" class="perm-checkbox" data-group="QuanLyDonHang"/></td>
+                    <td><input type="checkbox" name="QuanLyDonHang_edit" class="perm-checkbox"
+                               data-group="QuanLyDonHang"/></td>
                     <td></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLyDonHang" aria-label="Chọn tất cả quyền QuanLyDonHang"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLyDonHang"
+                               aria-label="Chọn tất cả quyền QuanLyDonHang"/></td>
                 </tr>
                 <tr>
                     <td>QuanLiKhachHang</td>
-                    <td><input type="checkbox" name="QuanLiKhachHang_view" class="perm-checkbox" data-group="QuanLiKhachHang"/></td>
+                    <td><input type="checkbox" name="QuanLiKhachHang_view" class="perm-checkbox"
+                               data-group="QuanLiKhachHang"/></td>
                     <td></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLiKhachHang_delete" class="perm-checkbox" data-group="QuanLiKhachHang"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLiKhachHang" aria-label="Chọn tất cả quyền QuanLiKhachHang"/></td>
+                    <td><input type="checkbox" name="QuanLiKhachHang_delete" class="perm-checkbox"
+                               data-group="QuanLiKhachHang"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLiKhachHang"
+                               aria-label="Chọn tất cả quyền QuanLiKhachHang"/></td>
                 </tr>
                 <tr>
                     <td>QuanLiBinhLuanVaDanhGia</td>
-                    <td><input type="checkbox" name="QuanLiBinhLuanVaDanhGia_view" class="perm-checkbox" data-group="QuanLiBinhLuanVaDanhGia"/></td>
+                    <td><input type="checkbox" name="QuanLiBinhLuanVaDanhGia_view" class="perm-checkbox"
+                               data-group="QuanLiBinhLuanVaDanhGia"/></td>
                     <td></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLiBinhLuanVaDanhGia_delete" class="perm-checkbox" data-group="QuanLiBinhLuanVaDanhGia"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLiBinhLuanVaDanhGia" aria-label="Chọn tất cả quyền QuanLiBinhLuanVaDanhGia"/></td>
+                    <td><input type="checkbox" name="QuanLiBinhLuanVaDanhGia_delete" class="perm-checkbox"
+                               data-group="QuanLiBinhLuanVaDanhGia"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLiBinhLuanVaDanhGia"
+                               aria-label="Chọn tất cả quyền QuanLiBinhLuanVaDanhGia"/></td>
                 </tr>
                 <tr>
                     <td>QuanLiTaiKhoanNguoiDung</td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_view" class="perm-checkbox" data-group="QuanLiTaiKhoanNguoiDung"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_view" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanNguoiDung"/></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_edit" class="perm-checkbox" data-group="QuanLiTaiKhoanNguoiDung"/></td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_delete" class="perm-checkbox" data-group="QuanLiTaiKhoanNguoiDung"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTaiKhoanNguoiDung" aria-label="Chọn tất cả quyền QuanLiTaiKhoanNguoiDung"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_edit" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanNguoiDung"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanNguoiDung_delete" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanNguoiDung"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTaiKhoanNguoiDung"
+                               aria-label="Chọn tất cả quyền QuanLiTaiKhoanNguoiDung"/></td>
                 </tr>
                 <tr>
                     <td>QuanLiTaiKhoanDuocPhanQuyen</td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_view" class="perm-checkbox" data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_view" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_edit" class="perm-checkbox" data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
-                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_delete" class="perm-checkbox" data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTaiKhoanDuocPhanQuyen" aria-label="Chọn tất cả quyền QuanLiTaiKhoanDuocPhanQuyen"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_edit" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
+                    <td><input type="checkbox" name="QuanLiTaiKhoanDuocPhanQuyen_delete" class="perm-checkbox"
+                               data-group="QuanLiTaiKhoanDuocPhanQuyen"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTaiKhoanDuocPhanQuyen"
+                               aria-label="Chọn tất cả quyền QuanLiTaiKhoanDuocPhanQuyen"/></td>
                 </tr>
                 <tr>
                     <td>QuanLiTrangGioiThieu</td>
-                    <td><input type="checkbox" name="QuanLiTrangGioiThieu_view" class="perm-checkbox" data-group="QuanLiTrangGioiThieu"/></td>
+                    <td><input type="checkbox" name="QuanLiTrangGioiThieu_view" class="perm-checkbox"
+                               data-group="QuanLiTrangGioiThieu"/></td>
                     <td></td>
-                    <td><input type="checkbox" name="QuanLiTrangGioiThieu_edit" class="perm-checkbox" data-group="QuanLiTrangGioiThieu"/></td>
+                    <td><input type="checkbox" name="QuanLiTrangGioiThieu_edit" class="perm-checkbox"
+                               data-group="QuanLiTrangGioiThieu"/></td>
                     <td></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTrangGioiThieu" aria-label="Chọn tất cả quyền QuanLiTrangGioiThieu"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLiTrangGioiThieu"
+                               aria-label="Chọn tất cả quyền QuanLiTrangGioiThieu"/></td>
                 </tr>
                 <tr>
                     <td>QuanLyKhoVoucher</td>
-                    <td><input type="checkbox" name="QuanLyKhoVoucher_view" class="perm-checkbox" data-group="QuanLyKhoVoucher"/></td>
-                    <td><input type="checkbox" name="QuanLyKhoVoucher_add" class="perm-checkbox" data-group="QuanLyKhoVoucher"/></td>
-                    <td><input type="checkbox" name="QuanLyKhoVoucher_edit" class="perm-checkbox" data-group="QuanLyKhoVoucher"/></td>
-                    <td><input type="checkbox" name="QuanLyKhoVoucher_delete" class="perm-checkbox" data-group="QuanLyKhoVoucher"/></td>
-                    <td><input type="checkbox" class="perm-all" data-group="QuanLyKhoVoucher" aria-label="Chọn tất cả quyền QuanLyKhoVoucher"/></td>
+                    <td><input type="checkbox" name="QuanLyKhoVoucher_view" class="perm-checkbox"
+                               data-group="QuanLyKhoVoucher"/></td>
+                    <td><input type="checkbox" name="QuanLyKhoVoucher_add" class="perm-checkbox"
+                               data-group="QuanLyKhoVoucher"/></td>
+                    <td><input type="checkbox" name="QuanLyKhoVoucher_edit" class="perm-checkbox"
+                               data-group="QuanLyKhoVoucher"/></td>
+                    <td><input type="checkbox" name="QuanLyKhoVoucher_delete" class="perm-checkbox"
+                               data-group="QuanLyKhoVoucher"/></td>
+                    <td><input type="checkbox" class="perm-all" data-group="QuanLyKhoVoucher"
+                               aria-label="Chọn tất cả quyền QuanLyKhoVoucher"/></td>
                 </tr>
                 </tbody>
             </table>
@@ -739,7 +792,9 @@
             <br/>
             <div class="form-actions">
                 <button type="button" onclick="closePermissionForm()" class="cancel-btn">Hủy</button>
-                <input type="submit" value="Lưu phân quyền"/>
+                <c:if test="${userId != 2}">
+                    <input type="submit" value="Lưu phân quyền"/>
+                </c:if>
             </div>
         </form>
     </div>
@@ -770,9 +825,11 @@
     // Permission modal open/close
     const permissionsData = {
     <c:forEach var="u" items="${users}">
-    ${u.userID}: [<c:forEach var="perm" items="${requestScope['permissions_'.concat(u.userID)]}">"${perm}",</c:forEach>],
+    ${u.userID}:
+    [<c:forEach var="perm" items="${requestScope['permissions_'.concat(u.userID)]}">"${perm}", </c:forEach>],
     </c:forEach>
-    };
+    }
+    ;
 
     function openPermissionForm(userId, userName) {
         // Lấy permissions của user từ biến JavaScript
@@ -809,16 +866,34 @@
         document.querySelector('[name="QuanLyKhoVoucher_edit"]').checked = userPermissions.includes('QuanLyKhoVoucher_edit');
         document.querySelector('[name="QuanLyKhoVoucher_delete"]').checked = userPermissions.includes('QuanLyKhoVoucher_delete');
 
+        const checkboxes = document.querySelectorAll('.perm-checkbox');
+        const allPermissionCheckbox = document.getElementById('allpermission');
+        const checkboxesAll = document.querySelectorAll('.perm-all');
+        const saveButton = document.querySelector('input[type="submit"][value="Lưu phân quyền"]');
+        // Vô hiệu hóa checkbox nếu userId là 2
+        if (userId === '2') {
+            checkboxes.forEach(cb => {
+                cb.disabled = true; // Vô hiệu hóa checkbox
+            });
+            checkboxesAll.forEach(cb => {
+                cb.disabled = true; // Vô hiệu hóa tất cả checkbox "Toàn quyền"
+            });
+            allPermissionCheckbox.disabled = true; // Vô hiệu hóa tất cả checkbox trong hàng
+            saveButton.style.display = 'none'; // Ẩn nút "Lưu phân quyền"
+        } else {
+            checkboxes.forEach(cb => {
+                cb.disabled = false; // Bỏ vô hiệu hóa cho các user khác
+            });
+            checkboxesAll.forEach(cb => {
+                cb.disabled = false; // Bỏ vô hiệu hóa tất cả checkbox trong hàng
+            });
+            allPermissionCheckbox.disabled = false; // Bỏ vô hiệu hóa cho checkbox "Toàn quyền"
+            saveButton.style.display = 'inline'; // Hiện nút "Lưu phân quyền"
+        }
         // Mở modal
         document.getElementById('permissionModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
-
-
-
-
-
-
 
 
     function closePermissionForm() {

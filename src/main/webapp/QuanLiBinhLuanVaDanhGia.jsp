@@ -367,6 +367,12 @@
         <div class="content">
             <div class="management-section">
                 <h2>Quản lý bình luận:</h2>
+                <c:if test="${not empty errorMessage}">
+                    <div class="alert-warning">
+                            ${errorMessage}
+                    </div>
+                </c:if>
+                <c:if test="${empty errorMessage}">
                 <div class="container2">
                     <div class="filter-section">
                         <form action="QuanLiBinhLuanVaDanhGia" method="get">
@@ -381,7 +387,12 @@
                                 </c:forEach>
                             </select>
                         </form>
-                        <button class="bHis" onclick="toggleHistory()">Lịch sử xóa</button>
+                        <c:if test="${!canDelete}">
+                            <button class="bHis" style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" type="button" disabled>Lịch sử xóa</button>
+                        </c:if>
+                        <c:if test="${canDelete}">
+                            <button class="bHis" id="toggleButton" onclick="toggleHistory()">Lịch sử xóa</button>
+                        </c:if>
                         <form action="QuanLiBinhLuanVaDanhGia" method="GET">
                             <label>Chọn số sao:</label>
                             <select name="starRating" onchange="this.form.submit()">
@@ -424,6 +435,8 @@
                                                 <input type="hidden" name="commentIdHis"
                                                        value="${historyItem.comAndReID}"/>
                                                 <button type="submit" name="action" value="redo">Khôi phục</button>
+                                                <button type="submit" name="action" value="deleteReal">Xóa vĩnh viễn
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -460,7 +473,12 @@
                                                value="${listCommentAndReview.comAndReID}"/>
                                         <input type="hidden" name="productID" value="${selectedProductID}"/>
                                         <input type="hidden" name="starRating" value="${selectedRatingStar}"/>
-                                        <button type="submit" name="action" value="delete">Xóa</button>
+                                        <c:if test="${!canDelete}">
+                                            <button style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" type="button" disabled>Xóa</button>
+                                        </c:if>
+                                        <c:if test="${canDelete}">
+                                            <button type="submit" name="action" value="delete">Xóa</button>
+                                        </c:if>
                                     </form>
                                 </td>
                             </tr>
@@ -469,6 +487,7 @@
                         </tbody>
                     </table>
                 </div>
+                </c:if>
             </div>
         </div>
     </div>
@@ -490,10 +509,13 @@
 
     function toggleHistory() {
         var historySection = document.getElementById("historySection");
+        var toggleButton = document.getElementById("toggleButton");
         if (historySection.style.display === "none" || historySection.style.display === "") {
             historySection.style.display = "block";
+            toggleButton.textContent = "Đóng lịch sử xóa"; // Thay đổi văn bản khi mở
         } else {
             historySection.style.display = "none";
+            toggleButton.textContent = "Lịch sử xóa"; // Đặt lại văn bản khi đóng
         }
     }
 

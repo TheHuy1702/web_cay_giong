@@ -482,113 +482,147 @@
         <div class="content">
             <div class="management-section">
                 <h2>Quản lý kho Voucher:</h2>
-
-                <div class="container2" role="main">
-                    <div class="header2">
-                        <h1></h1>
-                        <button class="bHis" id="toggleButton" onclick="toggleHistory()">Lịch sử xóa</button>
-                        <button id="addVoucherBtn" class="btn-add" onclick="showForm('add')">
-                            <i class="fas fa-plus" aria-hidden="true"></i>Thêm Voucher
-                        </button>
+                <c:if test="${not empty errorMessage}">
+                    <div class="alert-warning">
+                            ${errorMessage}
                     </div>
+                </c:if>
+                <c:if test="${empty errorMessage}">
+                    <div class="container2" role="main">
+                        <div class="header2">
+                            <h1></h1>
 
-                    <div id="historySection" style="display: ${showHistory ? 'block' : 'none'};">
-                        <h2>Lịch sử xóa Voucher:</h2>
-                        <c:if test="${empty listHisVoucher}">
+                            <c:if test="${!canDelete}">
+                                <button class="bHis" style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" type="button" disabled>Lịch sử xóa</button>
+                            </c:if>
+                            <c:if test="${canDelete}">
+                                <button class="bHis" id="toggleButton" onclick="toggleHistory()">Lịch sử xóa</button>
+                            </c:if>
+                            <c:if test="${!canAdd}">
+                                <button class="btn-add" style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" disabled>
+                                    <i class="fas fa-plus" aria-hidden="true"></i>Thêm Voucher
+                                </button>
+                            </c:if>
+                            <c:if test="${canAdd}">
+                                <button id="addVoucherBtn" class="btn-add" onclick="showForm('add')">
+                                    <i class="fas fa-plus" aria-hidden="true"></i>Thêm Voucher
+                                </button>
+                            </c:if>
+                        </div>
+
+                        <div id="historySection" style="display: ${showHistory ? 'block' : 'none'};">
+                            <h2>Lịch sử xóa Voucher:</h2>
+                            <c:if test="${empty listHisVoucher}">
+                                <div class="alert-warning">
+                                    Không có lịch sử xóa Voucher nào.
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty listHisVoucher}">
+                                <table id="history-table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Mã giảm giá</th>
+                                        <th scope="col">Mô tả</th>
+                                        <th scope="col">Giá trị tối thiểu</th>
+                                        <th scope="col">Ngày bắt đầu</th>
+                                        <th scope="col">Ngày kết thúc</th>
+                                        <th scope="col" style="text-align:center;">Thao Tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="v" items="${listHisVoucher}">
+                                        <tr>
+                                            <td>${v.code}</td>
+                                            <td>${v.description}</td>
+                                            <td><fmt:formatNumber value="${v.minOrderValue}" type="number"
+                                                                  pattern="#,##0 VND"/></td>
+                                            <td>${v.startDate}</td>
+                                            <td>${v.endDate}</td>
+                                            <td>
+                                                <form action="QuanLyVoucher" method="post"
+                                                      onsubmit="return confirmRestore();">
+                                                    <input type="hidden" name="vID"
+                                                           value="${v.iD}"/>
+                                                    <button class="btRedo" type="submit" name="action"
+                                                            value="redo">Khôi phục
+                                                    </button>
+                                                    <button class="btRedo" type="submit" name="action"
+                                                            value="deleteReal">Xóa vĩnh viễn
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </c:if>
+                        </div>
+                        <c:if test="${empty listVoucher}">
                             <div class="alert-warning">
-                                Không có lịch sử xóa Voucher nào.
+                                Không tìm thấy bình luận và đánh giá nào
                             </div>
                         </c:if>
-                        <c:if test="${not empty listHisVoucher}">
-                            <table id="history-table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Mã giảm giá</th>
-                                    <th scope="col">Mô tả</th>
-                                    <th scope="col">Giá trị tối thiểu</th>
-                                    <th scope="col">Ngày bắt đầu</th>
-                                    <th scope="col">Ngày kết thúc</th>
-                                    <th scope="col" style="text-align:center;">Thao Tác</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="v" items="${listHisVoucher}">
+                        <c:if test="${not empty listVoucher}">
+                            <div style="overflow-x:auto;">
+                                <table>
+                                    <thead>
                                     <tr>
-                                        <td>${v.code}</td>
-                                        <td>${v.description}</td>
-                                        <td><fmt:formatNumber value="${v.minOrderValue}" type="number"
-                                                              pattern="#,##0 VND"/></td>
-                                        <td>${v.startDate}</td>
-                                        <td>${v.endDate}</td>
-                                        <td>
-                                            <form action="QuanLyVoucher" method="post"
-                                                  onsubmit="return confirmRestore();">
-                                                <input type="hidden" name="vID"
-                                                       value="${v.iD}"/>
-                                                <button class="btRedo" type="submit" name="action"
-                                                        value="redo">Khôi phục
-                                                </button>
-                                                <button class="btRedo" type="submit" name="action"
-                                                        value="deleteReal">Xóa vĩnh viễn
-                                                </button>
-                                            </form>
-                                        </td>
+                                        <th scope="col">Mã giảm giá</th>
+                                        <th scope="col">Mô tả</th>
+                                        <th scope="col">Giá trị tối thiểu</th>
+                                        <th scope="col">Ngày bắt đầu</th>
+                                        <th scope="col">Ngày kết thúc</th>
+                                        <th scope="col" style="text-align:center;">Thao Tác</th>
                                     </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody id="voucherTableBody">
+                                    <c:forEach var="v" items="${listVoucher}">
+                                        <tr>
+                                            <td class="code">${v.code}</td>
+                                            <td class="description">${v.description}</td>
+                                            <td class="value"><fmt:formatNumber value="${v.minOrderValue}" type="number"
+                                                                                pattern="#,##0 VND"/></td>
+                                            <td class="date">${v.startDate}</td>
+                                            <td class="date">${v.endDate}</td>
+                                            <td class="actions">
+                                                <input type="hidden" name="voucherId" id="voucherId" value="${v.iD}">
+
+                                                <c:if test="${!canEdit}">
+                                                    <button class="action-btn edit-btn" title="Bạn không thể chỉnh sửa">
+                                                        <i class="fas fa-edit" aria-hidden="true" style="color: #cfcfcf;"></i>
+                                                    </button>
+                                                </c:if>
+                                                <c:if test="${canEdit}">
+                                                    <button class="action-btn edit-btn" title="Chỉnh sửa"
+                                                            onclick="showForm('edit', this)">
+                                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    </button>
+                                                </c:if>
+                                                <form action="QuanLyVoucher" method="post"
+                                                      onsubmit="return deleteVoucher();">
+                                                    <input type="hidden" name="voucherId" value="${v.iD}">
+                                                    <c:if test="${!canDelete}">
+                                                        <button type="button"
+                                                                class="action-btn delete-btn" title="Bạn không có quyền này">
+                                                            <i class="fas fa-trash-alt" aria-hidden="true" style="color: #cfcfcf;"></i>
+                                                        </button>
+                                                    </c:if>
+                                                    <c:if test="${canDelete}">
+                                                        <button type="submit" name="actionDelete" value="delete"
+                                                                class="action-btn delete-btn" title="Xóa">
+                                                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                                        </button>
+                                                    </c:if>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                         </c:if>
                     </div>
-                    <c:if test="${empty listVoucher}">
-                        <div class="alert-warning">
-                            Không tìm thấy bình luận và đánh giá nào
-                        </div>
-                    </c:if>
-                    <c:if test="${not empty listVoucher}">
-                        <div style="overflow-x:auto;">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th scope="col">Mã giảm giá</th>
-                                    <th scope="col">Mô tả</th>
-                                    <th scope="col">Giá trị tối thiểu</th>
-                                    <th scope="col">Ngày bắt đầu</th>
-                                    <th scope="col">Ngày kết thúc</th>
-                                    <th scope="col" style="text-align:center;">Thao Tác</th>
-                                </tr>
-                                </thead>
-                                <tbody id="voucherTableBody">
-                                <c:forEach var="v" items="${listVoucher}">
-                                    <tr>
-                                        <td class="code">${v.code}</td>
-                                        <td class="description">${v.description}</td>
-                                        <td class="value"><fmt:formatNumber value="${v.minOrderValue}" type="number"
-                                                                            pattern="#,##0 VND"/></td>
-                                        <td class="date">${v.startDate}</td>
-                                        <td class="date">${v.endDate}</td>
-                                        <td class="actions">
-                                            <input type="hidden" name="voucherId" id="voucherId" value="${v.iD}">
-                                            <button class="action-btn edit-btn" title="Chỉnh sửa"
-                                                    onclick="showForm('edit', this)">
-                                                <i class="fas fa-edit" aria-hidden="true"></i>
-                                            </button>
-                                            <form action="QuanLyVoucher" method="post"
-                                                  onsubmit="return deleteVoucher();">
-                                                <input type="hidden" name="voucherId" value="${v.iD}">
-                                                <button type="submit" name="actionDelete" value="delete"
-                                                        class="action-btn delete-btn" title="Xóa">
-                                                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                    </c:if>
-                </div>
-
+                </c:if>
                 <div class="overlay" id="overlay" onclick="hideForm()"></div>
                 <div class="form-popup" id="voucherForm" role="dialog" aria-modal="true"
                      aria-labelledby="formTitle">

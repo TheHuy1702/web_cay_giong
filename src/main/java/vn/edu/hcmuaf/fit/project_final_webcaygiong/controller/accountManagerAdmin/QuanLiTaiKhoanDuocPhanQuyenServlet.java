@@ -19,13 +19,24 @@ public class QuanLiTaiKhoanDuocPhanQuyenServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         // Kiểm tra xem đã đăng nhập hay chưa
         if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 7, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiTaiKhoanDuocPhanQuyen.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            boolean canDelete = userPermissionDao.hasPermission(userId, 7, 3);
+            boolean canEdit = userPermissionDao.hasPermission(userId, 7, 2);
+            request.setAttribute("canDelete", canDelete);
+            request.setAttribute("canEdit", canEdit);
             UserDao userDao = new UserDao();
             List<User> users;
-            UserPermissionDao userPermissionDao = new UserPermissionDao();
             String sortBy = request.getParameter("sortBy");
             //tìm kiếm
             String keyword = request.getParameter("keyword");
