@@ -448,7 +448,7 @@
                         <li><i class="fas fa-info-circle icon"></i>Chỉnh sửa thông
                             tin giới thiệu
                         </li>
-                        <li><i class="fas fa-user icon"></i><a href="#">Thông tin của tôi</a></li>
+                        <li><i class="fas fa-user icon"></i><a href="QuanLiTaiKhoanCuaToi">Thông tin của tôi</a></li>
 
                     </a>
 
@@ -466,6 +466,12 @@
                     Lịch sử
                 </button>
             </h2>
+            <c:if test="${not empty errorMessage}">
+                    <div class="alert-warning">
+            ${errorMessage}
+                    </div>
+            </c:if>
+            <c:if test="${empty errorMessage}">
             <div class="customer-list">
 
             <div id="historyTable" style="display: none; margin-top: 20px;">
@@ -561,6 +567,7 @@
                     </table>
                 </c:if>
             </div>
+            </c:if>
         </div>
     </div>
 </div>
