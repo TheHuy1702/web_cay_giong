@@ -60,15 +60,17 @@ public class CustomerDao {
                         .bind(0, email).execute());
     }
 
-    public void updateCustomerAddress(int userID, String fullName, String phoneNumber, String address, String district, String city) {
+    public void updateCustomerAddress(int userID, String fullName, String phoneNumber, String address, String district, String city, int districtID, String wardCode) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("UPDATE customers SET nameCustomer = ?, phone = ?, address = ?, district = ?, city = ? WHERE userID = ?")
+                h.createUpdate("UPDATE customers SET nameCustomer = ?, phone = ?, address = ?, district = ?, city = ?, districtID = ?, wardCode = ? WHERE userID = ?")
                         .bind(0, fullName)
                         .bind(1, phoneNumber)
                         .bind(2, address)
                         .bind(3, district)
                         .bind(4, city)
-                        .bind(5, userID)
+                        .bind(5, districtID)
+                        .bind(6, wardCode)
+                        .bind(7, userID)
                         .execute()
         );
     }
@@ -105,6 +107,21 @@ public class CustomerDao {
                 h.createUpdate("UPDATE customers SET gender =? WHERE userID =?")
                         .bind(0, gender)
                         .bind(1, userID)
+                        .execute()
+        );
+    }
+
+    public void addCustomer(int userID, String fullName, String phoneNumber, String s, String district, String city, int districtId, String wardCode) {
+        JDBIConnect.get().useHandle(h ->
+                h.createUpdate("INSERT INTO customers(userID,nameCustomer,phone,address,district,city,districtID,wardCode) values ( ?, ?, ?,  ?,  ?,  ?,  ?, ?)")
+                        .bind(0, userID)
+                        .bind(1, fullName)
+                        .bind(2, phoneNumber)
+                        .bind(3, s)
+                        .bind(4, district)
+                        .bind(5, city)
+                        .bind(6, districtId)
+                        .bind(7, wardCode)
                         .execute()
         );
     }
