@@ -467,8 +467,11 @@
                         <li class="background"><i class="fas fa-user icon"></i>Hồ sơ của
                             tôi</li>
                     </a>
-                    <a href="#">
+                    <a href="send-otp-email">
                         <li><i class="fas fa-lock icon"></i>Đổi mật khẩu </li>
+                    </a>
+                    <a href="QRServlet">
+                        <li><i class="fas fa-building-columns"></i>Ngân hàng</li>
                     </a>
 
 
@@ -508,47 +511,38 @@
                         </div>
                     </form>
 
-                    <form style="padding-bottom: 10px;" id="emailCus" action="UpdateEmail"
-                          method="POST">
-                        <label><strong>Email:</strong></label>
-                        <p>${u.email}<a class="change-link" onclick="openEmailPopup()">Thay Đổi</a>
-                        </p>
+                    <label>Email:</label>
+                    <p>${u.email}<a class="change-link" href="send-otp-email?action=updateEmail" onclick="openEmailPopup()">Thay Đổi</a></p>
 
-                        <div class="popup-overlay" id="email-popup">
+                    <div class="popup-overlay" id="email-popup">
+                        <form id="emailCus" action="UpdateEmail" method="POST">
                             <div class="popup-content">
                                 <div class="popup-header">Thay đổi Email</div>
-                                <input type="email" id="email" class="popup-input"
-                                       placeholder="Nhập Email mới" name="nameEmail" required>
+                                <input type="email" id="email" class="popup-input" placeholder="Nhập Email mới" name="nameEmail" required>
                                 <div class="popup-buttons">
-                                    <button type="button" class="cancel-button"
-                                            onclick="closeEmailPopup()">Hủy</button>
+                                    <button type="button" class="cancel-button" onclick="closeEmailPopup()">Hủy</button>
                                     <button type="submit" class="save-button">Lưu</button>
                                 </div>
                             </div>
+                        </form>
+                    </div>
 
-                        </div>
-                    </form>
 
-
-                    <form style="padding-bottom: 20px;" id="phoneCus" action="UpdatePhone"
-                          method="POST">
-                        <label><strong>Số điện thoại:</strong></label>
-                        <p>${customer.phone}<a class="change-link" onclick="openPhonePopup()">Thay
-                            Đổi</a></p>
-                        <div class="popup-overlay" id="phone-popup">
-
+                    <label>Số điện thoại</label>
+                    <p>${customer.phone}<a class="change-link" href="send-otp-email?action=updatePhone" onclick="openPhonePopup()">Thay Đổi</a></p>
+                    <div class="popup-overlay" id="phone-popup">
+                        <form id="phoneCus" action="UpdatePhone" method="POST">
                             <div class="popup-content">
                                 <div class="popup-header">Thay đổi số điện thoại</div>
-                                <input type="number" id="phone" class="popup-input"
-                                       placeholder="Nhập Số điện thoại mới" name="phone" required>
+                                <input type="number" id="phone" class="popup-input" placeholder="Nhập Số điện thoại mới" name="phone"
+                                       required>
                                 <div class="popup-buttons">
-                                    <button type="button" class="cancel-button"
-                                            onclick="closePhonePopup()">Hủy</button>
+                                    <button type="button" class="cancel-button" onclick="closePhonePopup()">Hủy</button>
                                     <button type="submit" class="save-button">Lưu</button>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
 
             </div>
