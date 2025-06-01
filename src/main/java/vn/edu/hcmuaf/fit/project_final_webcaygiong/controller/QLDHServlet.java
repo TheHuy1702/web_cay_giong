@@ -19,34 +19,51 @@ public class QLDHServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Tạo đối tượng DAO
-        QLDHDao dao = new QLDHDao();
-        //sắp xếp
-        List<Map<String, Object>> orders;
-        String sortBy = request.getParameter("sortBy");
-
-        //tìm kiếm
-        String keyword = request.getParameter("keyword");
-        if (keyword != null && !keyword.isEmpty()) {
-            orders = dao.searchOrders(keyword); // Tìm kiếm theo từ khóa
-        } else {
-            if (sortBy == null) {
-                orders = dao.dsOrder("desc"); // Mặc định là mới nhất
-            } else if (sortBy.equals("asc")) {
-                sortBy = "asc";
-                orders = dao.dsOrder("asc");
-            } else {
-                sortBy = "desc";
-                orders = dao.dsOrder("desc");
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 3, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyDonHang.jsp");
+                dispatcher.forward(request, response);
+                return;
             }
-        }
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("orders", orders);
-        request.setAttribute("sortBy", sortBy);
+            boolean canEdit = userPermissionDao.hasPermission(userId, 3, 2);
+            request.setAttribute("canEdit", canEdit);
 
-        // Chuyển tiếp dữ liệu đến JSP để hiển thị
-        RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyDonHang.jsp");
-        dispatcher.forward(request, response);
+            QLDHDao dao = new QLDHDao();
+            //sắp xếp
+            List<Map<String, Object>> orders;
+            String sortBy = request.getParameter("sortBy");
+
+            //tìm kiếm
+            String keyword = request.getParameter("keyword");
+            if (keyword != null && !keyword.isEmpty()) {
+                orders = dao.searchOrders(keyword); // Tìm kiếm theo từ khóa
+            } else {
+                if (sortBy == null) {
+                    orders = dao.dsOrder("desc"); // Mặc định là mới nhất
+                } else if (sortBy.equals("asc")) {
+                    sortBy = "asc";
+                    orders = dao.dsOrder("asc");
+                } else {
+                    sortBy = "desc";
+                    orders = dao.dsOrder("desc");
+                }
+            }
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("orders", orders);
+            request.setAttribute("sortBy", sortBy);
+
+            // Chuyển tiếp dữ liệu đến JSP để hiển thị
+            RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyDonHang.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override

@@ -6,7 +6,9 @@ import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.DiscountDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserPermissionDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Discount;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,17 +21,38 @@ public class QuanLyVoucherServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Discount discount = new Discount();
-        DiscountDao dao = new DiscountDao();
-        List<Discount> listVoucher = dao.getAllDiscounts();
-        List<Discount> listHisVoucher = dao.getAllDiscountsDeleted();
-        String khoiPhuc = request.getParameter("khoiPhuc");
-        String xoaVinhVien = request.getParameter("xoaVinhVien");
-        request.setAttribute("listVoucher", listVoucher);
-        request.setAttribute("listHisVoucher", listHisVoucher);
-        request.setAttribute("showHistory", "ThanhCong".equals(khoiPhuc) || "ThanhCong".equals(xoaVinhVien));
-        RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyKhoVoucher.jsp");
-        dispatcher.forward(request, response);
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 9, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyKhoVoucher.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            boolean canDelete = userPermissionDao.hasPermission(userId, 9, 3);
+            boolean canAdd = userPermissionDao.hasPermission(userId, 9, 1);
+            boolean canEdit = userPermissionDao.hasPermission(userId, 9, 2);
+            request.setAttribute("canDelete", canDelete);
+            request.setAttribute("canAdd", canAdd);
+            request.setAttribute("canEdit", canEdit);
+
+            DiscountDao dao = new DiscountDao();
+            List<Discount> listVoucher = dao.getAllDiscounts();
+            List<Discount> listHisVoucher = dao.getAllDiscountsDeleted();
+            String khoiPhuc = request.getParameter("khoiPhuc");
+            String xoaVinhVien = request.getParameter("xoaVinhVien");
+            request.setAttribute("listVoucher", listVoucher);
+            request.setAttribute("listHisVoucher", listHisVoucher);
+            request.setAttribute("showHistory", "ThanhCong".equals(khoiPhuc) || "ThanhCong".equals(xoaVinhVien));
+            RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLyKhoVoucher.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override
