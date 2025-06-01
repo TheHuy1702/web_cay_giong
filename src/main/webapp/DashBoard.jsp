@@ -293,6 +293,12 @@
             </ul>
         </div>
         <div class="content">
+            <c:if test="${not empty errorMessage}">
+                <div class="alert-warning">
+                        ${errorMessage}
+                </div>
+            </c:if>
+            <c:if test="${empty errorMessage}"></c:if>
             <div class="head-content"></div>
             <h2>Dashboard</h2>
             <div class="dashboard-cards">

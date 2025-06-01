@@ -8,10 +8,7 @@ import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLSPDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiSanPham;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 
 import java.io.File;
@@ -31,6 +28,25 @@ public class QSLPServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 2, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLySanPham.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            boolean canDelete = userPermissionDao.hasPermission(userId, 2, 3);
+            boolean canAdd = userPermissionDao.hasPermission(userId, 2, 1);
+//            boolean canEdit = userPermissionDao.hasPermission(userId, 2, 2); NẾU CÓ
+            request.setAttribute("canDelete", canDelete);// XÓA.
+            request.setAttribute("canAdd", canAdd);// THÊM.
+//            request.setAttribute("canEdit", canEdit);
+            // BÊN JSP XỬ LÝ TƯƠNG TỰ.
 
 
         List<SubImage> subImages = qlspDao.getSubImage();
@@ -54,6 +70,9 @@ public class QSLPServlet extends HttpServlet {
         //Lấy danh mục sản phẩm
         RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLySanPham.jsp");
         dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override

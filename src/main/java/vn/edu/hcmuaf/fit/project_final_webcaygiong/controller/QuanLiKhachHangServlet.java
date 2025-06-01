@@ -16,6 +16,20 @@ public class QuanLiKhachHangServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 4, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiKhachHang.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            boolean canDelete = userPermissionDao.hasPermission(userId, 4, 3);
+            request.setAttribute("canDelete", canDelete);
         QuanLiCustomerDao customerDao = new QuanLiCustomerDao();
         String searchQuery = request.getParameter("search");
         String action = request.getParameter("action");
@@ -38,11 +52,15 @@ public class QuanLiKhachHangServlet extends HttpServlet {
 
         // Chỉ forward một lần
         request.getRequestDispatcher("QuanLiKhachHang.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String action = request.getParameter("action");
         if ("delete".equals(action)) {
             int customerID = Integer.parseInt(request.getParameter("customerID"));
