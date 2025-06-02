@@ -31,7 +31,7 @@ public class CustomerDao {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("select * from customers where userID = ?")
                         .bind(0, userID)
-                        .mapToBean(Customer.class).one());
+                        .mapToBean(Customer.class).findOne().orElse(null) );
     }
 
 
@@ -57,35 +57,20 @@ public class CustomerDao {
                         .bind(0, email).execute());
     }
 
-    public void updateCustomerAddress(int userID, String fullName, String phoneNumber, String address, String district, String city) {
+    public void updateCustomerAddress(int userID, String fullName, String phoneNumber, String address, String district, String city, int districtID, String wardCode) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("UPDATE customers SET nameCustomer = ?, phone = ?, address = ?, district = ?, city = ? WHERE userID = ?")
+                h.createUpdate("UPDATE customers SET nameCustomer = ?, phone = ?, address = ?, district = ?, city = ?, districtID = ?, wardCode = ? WHERE userID = ?")
                         .bind(0, fullName)
                         .bind(1, phoneNumber)
                         .bind(2, address)
                         .bind(3, district)
                         .bind(4, city)
-                        .bind(5, userID)
+                        .bind(5, districtID)
+                        .bind(6, wardCode)
+                        .bind(7, userID)
                         .execute()
         );
     }
-
-
-
-
-
-
-//    public void updateInfoCustomer(int userID, String fullName, String phoneNumber, String gender, String email) {
-//        JDBIConnect.get().useHandle(h ->
-//                h.createUpdate("UPDATE customers SET nameCustomer =?, phone =?, gender =?, email =? WHERE userID =?")
-//                       .bind(0, fullName)
-//                       .bind(1, phoneNumber)
-//                       .bind(2, gender)
-//                       .bind(3, email)
-//                       .bind(4, userID)
-//                       .execute()
-//        );
-//    }
 
     public void updateInfoCustomer(int userID, String fullName) {
         JDBIConnect.get().useHandle(h ->
@@ -125,8 +110,9 @@ public class CustomerDao {
 
     public static void main(String[] args) {
         CustomerDao customerDao = new CustomerDao();
-        customerDao.updateInfoCustomerEmail(2,"thththt@gmail.com");
-
+//        customerDao.updateInfoCustomerEmail(2,"thththt@gmail.com");
+//        customerDao.updateCustomerAddress(2 ,"ALOLOLOLOL","0862593475","60/12, Nguyễn Bỉnh Khiêm","Phường 6", "Quận 9",111, "111");
+        System.out.println(customerDao.getCustomerWithUID(2));
     }
 }
 

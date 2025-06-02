@@ -526,6 +526,7 @@
                                         <th scope="col">Giá trị tối thiểu</th>
                                         <th scope="col">Ngày bắt đầu</th>
                                         <th scope="col">Ngày kết thúc</th>
+                                        <th scope="col">Giảm bao nhiêu %</th>
                                         <th scope="col" style="text-align:center;">Thao Tác</th>
                                     </tr>
                                     </thead>
@@ -538,6 +539,7 @@
                                                                   pattern="#,##0 VND"/></td>
                                             <td>${v.startDate}</td>
                                             <td>${v.endDate}</td>
+                                            <td>${v.percentDecrease}</td>
                                             <td>
                                                 <form action="QuanLyVoucher" method="post"
                                                       onsubmit="return confirmRestore();">
@@ -572,6 +574,7 @@
                                         <th scope="col">Giá trị tối thiểu</th>
                                         <th scope="col">Ngày bắt đầu</th>
                                         <th scope="col">Ngày kết thúc</th>
+                                        <th scope="col">Giảm bao nhiêu %</th>
                                         <th scope="col" style="text-align:center;">Thao Tác</th>
                                     </tr>
                                     </thead>
@@ -584,6 +587,7 @@
                                                                                 pattern="#,##0 VND"/></td>
                                             <td class="date">${v.startDate}</td>
                                             <td class="date">${v.endDate}</td>
+                                            <td class="percentDecrease">${v.percentDecrease}</td>
                                             <td class="actions">
                                                 <input type="hidden" name="voucherId" id="voucherId" value="${v.iD}">
 
@@ -638,6 +642,8 @@
                         <input type="datetime-local" id="startDateInput" name="startDate" required/>
                         <label for="endDateInput">Ngày Kết Thúc:</label>
                         <input type="datetime-local" id="endDateInput" name="endDate" required/>
+                        <label for="percentDecreaseInput">Giảm bao nhiêu %:</label>
+                        <input type="number" id="percentDecreaseInput" name="percentDecrease" required min="0" max="100"/>
                         <input type="hidden" id="formAction" name="action" value="add"/>
                         <button type="submit" class="btn-add" id="submitBtn">Thêm Voucher</button>
                         <button type="button" class="btn-add btn-cancel" onclick="hideForm()">Hủy</button>
@@ -664,6 +670,7 @@
         const minValueInput = document.getElementById("minValueInput");
         const startDateInput = document.getElementById("startDateInput");
         const endDateInput = document.getElementById("endDateInput");
+        const percentDecreaseInput = document.getElementById("percentDecreaseInput");
 
         if (mode === 'add') {
             formTitle.textContent = "Thêm Voucher Mới";
@@ -676,6 +683,7 @@
             minValueInput.value = "";
             startDateInput.value = "";
             endDateInput.value = "";
+            percentDecreaseInput.value = "";
             codeInput.disabled = false;
         } else if (mode === 'edit' && btn) {
             formTitle.textContent = "Chỉnh Sửa Voucher";
@@ -688,7 +696,7 @@
             const code = editingRow.querySelector(".code").textContent.trim();
             const description = editingRow.querySelector(".description").textContent.trim();
             const valueText = editingRow.querySelector(".value").textContent.trim();
-
+            const percentDecrease = editingRow.querySelector(".percentDecrease").textContent.trim();
             // Xử lý giá trị tối thiểu
             const minValue = valueText.replace(/[^0-9]/g, ''); // Loại bỏ tất cả ký tự không phải số
 
@@ -706,6 +714,7 @@
             minValueInput.value = minValue;
             startDateInput.value = startDateTime;
             endDateInput.value = endDateTime;
+            percentDecreaseInput.value = percentDecrease;
             // Xóa các ô nhập liệu ẩn cũ nếu có
             const existingIdInput = document.getElementById('voucherIdInput');
             if (existingIdInput) {

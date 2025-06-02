@@ -45,13 +45,15 @@ public class OrderServlet extends HttpServlet {
             }
             CustomerDao customerDao = new CustomerDao();
             Customer customer = customerDao.getCustomerWithUID(user.getUserID());
+            double orderShipFee = Double.parseDouble(request.getParameter("orderShipFee"));
+            double orderTotalAmount = Double.parseDouble(request.getParameter("orderTotalAmount"));
             // Tạo đơn hàng mới
             order.setCustomerId(customer.getCustomerID());
             order.setUserId(user.getUserID());
             order.setOrderDate(new Date());
-            order.setTotalAMount(cart.getTotal());
+            order.setTotalAMount(orderTotalAmount);
             order.setStatus("Chờ xác nhận");
-            order.setShippingFee(15000);
+            order.setShippingFee(orderShipFee);
             order.setCreateAt(new Date());
 
             // Lưu đơn hàng vào cơ sở dữ liệu

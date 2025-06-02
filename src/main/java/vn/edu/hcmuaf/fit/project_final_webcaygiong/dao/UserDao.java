@@ -4,9 +4,7 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class UserDao {
     List<User> users;
@@ -124,55 +122,43 @@ public class UserDao {
         );
     }
 
-    public User findByEmail(String email) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT * FROM users WHERE email = ?")
-                        .bind(0, email)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
+    // danh sách user theo sắp sếp.
+    public List<Map<String, Object>> dsUser(String sortBy) {
+        String query = " SELECT DISTINCT  u.userID,u.name, u.phone, u.createAt, u.updateAt,u.status, c.customerID , c.email FROM users u JOIN customers c ON u.userID = c.userID  GROUP BY u.userID  ORDER BY u.createAt " + (sortBy.equals("desc") ? "DESC" : "ASC");
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(query)
+                        .map((rs, ctx) -> {
+                            Map<String, Object> result = new HashMap<>();
+                            result.put("userID", rs.getInt("userID"));
+                            result.put("name", rs.getString("name"));
+                            result.put("phone", rs.getString("phone"));
+                            result.put("createAt", rs.getDate("createAt"));
+                            result.put("updateAt", rs.getDate("updateAt"));
+                            result.put("status", rs.getString("status"));
+                            result.put("customerID", rs.getInt("customerID"));
+                            result.put("email", rs.getString("email"));
+                            return result;
+                        })
+                        .list());
     }
 
-    public void insertGoogleUser(User user) {
-        JDBIConnect.get().useHandle(h -> {
-            String sql = "INSERT INTO users (name, email, googleId, createAt, updateAt) VALUES (?, ?, ?, ?, ?)";
-            h.createUpdate(sql)// ID của người dùng từ Google OAuth
-                    .bind(0, user.getName())
-                    .bind(1, user.getEmail())
-                    .bind(2, user.getGoogleId())
-                    .bind(3, user.getCreateAt())
-                    .bind(4, user.getUpdateAt())
-                    .execute();
-        });
-    }
-
-    public void updateGoogleId(int userId, String googleId) {
-        JDBIConnect.get().useHandle(h -> {
-            h.createUpdate("UPDATE users SET googleId = ?, updateAt = ? WHERE userID = ?")
-                    .bind(0, googleId)
-                    .bind(1, new Date())
-                    .bind(2, userId)
-                    .execute();
-        });
-    }
-
-    public User findByGoogleId(String googleId) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT * FROM users WHERE googleId = ?")
-                        .bind(0, googleId)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
+    public List<User> getUsers(String sortBy) {
+        users = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users ORDER BY createAt " + (sortBy.equals("desc") ? "DESC" : "ASC"))
+                        .mapToBean(User.class).list());
+        return users;
     }
 
     public static void main(String[] args) {
-        UserDao userDao = new UserDao();
-//        List<User> listAll = userDao.getAllUsers();
-//        for (User c : listAll) {
-//            System.out.println(c);
-//        }
-        System.out.println(userDao.findUserID(2));
+    }
+
+    public List<User> searchUser(String keyword) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE name LIKE ? OR phone LIKE ?")
+                        .bind(0, "%" + keyword + "%")
+                        .bind(1, keyword + "%")
+                        .mapToBean(User.class)
+                        .list()
+        );
     }
 }

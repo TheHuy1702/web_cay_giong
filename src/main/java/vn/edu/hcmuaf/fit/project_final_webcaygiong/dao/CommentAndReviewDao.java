@@ -20,6 +20,7 @@ public class CommentAndReviewDao {
                         .mapToBean(CommentAndReview.class).list());
         return commentAndReview;
     }
+
     public CommentAndReview getCommentAndReview(int id) {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("select * from commentandreviews where comAndReID = ?")
@@ -62,10 +63,18 @@ public class CommentAndReviewDao {
                         .bind(0, comAndReID)
                         .execute());
     }
+
     public void redoCommentAndReview(int commentIdHis) {
         JDBIConnect.get().withHandle(handle ->
                 handle.createUpdate("UPDATE commentandreviews SET deleted = false WHERE comAndReID = ?")
                         .bind(0, commentIdHis)
+                        .execute());
+    }
+
+    public void deleteCommentAndReviewReal(int id) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("DELETE FROM commentandreviews WHERE comAndReID = ?")
+                        .bind(0, id)
                         .execute());
     }
 
@@ -134,7 +143,7 @@ public class CommentAndReviewDao {
             System.out.println(commentAndReview);
         }
         System.out.println(commentAndReviewDao.trungBinhSoSao(2));
-        CommentAndReview c=commentAndReviewDao.getCommentAndReview(1);
+        CommentAndReview c = commentAndReviewDao.getCommentAndReview(1);
         System.out.println(c);
         commentAndReviewDao.deleteCommentAndReview(1);
     }

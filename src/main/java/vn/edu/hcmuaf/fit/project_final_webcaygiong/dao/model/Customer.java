@@ -13,11 +13,54 @@ public class Customer implements Serializable {
     private String city;
     private Date createAt;
     private String gender;
+    private int districtID;
+    private String wardCode;
+
+    public int getDistrictID() {
+        return districtID;
+    }
+
+    public void setDistrictID(int districtID) {
+        this.districtID = districtID;
+    }
+
+    public String getWardCode() {
+        return wardCode;
+    }
+
+    public void setWardCode(String wardCode) {
+        this.wardCode = wardCode;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerID=" + customerID +
+                ", userID=" + userID +
+                ", nameCustomer='" + nameCustomer + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", district='" + district + '\'' +
+                ", city='" + city + '\'' +
+                ", createAt=" + createAt +
+                ", gender='" + gender + '\'' +
+                ", districtID=" + districtID +
+                ", wardCode='" + wardCode + '\'' +
+                '}';
+    }
 
     public Customer() {
     }
 
-    public Customer(int customerID, int userID, String nameCustomer, String phone, String address, String district, String city, Date createAt, String gender) {
+    public Customer(int customerID, int userID, String nameCustomer, String phone, String address, String district, String city, Date createAt) {
         this.customerID = customerID;
         this.userID = userID;
         this.nameCustomer = nameCustomer;
@@ -26,7 +69,6 @@ public class Customer implements Serializable {
         this.district = district;
         this.city = city;
         this.createAt = createAt;
-        this.gender = gender;
     }
 
     public int getCustomerID() {
@@ -93,26 +135,4 @@ public class Customer implements Serializable {
         this.createAt = createAt;
     }
 
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    @Override
-    public String toString() {
-        return
-                customerID +
-                        ", " + userID +
-                        ", " + nameCustomer +
-                        "," + phone +
-                        ", " + address +
-                        ", " + district +
-                        ", " + city +
-                        ", " + gender+
-                        ", " + createAt;
-    }
 }
