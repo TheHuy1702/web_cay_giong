@@ -3,10 +3,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.SubImageDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.cart.Cart;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
 
@@ -68,11 +65,25 @@ public class ChiTietSanPhamServlet extends HttpServlet {
         double tbS = commentDao.trungBinhSoSao(id);
         request.setAttribute("tbSao", tbS);
 
+        // Ghi log xem sản phẩm
+        LogUtil logUtil = new LogUtil();
+        logUtil.log(
+                request,
+                "Xem sản phẩm",
+                "Thông báo",
+                "ChiTietSanPhamServlet",
+                "Product",
+                null,
+                "Product ID: " + id
+        );
+
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("ChiTietSanPham.jsp");
         dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     }
 }

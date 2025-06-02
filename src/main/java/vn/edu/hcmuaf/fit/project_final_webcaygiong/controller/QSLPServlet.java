@@ -1,27 +1,52 @@
 package vn.edu.hcmuaf.fit.project_final_webcaygiong.controller;
 
+import com.google.gson.Gson;
+import com.mysql.cj.util.LogUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CategoryDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLSPDao;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Categories;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.SubImage;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+@MultipartConfig
 @WebServlet(name = "QSLPServlet", value = "/QuanLySanPham")
 public class QSLPServlet extends HttpServlet {
     private QLSPDao qlspDao = new QLSPDao();
     private CategoryDao categoryDao = new CategoryDao();
     private ProductDao productDao = new ProductDao();
+    private LogUtil logUtil = new LogUtil();
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserPermissionDao userPermissionDao = new UserPermissionDao();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            int userId = user.getUserID();
+            if (!userPermissionDao.hasPermission(userId, 2, 4)) {
+                request.setAttribute("errorMessage", "Bạn không có quyền truy cập trang này.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLySanPham.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            boolean canDelete = userPermissionDao.hasPermission(userId, 2, 3);
+            boolean canAdd = userPermissionDao.hasPermission(userId, 2, 1);
+//            boolean canEdit = userPermissionDao.hasPermission(userId, 2, 2); NẾU CÓ
+            request.setAttribute("canDelete", canDelete);// XÓA.
+            request.setAttribute("canAdd", canAdd);// THÊM.
+//            request.setAttribute("canEdit", canEdit);
+            // BÊN JSP XỬ LÝ TƯƠNG TỰ.
 
 
         List<SubImage> subImages = qlspDao.getSubImage();
@@ -45,12 +70,16 @@ public class QSLPServlet extends HttpServlet {
         //Lấy danh mục sản phẩm
         RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLySanPham.jsp");
         dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // nút xoá
+
+        // nút thêm
         String action = request.getParameter("action");
         if ("them".equals(action)) {
             String name = request.getParameter("addname");
@@ -69,12 +98,79 @@ public class QSLPServlet extends HttpServlet {
             if (name == null || name.trim().isEmpty() || price <= 0 || stock < 0) {
                 request.setAttribute("error", "Dữ liệu không hợp lệ!");
                 response.sendRedirect("QuanLySanPham?them=thatBai");
+            }else {
+                logUtil.log(request,
+                        "Thêm sản phẩm",
+                        "Thông báo",
+                        "QSLPServlet",
+                        "Product",
+                        null,
+                        convertProductToJson(product));
+
+
+                response.sendRedirect("QuanLySanPham?them=thanhcong");
             }
+            // xoá
         } else if ("delet".equals(action)) {
             String productId = request.getParameter("productIdXoa");
+            Product product = qlspDao.getProduct(Integer.parseInt(productId)); // Lấy dữ liệu cũ để lưu log
+
             qlspDao.deleteProductById(Integer.parseInt(productId));
+            logUtil.log(request,
+                    "Xoá sản phẩm",
+                    "Cảnh báo",
+                    "QSLPServlet",
+                    "Product",
+                    convertProductToJson(product),
+                    null);
+
             response.sendRedirect("QuanLySanPham?pid=" + productId + "&Xoa=thanhCong");
+            //sửa sản phẩm
+        } else if ("update".equals(action)) {
+            String productId = request.getParameter("productIdSua");
+            Product product = qlspDao.getProduct(Integer.parseInt(productId));
+            List<Categories> dsCategories = categoryDao.getAllCategories();
+
+            request.setAttribute("product", product);
+            request.setAttribute("dsCategories", dsCategories);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("suaSanPham.jsp");
+            dispatcher.forward(request, response);
+        } else if ("capnhat".equals(action)) {
+            // Lấy dữ liệu từ form
+            int productID = Integer.parseInt(request.getParameter("productID"));
+            String name = request.getParameter("name");
+            double price = Double.parseDouble(request.getParameter("price"));
+            String imageMain = request.getParameter("oldImage");
+            int stock = Integer.parseInt(request.getParameter("stock"));
+            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            String introduce = request.getParameter("introduce");
+            String infoPro = request.getParameter("infoPro");
+
+            // ➡️ Lấy thông tin cũ trước khi update
+            Product oldProduct = qlspDao.getProduct(productID);
+
+            QuanLiSanPham newProduct = new QuanLiSanPham(productID, name, price, imageMain, stock, categoryID, introduce, infoPro);
+            qlspDao.update(newProduct, productID);
+
+            // ➡️ Ghi log vào History
+            logUtil.log(request,
+                    "Cập nhật sản phẩm",
+                    "Cảnh báo",
+                    "QSLPServlet",
+                    "Product",
+                    convertProductToJson(oldProduct),
+                    convertProductToJson(newProduct.toProduct()));
+
+
+            response.sendRedirect("QuanLySanPham?capnhat=thanhcong");
         }
 
+
+
+    }
+    private String convertProductToJson(Product product) {
+        Gson gson = new Gson();
+        return gson.toJson(product);
     }
 }

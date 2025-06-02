@@ -146,11 +146,13 @@
             display: none;
             position: absolute;
             right: 0;
+            top: 60px; /* Dịch xuống để không bị che */
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 10px;
-            z-index: 1;
+            z-index: 2000; /* Đảm bảo nằm trên content */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ để nổi bật */
         }
 
         .admin-user i {
@@ -163,13 +165,13 @@
             display: inline-block;
             cursor: pointer;
             padding: 10px;
-            right: -650px;
-
+            right: -450px;
             border-radius: 5px;
+            z-index: 1000; /* Đảm bảo nằm trên các phần khác */
         }
 
         .admin-user .logout-menu {
-            width: fit-content;
+            width: 135px;
         }
 
         .admin-user .logout-menu:hover {
@@ -212,17 +214,32 @@
             background-color: #666;
         }
 
-        .dangxuat {
-            background-color: #333;
-            font-size: 15px;
-            cursor: pointer;
-            padding: 5px;
-            color: white;
+        .product-list {
+            margin-top: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .dangxuat:hover {
-            background-color: #666;
+        .product-list table {
+            width: 100%;
+            border-collapse: collapse;
         }
+
+        .product-list table, .product-list th, .product-list td {
+            border: 1px solid #ddd;
+        }
+
+        .product-list th, .product-list td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .product-list th {
+            background-color: #f2f2f2;
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -234,6 +251,15 @@
         <div class="admin-user">
             <i class="fas fa-user-circle "></i> <br> Admin
             <div class="logout-menu">
+
+                    <button class="thongtin" id="thongTin" type="submit"> Thông tin tài khoản
+                    </button>
+                    <hr style="border: 1px solid  #ccc;">
+                <form method="get" action="send-otp-email">
+                    <button class="donMua" id="donMua" type="submit"> Đổi mật khẩu
+                    </button>
+                </form>
+                    <hr style="border: 1px solid  #ccc;">
                 <form method="post" action="logout">
                     <button class="dangxuat" id="logout1" type="submit"><i
                             class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -267,6 +293,12 @@
             </ul>
         </div>
         <div class="content">
+            <c:if test="${not empty errorMessage}">
+                <div class="alert-warning">
+                        ${errorMessage}
+                </div>
+            </c:if>
+            <c:if test="${empty errorMessage}"></c:if>
             <div class="head-content"></div>
             <h2>Dashboard</h2>
             <div class="dashboard-cards">
@@ -299,6 +331,39 @@
                     <h3>Đơn hàng mới</h3>
                     <p>${newOrders}</p>
                 </div>
+            </div>
+            <div class="product-list">
+            <h3>Top sản phẩm được xem nhiều</h3>
+            <c:if test="${not empty topViewed}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng còn lại</th>
+                        <th>Ảnh sản phẩm</th>
+                        <th>Danh mục</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="p" items="${topViewed}">
+
+                        <tr>
+                            <td>${p.name}</td>
+                            <td><fmt:formatNumber value="${p.price}" type="number" pattern="#,##0 VND"/></td>
+                            <td>${p.stock}</td>
+                            <td><img alt="${p.name}" height="50"
+                                     src="${p.imageMain}" width="50"/></td>
+                            <td>${dsCategories[p.categoryID-1].nameCategory}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+            <c:if test="${empty topViewed}">
+                <p>Không có dữ liệu sản phẩm được xem nhiều.</p>
+            </c:if>
+
             </div>
             <div class="chart-container">
                 <h3>Biểu đồ doanh thu trong tháng</h3>

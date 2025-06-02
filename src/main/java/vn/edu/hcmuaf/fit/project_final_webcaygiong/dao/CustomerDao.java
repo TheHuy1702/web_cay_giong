@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.dao;
 
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -31,7 +32,8 @@ public class CustomerDao {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("select * from customers where userID = ?")
                         .bind(0, userID)
-                        .mapToBean(Customer.class).findOne().orElse(null) );
+                        .mapToBean(Customer.class).findOne()  // trả về Optional<Customer>
+                        .orElse(null));
     }
 
 
@@ -51,7 +53,8 @@ public class CustomerDao {
                         .execute()
         );
     }
-    public void updateEmailAddress(String email){
+
+    public void updateEmailAddress(String email) {
         JDBIConnect.get().useHandle(h ->
                 h.createUpdate("UPDATE customers SET email = ?")
                         .bind(0, email).execute());
@@ -75,20 +78,21 @@ public class CustomerDao {
     public void updateInfoCustomer(int userID, String fullName) {
         JDBIConnect.get().useHandle(h ->
                 h.createUpdate("UPDATE customers SET nameCustomer =? WHERE userID =?")
-                       .bind(0, fullName)
+                        .bind(0, fullName)
                         .bind(1, userID)
-                       .execute()
+                        .execute()
         );
     }
 
     public void updateInfoCustomerPhone(int userID, String phoneNumber) {
         JDBIConnect.get().useHandle(h ->
                 h.createUpdate("UPDATE customers SET phone =? WHERE userID =?")
-                       .bind(0, phoneNumber)
-                       .bind(1, userID)
-                       .execute()
+                        .bind(0, phoneNumber)
+                        .bind(1, userID)
+                        .execute()
         );
     }
+
     public void updateInfoCustomerEmail(int userID, String email) {
         JDBIConnect.get().useHandle(h ->
                 h.createUpdate("UPDATE users SET email =? WHERE userID =?")
@@ -97,6 +101,7 @@ public class CustomerDao {
                         .execute()
         );
     }
+
     public void updateInfoCustomerGender(int userID, String gender) {
         JDBIConnect.get().useHandle(h ->
                 h.createUpdate("UPDATE customers SET gender =? WHERE userID =?")
@@ -106,13 +111,100 @@ public class CustomerDao {
         );
     }
 
-
+    public void addCustomer(int userID, String fullName, String phoneNumber, String s, String district, String city, int districtId, String wardCode) {
+        JDBIConnect.get().useHandle(h ->
+                h.createUpdate("INSERT INTO customers(userID,nameCustomer,phone,address,district,city,districtID,wardCode) values ( ?, ?, ?,  ?,  ?,  ?,  ?, ?)")
+                        .bind(0, userID)
+                        .bind(1, fullName)
+                        .bind(2, phoneNumber)
+                        .bind(3, s)
+                        .bind(4, district)
+                        .bind(5, city)
+                        .bind(6, districtId)
+                        .bind(7, wardCode)
+                        .execute()
+        );
+    }
 
     public static void main(String[] args) {
         CustomerDao customerDao = new CustomerDao();
-//        customerDao.updateInfoCustomerEmail(2,"thththt@gmail.com");
-//        customerDao.updateCustomerAddress(2 ,"ALOLOLOLOL","0862593475","60/12, Nguyễn Bỉnh Khiêm","Phường 6", "Quận 9",111, "111");
-        System.out.println(customerDao.getCustomerWithUID(2));
+
+//        customerDao.updateInfoCustomerEmail(2, "thththt@gmail.com");
+//        customerDao.createCus(2);
+Customer customer=customerDao.getCustomerWithUID(2);
+if(customer==null){
+    System.out.println("RONG");
+}else{
+    System.out.println("Khong rong");
+}
+
+
+    }
+
+    public void updateCustomerAddressForAccount(int userID, String address, String district, String city) {
+        JDBIConnect.get().useHandle(h ->
+                h.createUpdate("UPDATE customers SET address = ?, district = ?, city = ? WHERE userID = ?")
+                        .bind(0, address)
+                        .bind(1, district)
+                        .bind(2, city)
+                        .bind(3, userID)
+                        .execute()
+        );
+    }
+    public void createCus(int userID, String fullName) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, nameCustomer, createAt) VALUES (?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,fullName )
+                    .execute();
+        });
+    }
+
+
+
+    public void createCusGender(int userID, String gender) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, gender, createAt) VALUES (?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,gender )
+                    .execute();
+        });
+    }
+
+    public void createCusPhone(int userID, String phone) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, phone, createAt) VALUES (?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,phone )
+                    .execute();
+        });
+    }
+
+    public void createAddress(int userID, String address, String district, String city, String ward) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, address,district,city,ward, createAt) VALUES (?,?,?,?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,address )
+                    .bind(2,district)
+                    .bind(3,city)
+                    .bind(4,ward)
+                    .execute();
+        });
+    }
+
+    public void createCusEmail(int userID, String email) {
+        JDBIConnect.get().useHandle(h -> {
+            String sql = "INSERT INTO customers (userID, email, createAt) VALUES (?, ?, now())";
+            h.createUpdate(sql)
+                    .bind(0, userID)
+                    .bind(1,email )
+                    .execute();
+        });
+
     }
 }
 

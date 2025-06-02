@@ -37,10 +37,14 @@ public class UpdateAddressServlet extends HttpServlet {
         LogUtil log = new LogUtil();
         Customer customer = customerDao.getCustomerWithUID(user.getUserID());
         if (user != null) {
-            // Cập nhật địa chỉ cho khách hàng
-            customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city, districtId, wardCode);
-            log.log(request, "Cập nhật thông tin địa chỉ", "Thông báo", "thanhtoan.jsp", "Thông tin khách hàng", convertProductToJson(customer), convertProductToJson(customerDao.getCustomerWithUID(user.getUserID())));
-            response.sendRedirect("thanhtoan?update=thanhcong");
+            if (customer == null) {
+                customerDao.addCustomer(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city, districtId, wardCode);
+                response.sendRedirect("thanhtoan?add=thanhcong");
+            } else {
+                customerDao.updateCustomerAddress(user.getUserID(), fullName, phoneNumber, address + ", " + ward, district, city, districtId, wardCode);
+                log.log(request, "Cập nhật thông tin địa chỉ", "Thông báo", "thanhtoan.jsp", "Thông tin khách hàng", convertProductToJson(customer), convertProductToJson(customerDao.getCustomerWithUID(user.getUserID())));
+                response.sendRedirect("thanhtoan?update=thanhcong");
+            }
         } else {
             response.sendRedirect("login");
         }

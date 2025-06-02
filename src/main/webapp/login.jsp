@@ -13,7 +13,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00b894, #6c5ce7, #ff7675); /* Màu gradient mới */
+            background: linear-gradient(135deg, #00b894, #2ecc71, #27ae60); /* Green gradient */
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: center;
@@ -39,7 +39,7 @@
         }
 
         .back-home:hover {
-            color: #f60a36;
+            color: #2ecc71;
         }
 
         .container {
@@ -62,7 +62,7 @@
         }
 
         h2 {
-            background: linear-gradient(135deg, #ff7675, #00b894, #6c5ce7);
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             -webkit-background-clip: text;
             color: transparent;
             font-size: 36px;
@@ -113,13 +113,13 @@
         }
 
         .form-group input:focus {
-            border-color: #00b894;
+            border-color: #2ecc71;
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 183, 148, 0.6);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
         }
 
         .btn {
-            background-color: #00b894;
+            background-color: #2ecc71;
             color: #fff;
             padding: 15px;
             border: none;
@@ -131,9 +131,9 @@
         }
 
         .btn:hover {
-            background-color: #00a182;
+            background-color: #27ae60;
             transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(0, 183, 148, 0.7);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.7);
         }
 
         .btn-social {
@@ -146,10 +146,10 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            width: 48%; /* Giảm width để hai nút nằm ngang hàng */
+            width: 48%;
             font-size: 16px;
             margin-bottom: 15px;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -166,11 +166,8 @@
         .btn-facebook {
             background-color: #1877f2;
             color: #fff;
-        }
-
-        .btn-google {
-            background-color: #db4437;
-            color: #fff;
+            width: 150px;
+            height: 24px;
         }
 
         .extra-options {
@@ -194,7 +191,7 @@
         }
 
         .extra-option a:hover {
-            color: #00b894;
+            color: #2ecc71;
             text-decoration: underline;
         }
 
@@ -206,7 +203,7 @@
         }
 
         .extra-options a:hover {
-            color: #00b894;
+            color: #2ecc71;
             text-decoration: underline;
         }
 
@@ -221,7 +218,7 @@
         }
 
         .fa-eye:hover {
-            color: #00b894;
+            color: #2ecc71;
         }
 
         .text-danger {
@@ -230,22 +227,11 @@
             margin-top: 5px;
         }
 
-        .error-message {
-            color: red;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .success-message {
-            color: green;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
         .social-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            gap: 15px;
         }
 
         .or-separator {
@@ -271,6 +257,35 @@
         .or-separator::after {
             margin-left: 10px;
         }
+
+        /* Custom Google button styling to match Facebook */
+        .custom-google-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #db4437;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            height: 55px;
+            width: 190px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-google-button:hover {
+            background-color: #c23321;
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-google-button i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
     </style>
 </head>
 
@@ -278,6 +293,18 @@
 <div>
     <a href="TrangChu" class="back-home"><i class="fas fa-home"></i> Trang chủ</a>
     <div class="container">
+
+        <c:if test="${not empty success}">
+            <div class="alert alert-success" style="color: green; margin-bottom: 15px;">
+                    ${success}
+            </div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger" style="color: red; margin-bottom: 15px;">
+                    ${error}
+            </div>
+        </c:if>
+
         <h2>Đăng Nhập</h2>
         <form method="post" action="login" id="loginForm">
             <div class="form-group">
@@ -299,12 +326,13 @@
             <button class="btn" type="submit">Đăng Nhập</button>
             <div class="or-separator">--------- hoặc ---------</div>
             <div class="social-buttons">
-                <button class="btn btn-social btn-facebook">
+                <a style="text-decoration: none;" href="https://www.facebook.com/v22.0/dialog/oauth?client_id=1151500616726229&redirect_uri=http://localhost:8080/Project_Final_WebCayGiong_war/facebook_login" id="facebookSignInButton" class="btn btn-social btn-facebook">
                     <i class="fab fa-facebook-f"></i> Facebook
-                </button>
-                <div id="googleSignInButton" class="btn btn-social btn-google">
+                </a>
+                <button id="customGoogleButton" class="custom-google-button">
                     <i class="fab fa-google"></i> Google
-                </div>
+                </button>
+                <div id="googleSignInButton" style="display: none;"></div>
             </div>
             <div class="extra-option">
                 <p style="color: #333;">Chưa có tài khoản ? <a href="register">Đăng ký</a></p>
@@ -321,6 +349,7 @@
         const phoneError = document.getElementById("phoneError");
         const passwordError = document.getElementById("passwordError");
         const loginForm = document.getElementById("loginForm");
+        const customGoogleButton = document.getElementById("customGoogleButton");
 
         togglePassword.addEventListener("click", () => {
             const type = passwordField.type === "password" ? "text" : "password";
@@ -343,15 +372,22 @@
 
             // Validate password
             const password = passwordField.value;
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             if (!passwordRegex.test(password)) {
                 passwordError.textContent = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, ký tự đặc biệt và số.";
                 valid = false;
             }
 
             if (!valid) {
-                event.preventDefault(); // Prevent form submission if validation fails
+                event.preventDefault();
             }
+        });
+
+        // Handle custom Google button click
+        customGoogleButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            // Trigger click on the actual Google button
+            document.querySelector("#googleSignInButton div[role=button]").click();
         });
     });
 
@@ -385,9 +421,15 @@
                 size: "large",
                 text: "signin_with",
                 shape: "rectangular",
-                width: "300" // Điều chỉnh kích thước phù hợp
+                width: "300"
             }
         );
+
+        // Style the Google button to match our custom button
+        const googleButton = document.querySelector("#googleSignInButton div[role=button]");
+        if (googleButton) {
+            googleButton.style.display = "none"; // Hide the default button
+        }
     };
 </script>
 
