@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class UserDao {
     List<User> users;
 
@@ -183,6 +182,7 @@ public class UserDao {
                         .orElse(null)
         );
     }
+
 
     public void insertFacebookUser(User user) {
         JDBIConnect.get().useHandle(h -> {

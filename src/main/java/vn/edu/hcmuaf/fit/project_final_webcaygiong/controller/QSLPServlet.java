@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QLSPDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserPermissionDao;
 
 import java.io.File;
 import java.io.IOException;

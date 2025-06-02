@@ -6,6 +6,8 @@ import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.IntroductionDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Introduction;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserPermissionDao;
+
 
 import java.io.IOException;
 import java.util.List;

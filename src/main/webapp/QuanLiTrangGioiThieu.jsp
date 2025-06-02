@@ -536,6 +536,14 @@
             background-color: darkred;
             transform: scale(1.1);
         }
+
+        .alert-warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -595,6 +603,12 @@
                     <input type="hidden" name="introID" value="${intro.introID}">
                     <div class="submit">
                         <button type="submit">Cập nhật</button>
+                        <c:if test="${!canEdit}">
+                            <button style="background-color: #cfcfcf; border: none;" title="Bạn không có quyền này" type="button" disabled>Cập nhật</button>
+                        </c:if>
+                        <c:if test="${canEdit}">
+                            <button type="submit">Cập nhật</button>
+                        </c:if>
                     </div>
                 </div>
             </section>

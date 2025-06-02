@@ -12,36 +12,38 @@ import java.io.IOException;
 
 @WebServlet(name = "UpdateEmailServlet", value = "/UpdateEmail")
 public class UpdateEmailServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CustomerDao customerDao = new CustomerDao();
-        Customer customer;
         String email = request.getParameter("nameEmail");
-        System.out.println("Email: " + email);
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        // Kiểm tra xem đã đăng nhập hay chưa
-        if (user != null) {
-            customer = customerDao.getCustomerWithUID(user.getUserID());
-            System.out.println("bjvhv111g"+customer);
 
-            if(customer == null){
-                System.out.println("bjvhvg"+customer);
-
-                customerDao.createCusEmail(user.getUserID(), email);
-            }else{
-                customerDao.updateInfoCustomerEmail(user.getUserID(), email);
-                response.sendRedirect("taiKhoanCuaToi?updateMail=success");}
-        } else {
+        if (user == null) {
             response.sendRedirect("login");
+            return;
         }
 
-    }
-    }
+        int userId = user.getUserID();
+        Customer customer = customerDao.getCustomerWithUID(userId);
 
+        if (customer == null) {
+            customerDao.createCusEmail(userId, email);
+        } else {
+            customerDao.updateInfoCustomerEmail(userId, email);
+        }
+
+        // Update email trong session user nếu cần
+        user.setEmail(email);
+        session.setAttribute("user", user);
+
+        // Kiểm tra quyền để điều hướng về đúng trang
+        String type = request.getParameter("type");
+        if ("admin".equals(type)) {
+            response.sendRedirect("QuanLiTaiKhoanCuaToi?updateMail=success");
+        } else {
+            response.sendRedirect("taiKhoanCuaToi?updateMail=success");
+        }
+    }
+}
