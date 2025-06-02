@@ -13,11 +13,28 @@ public class User implements Serializable {
     private String verifiCode;
     private Date verifiExpines;
     private String email;
+    private String googleId;
+    private String facebookId;
+    private String avatar;
+    private boolean active;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public User() {
     }
 
-    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email) {
+    public User(int userID) {
+        this.userID = userID;
+    }
+
+    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId, String facebookId, String avatar, boolean active) {
         this.userID = userID;
         this.name = name;
         this.password = password;
@@ -27,15 +44,44 @@ public class User implements Serializable {
         this.verifiCode = verifiCode;
         this.verifiExpines = verifiExpines;
         this.email = email;
+        this.googleId = googleId;
+        this.facebookId = facebookId;
+        this.avatar = avatar;
+        this.active = active;
     }
 
-    public String getEmail() { return email; }
+    public User(int userID, String name, String password, String phone, Date createAt, Date updateAt, String verifiCode, Date verifiExpines, String email, String googleId, String facebookId, String avatar, boolean active, String status) {
+        this.userID = userID;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.verifiCode = verifiCode;
+        this.verifiExpines = verifiExpines;
+        this.email = email;
+        this.googleId = googleId;
+        this.facebookId = facebookId;
+        this.avatar = avatar;
+        this.active = active;
+        this.status = status;
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getGoogleId() { return googleId; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public void setGoogleId(String googleId) { this.googleId = googleId; }
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
 
     public int getUserID() {
         return userID;
@@ -101,6 +147,30 @@ public class User implements Serializable {
         this.verifiExpines = verifiExpines;
     }
 
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -110,11 +180,14 @@ public class User implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", createAt=" + createAt +
                 ", updateAt=" + updateAt +
-                ", email='" + email + '\'' +
                 ", verifiCode='" + verifiCode + '\'' +
                 ", verifiExpines=" + verifiExpines +
                 ", email='" + email + '\'' +
                 ", googleId='" + googleId + '\'' +
+                ", facebookId='" + facebookId + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", active=" + active +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

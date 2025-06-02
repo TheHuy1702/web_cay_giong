@@ -18,31 +18,38 @@ public class QuanLiTaiKhoanUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserDao userDao = new UserDao();
-        List<User> users;
-        String sortBy = request.getParameter("sortBy");
-        //tìm kiếm
-        String keyword = request.getParameter("keyword");
-        if (keyword != null && !keyword.isEmpty()) {
-            users = userDao.searchUser(keyword); // Tìm kiếm theo từ khóa
-        } else {
-            if (sortBy == null) {
-                users = userDao.getUsers("desc"); // Mặc định là mới nhất
-            } else if (sortBy.equals("asc")) {
-                sortBy = "asc";
-                users = userDao.getUsers("asc");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        // Kiểm tra xem đã đăng nhập hay chưa
+        if (user != null) {
+            UserDao userDao = new UserDao();
+            List<User> users;
+            String sortBy = request.getParameter("sortBy");
+            //tìm kiếm
+            String keyword = request.getParameter("keyword");
+            if (keyword != null && !keyword.isEmpty()) {
+                users = userDao.searchUser(keyword); // Tìm kiếm theo từ khóa
             } else {
-                sortBy = "desc";
-                users = userDao.getUsers("desc");
+                if (sortBy == null) {
+                    users = userDao.getUsers("desc"); // Mặc định là mới nhất
+                } else if (sortBy.equals("asc")) {
+                    sortBy = "asc";
+                    users = userDao.getUsers("asc");
+                } else {
+                    sortBy = "desc";
+                    users = userDao.getUsers("desc");
+                }
             }
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("users", users);
+            request.setAttribute("sortBy", sortBy);
+
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiTaiKhoanNguoiDung.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            response.sendRedirect("login");
         }
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("users", users);
-        request.setAttribute("sortBy", sortBy);
-
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("QuanLiTaiKhoanNguoiDung.jsp");
-        dispatcher.forward(request, response);
     }
 
     @Override

@@ -16,16 +16,30 @@ public class CommentAndReviewDao {
     // lấy ra tất cả comment và đánh giá.
     public List<CommentAndReview> getAllCommentAndReview() {
         commentAndReview = JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("select * from commentandreviews")
+                handle.createQuery("select * from commentandreviews where deleted = false")
                         .mapToBean(CommentAndReview.class).list());
         return commentAndReview;
+    }
+
+    public CommentAndReview getCommentAndReview(int id) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("select * from commentandreviews where comAndReID = ?")
+                        .bind(0, id)
+                        .mapToBean(CommentAndReview.class).one());
     }
 
     // lấy ra tất cả comment và đánh giá của sản phẩm nhất định.
     public List<CommentAndReview> getAllCommentOfProduct(int productID) {
         commentAndReview = JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("select * from commentandreviews where productID=? order by comAndReID desc")
+                handle.createQuery("select * from commentandreviews where productID=? and deleted=false order by comAndReID desc")
                         .bind(0, productID)
+                        .mapToBean(CommentAndReview.class).list());
+        return commentAndReview;
+    }
+
+    public List<CommentAndReview> getAllCommentAndReviewDeleted() {
+        commentAndReview = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("select * from commentandreviews where deleted = true")
                         .mapToBean(CommentAndReview.class).list());
         return commentAndReview;
     }
@@ -45,8 +59,22 @@ public class CommentAndReviewDao {
     // thêm phương thức xóa comment and reviews.
     public void deleteCommentAndReview(int comAndReID) {
         JDBIConnect.get().withHandle(handle ->
-                handle.createUpdate("DELETE FROM commentandreviews WHERE comAndReID = ?")
+                handle.createUpdate("UPDATE commentandreviews SET deleted = true WHERE comAndReID = ?")
                         .bind(0, comAndReID)
+                        .execute());
+    }
+
+    public void redoCommentAndReview(int commentIdHis) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("UPDATE commentandreviews SET deleted = false WHERE comAndReID = ?")
+                        .bind(0, commentIdHis)
+                        .execute());
+    }
+
+    public void deleteCommentAndReviewReal(int id) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("DELETE FROM commentandreviews WHERE comAndReID = ?")
+                        .bind(0, id)
                         .execute());
     }
 
@@ -74,7 +102,7 @@ public class CommentAndReviewDao {
     // lấy comment and review theo điểm đánh giá và id sản phẩm.
     public List<CommentAndReview> getAllCommentOfProductByRatingAndIDP(int productID, int ratingStars) {
         return JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM commentandreviews WHERE productID = ? AND ratingStars = ?")
+                handle.createQuery("SELECT * FROM commentandreviews WHERE productID = ? AND ratingStars = ? and deleted=false")
                         .bind(0, productID)
                         .bind(1, ratingStars)
                         .mapToBean(CommentAndReview.class).list());
@@ -83,7 +111,7 @@ public class CommentAndReviewDao {
     // lấy comment and review theo điểm đánh giá.
     public List<CommentAndReview> getAllCommentOfProductByRating(int ratingStars) {
         return JDBIConnect.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM commentandreviews WHERE ratingStars = ?")
+                handle.createQuery("SELECT * FROM commentandreviews WHERE ratingStars = ? and deleted = false")
                         .bind(0, ratingStars)
                         .mapToBean(CommentAndReview.class).list());
     }
@@ -115,5 +143,8 @@ public class CommentAndReviewDao {
             System.out.println(commentAndReview);
         }
         System.out.println(commentAndReviewDao.trungBinhSoSao(2));
+        CommentAndReview c = commentAndReviewDao.getCommentAndReview(1);
+        System.out.println(c);
+        commentAndReviewDao.deleteCommentAndReview(1);
     }
 }

@@ -437,6 +437,14 @@
         .dangxuat:hover {
             background-color: #666;
         }
+
+        .alert-warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -501,6 +509,12 @@
         </div>
         <div class="content">
             <h2>Quản lý đơn hàng</h2>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert-warning">
+                        ${errorMessage}
+                </div>
+            </c:if>
+            <c:if test="${empty errorMessage}">
             <div class="container2">
                 <div class="header2">
                     <form action="QuanLyDonHang" method="get">
@@ -562,13 +576,25 @@
                                     <div class="dropdown-content">
                                         <form method="post" action="QuanLyDonHang">
                                             <input type="hidden" name="orderID" value="${o.orderID}">
-                                            <button type="submit" value="xacNhan"
-                                                    name="action"><i
-                                                    class="fas fa-check"></i>Xác nhận đơn hàng
-                                            </button>
-                                            <button type="submit" value="huyDon" name="action"><i
-                                                    class="fas fa-times"></i>Hủy đơn hàng
-                                            </button>
+
+                                            <c:if test="${!canEdit}">
+                                                <button type="button" title="Bạn không có quyền này" disabled><i
+                                                        class="fas fa-check"></i>Xác nhận đơn hàng
+                                                </button>
+                                                <button type="button" title="Bạn không có quyền này" disabled><i
+                                                        class="fas fa-times"></i>Hủy đơn hàng
+                                                </button>
+                                            </c:if>
+                                            <c:if test="${canEdit}">
+                                                <button type="submit" value="xacNhan"
+                                                        name="action"><i
+                                                        class="fas fa-check"></i>Xác nhận đơn hàng
+                                                </button>
+                                                <button type="submit" value="huyDon" name="action"><i
+                                                        class="fas fa-times"></i>Hủy đơn hàng
+                                                </button>
+                                            </c:if>
+
 
                                         </form>
                                     </div>
@@ -580,7 +606,7 @@
                     </tbody>
                 </table>
             </div>
-
+            </c:if>
 
         </div>
     </div>

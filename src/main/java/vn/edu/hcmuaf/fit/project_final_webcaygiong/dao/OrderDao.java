@@ -5,8 +5,15 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Order;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.OrderItems;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderDao {
     List<Order> order;
@@ -67,6 +74,29 @@ public class OrderDao {
                         .list());
     }
 
+    public List<Map<String, Object>> getOrderItemsByOrderID(int orderId) {
+        String query = "SELECT oi.*, p.name AS productName, p.price AS productPrice ,p.imageMain as image " +
+                "FROM orderitems oi " +
+                "JOIN products p ON oi.productID = p.productID " +
+                "WHERE oi.orderID = ?";
+
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(query)
+                        .bind(0, orderId)
+                        .map((rs, ctx) -> {
+                            Map<String, Object> itemDetail = new HashMap<>();
+                            itemDetail.put("orderID", rs.getInt("orderID"));
+                            itemDetail.put("itemID", rs.getInt("itemID"));
+                            itemDetail.put("image", rs.getString("image"));
+                            itemDetail.put("productID", rs.getInt("productID"));
+                            itemDetail.put("quantity", rs.getInt("quantity"));
+                            itemDetail.put("price", rs.getDouble("productPrice"));
+                            itemDetail.put("productName", rs.getString("productName"));
+                            return itemDetail;
+                        })
+                        .list());
+    }
+
     // lay thong tin khach hang theo id.
     public Customer getCustomerById(int customerId) {
         return JDBIConnect.get().withHandle(handle ->
@@ -84,19 +114,54 @@ public class OrderDao {
                         .bind(1, orderId)
                         .execute());
     }
+    // cập nhật trạng thái đơn hàng là đã hủy.
+    public void updateOrderStatusCancel(int orderId, String actionBy) {
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET status = 'Đã hủy', cancelBy = ?, cancelAt = current_timestamp() WHERE orderId =?")
+                        .bind(0, actionBy)
+                        .bind(1, orderId)
+                        .execute());
+    }
+
+    public void updateOrderTggh(int orderId, String tg) {
+        OffsetDateTime odt = OffsetDateTime.parse(tg, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String mysqlDateTime = odt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        JDBIConnect.get().withHandle(handle ->
+                handle.createUpdate("UPDATE orders SET expectedDeliveryTime = ? WHERE orderId =?")
+                        .bind(0, mysqlDateTime)
+                        .bind(1, orderId)
+                        .execute());
+    }
+
+    public String getDatePrepare(int orderId) {
+        String sql = "SELECT DATE(orderDate) FROM orders WHERE orderId = ?";
+
+        String dateString = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, orderId)
+                        .mapTo(String.class)
+                        .findOnly()
+        );
+
+        // Chuyển đổi chuỗi ngày thành LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        // Cộng thêm 2 ngày
+        LocalDate newDate = date.plusDays(2);
+
+        // Trả về ngày mới dưới dạng chuỗi
+        return newDate.format(formatter);
+    }
 
 
     public static void main(String[] args) {
         OrderDao orderDao = new OrderDao();
-        List<Order> orders = orderDao.getAllOrderItems();
-        for (Order order : orders) {
-            System.out.println(order);
+        System.out.println(orderDao.getDatePrepare(30));
+        System.out.println(orderDao.getOrderById(30));
+        List<Order> ds = orderDao.getAllOrderItems();
+        for(Order o:ds){
+            System.out.println(o);
         }
-        List<OrderItems> orderItems = orderDao.getOrderItemsByOrderId(3);
-        for (OrderItems item : orderItems) {
-            System.out.println(item);
-        }
-        Customer customer = orderDao.getCustomerById(2);
-        System.out.println(customer);
     }
 }

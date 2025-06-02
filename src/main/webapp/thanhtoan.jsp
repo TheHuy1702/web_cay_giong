@@ -1,3 +1,4 @@
+<%@ page import="org.json.JSONObject" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -409,6 +410,49 @@
             box-sizing: border-box;
             font-size: 14px;
         }
+        .discount-section {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .discount-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .discount-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .discount-select {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .apply-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .apply-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
@@ -441,9 +485,9 @@
         <form method="post" action="UpdateAddress">
             <div class="popup-content">
                 <div class="popup-header">Thay đổi địa chỉ nhận hàng</div>
-                <input type="text" id="full-name" class="popup-input" placeholder="Họ tên người nhận" name="fullname"
+                <input type="text" id="full-name" class="popup-input" placeholder="Họ tên người nhận" name="fullName"
                        required>
-                <input type="text" id="phone-number" class="popup-input" placeholder="Số điện thoại" name="phonenumber"
+                <input type="text" id="phone-number" class="popup-input" placeholder="Số điện thoại" name="phoneNumber"
                        required>
                 <input type="text" id="address" class="popup-input" placeholder="Số nhà, tên đường"
                        name="address"
@@ -486,6 +530,12 @@
             <tbody id="product-list">
 
             <c:forEach var="p" items="${sessionScope.cart.list}">
+
+                <form method="post" action="UpdateAddress">
+                    <input type="hidden" id="prodName" name="prodName" value="${p.name}">
+                    <input type="hidden" id="prodQuantity" name="prodQuantity" value="${p.quantity}">
+                </form>
+
                 <tr>
                     <td>
                         <div class="product-info">
@@ -515,6 +565,19 @@
             </tbody>
         </table>
     </div>
+    <div class="discount-section">
+        <label for="discountSelect" class="discount-label">Chọn mã giảm giá:</label>
+        <form action="ApplyDiscount" method="POST" class="discount-form">
+            <select name="code" id="discountSelect" class="discount-select">
+                <option value="0.0">Chọn mã giảm giá</option>
+                <c:forEach var="discount" items="${availableDiscounts}">
+                    <option value="${discount.code}">${discount.description} - Giá trị đơn hàng tối thiểu <fmt:formatNumber value="${discount.minOrderValue}"
+                                                                                                                                                      type="number" pattern="#,##0 VND"/></option>
+                </c:forEach>
+            </select>
+            <button type="submit" class="apply-button">Áp dụng</button>
+        </form>
+    </div>
 
     <div class="total-section">
         <table>
@@ -525,15 +588,31 @@
             </tr>
             <tr>
                 <td>Phí vận chuyển:</td>
-                <td class="total-price">15.000 VNĐ</td>
+                <td class="total-price">
+                    <p><fmt:formatNumber
+                            value="${serviceFee}" type="number" pattern="#,##0 VND"/></p>
+                </td>
+            </tr>
+            <tr>
+                <td>Giảm giá:</td>
+                <td class="total-price">
+                    <c:if test="${not empty param.giamGia}">
+                        <p><fmt:formatNumber value="${param.giamGia}" type="number" pattern="#,##0 VND"/></p>
+                    </c:if>
+                    <c:if test="${empty param.giamGia}">
+                        <p><fmt:formatNumber value="0" type="number" pattern="#,##0 VND"/></p>
+                    </c:if>
+                </td>
             </tr>
             <tr>
                 <td><strong>Tổng thanh toán:</strong></td>
                 <td id="final-total" class="total-price"><strong><fmt:formatNumber
-                        value="${sessionScope.cart.total+15000}" type="number" pattern="#,##0 VND"/></strong></td>
+                        value="${sessionScope.cart.total+serviceFee+param.giamGia}" type="number" pattern="#,##0 VND"/></strong></td>
             </tr>
         </table>
         <form action="Order" method="POST" onsubmit="return confirmThanhToan();">
+            <input type="hidden" name="orderTotalAmount"  value="${sessionScope.cart.total+serviceFee+param.giamGia}"/>
+            <input type="hidden" name="orderShipFee" value="${serviceFee}"/>
             <button class="order-button" type="submit">Đặt hàng</button>
         </form>
     </div>

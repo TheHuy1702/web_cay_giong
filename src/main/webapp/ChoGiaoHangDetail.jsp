@@ -446,6 +446,7 @@
             font-size: 14px;
             text-decoration: none;
         }
+
         .header1 a:hover {
             color: red;
         }
@@ -904,9 +905,9 @@
 
         <div class="container1">
             <div class="header1">
-                <a href="ChoGiaoHang"><i class="fas fa-arrow-left"></i> TRỞ LẠI</a>
+                <a href="ChoGiaoHang?status=Đã xác nhận"><i class="fas fa-arrow-left"></i> TRỞ LẠI</a>
                 <div class="order-info">
-                    <span>MÃ ĐƠN HÀNG: 250328RT5YV4AF</span>
+                    <span>MÃ ĐƠN HÀNG: ${order.orderId}</span>
                     <span class="status">| ĐANG GIAO HÀNG</span>
                 </div>
             </div>
@@ -914,19 +915,19 @@
                 <div class="step">
                     <div class="icon"><i class="fas fa-file-alt"></i></div>
                     <div class="text">Đơn Hàng Đã Đặt</div>
-                    <div class="date">16:19 28-03-2025</div>
+                    <div class="date">${order.orderDate}</div>
                 </div>
                 <div class="line"></div>
                 <div class="step">
                     <div class="icon"><i class="fas fa-dollar-sign"></i></div>
                     <div class="text">Đã Xác Nhận Thông Tin Thanh Toán</div>
-                    <div class="date">16:49 28-03-2025</div>
+                    <div class="date">${order.createAt}</div>
                 </div>
                 <div class="line"></div>
                 <div class="step">
                     <div class="icon"><i class="fas fa-truck"></i></div>
                     <div class="text">Đã Giao Cho ĐVVC</div>
-                    <div class="date">20:00 29-03-2025</div>
+                    <div class="date"></div>
                 </div>
                 <div class="line"></div>
                 <div class="step">
@@ -957,63 +958,71 @@
                         <div class="green"></div>
                         <div class="blue"></div>
                     </div>
-                    <div class="text-right">
-                        <p>SPX Express</p>
-                        <p>SPXVN057230169173</p>
-                    </div>
                 </div>
             </div>
             <div class="address">
                 <h1>Địa Chỉ Nhận Hàng</h1>
-                <p class="font-semibold">Khương Nguyễn</p>
-                <p>(+84)</p>
-                <p> Phường Long Thạnh Mỹ, Thành Phố Thủ Đức, TP. Hồ Chí Minh</p>
+                <p class="font-semibold">${customer.nameCustomer}</p>
+                <p>${customer.phone}</p>
+                <p> ${customer.address}, ${customer.district}, ${customer.city}</p>
             </div>
             <div class="order-summary">
                 <div class="flex">
                     <h2><i class="fas fa-store" style="margin-right: 10px;">
                     </i><a href="TrangChu" style="text-decoration: none; color: black;">OnH2K</a></h2>
-                    <div class="buttons">
-                        <button class="bg-gray-200">Xem sản phẩm</button>
-                    </div>
                 </div>
-                <div class="flex" style="margin-bottom: 20px;">
-                    <img src="https://storage.googleapis.com/a1aa/image/n9PTFWP2dWIXBlo1DDys8mFyZT3Gf1L8xaJRVsontOo.jpg"
-                         alt="Gương chiếu hậu xe Wave" />
-                    <div>
-                        <a href="" title="Xem sản phẩm" style="color: black; text-decoration: none;">
-                            <p class="font-semibold">
-                            <h4>Gương chiếu hậu xe Wave cặp trái phải (có bán lẻ bên trái và phải) gắn được nhiều xe
-                            </h4>
-                            </p>
-                        </a>
-                        <p>Số lượng: <span>x1</span></p>
+                <c:forEach var="oi" items="${orderItems}">
+                    <div class="flex" style="margin-bottom: 20px;">
+                        <a href="ChiTietSanPham?pid=${oi.productID}" title="Xem sản phẩm"
+                           style="text-decoration: none;"><img src="${oi.image}"
+                                                               alt="${oi.productName}"/></a>
+                        <div>
+                            <a href="ChiTietSanPham?pid=${oi.productID}" title="Xem sản phẩm"
+                               style="color: black; text-decoration: none;">
+                                <p class="font-semibold">
+                                <h4>${oi.productName}
+                                </h4>
+                                </p>
+                            </a>
+                            <p>Giá sản phẩm: <span><fmt:formatNumber value="${oi.price}" type="number"
+                                                                     pattern="#,##0 VND"/></span></p>
+                            <p>Số lượng: <span>x${oi.quantity}</span></p>
+                        </div>
+                        <div class="ml-auto">
+                            <p class="line-through"><fmt:formatNumber value="${oi.quantity*oi.price}" type="number"
+                                                                      pattern="#,##0 VND"/></p>
+                            <p class="text-red-500"><fmt:formatNumber value="${oi.quantity*oi.price*0.8}" type="number"
+                                                                      pattern="#,##0 VND"/></p>
+                        </div>
                     </div>
-                    <div class="ml-auto">
-                        <p class="line-through">₫19.955</p>
-                        <p class="text-red-500">₫15.800</p>
-                    </div>
-                </div>
+                </c:forEach>
                 <div class="border-t-2">
                     <div class="flex">
                         <p>Tổng tiền hàng</p>
-                        <p>₫15.800</p>
+                        <p><fmt:formatNumber value="${totalPrice}" type="number"
+                                             pattern="#,##0 VND"/></p>
                     </div>
                     <div class="flex">
                         <p>Phí vận chuyển</p>
-                        <p>₫16.500</p>
+                        <p><fmt:formatNumber value="${order.shippingFee}" type="number"
+                                             pattern="#,##0 VND"/></p>
                     </div>
                     <div class="flex">
-                        <p>Giảm giá phí vận chuyển</p>
-                        <p>-₫16.500</p>
+                        <p>Giảm giá</p>
+                        <p><fmt:formatNumber value="-16500" type="number"
+                                             pattern="#,##0 VND"/></p>
                     </div>
                     <div class="flex font-bold">
                         <p>Thành tiền</p>
-                        <p class="text-red-500">₫15.800</p>
+                        <p class="text-red-500"><fmt:formatNumber value="${totalPrice - 16000}" type="number"
+                                                                  pattern="#,##0 VND"/></p>
                     </div>
                 </div>
                 <div class="bg-yellow-100">
-                    <p>Vui lòng thanh toán <span class="text-red-500">₫15.800</span> khi nhận hàng.</p>
+                    <p>Vui lòng thanh toán <span class="text-red-500"><fmt:formatNumber value="${totalPrice - 16000}"
+                                                                                        type="number"
+                                                                                        pattern="#,##0 VND"/></span> khi
+                        nhận hàng.</p>
                 </div>
                 <div class="mt-4">
                     <p class="font-semibold">Phương thức Thanh toán</p>
@@ -1053,7 +1062,5 @@
 <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i>
     <div>Lên đầu trang</div>
 </button>
-
 </body>
-
 </html>
