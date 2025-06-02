@@ -392,6 +392,13 @@
             padding: 5px;
             color: white;
         }
+        .alert-warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
+        }
 
         .dangxuat:hover {
             background-color: #666;

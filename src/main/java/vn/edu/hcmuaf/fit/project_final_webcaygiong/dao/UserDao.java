@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//import static vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect.jdbi;
+
 public class UserDao {
     List<User> users;
 
@@ -134,38 +136,39 @@ public class UserDao {
         );
     }
 
-    public void insertGoogleUser(User user) {
-        JDBIConnect.get().useHandle(h -> {
-            String sql = "INSERT INTO users (name, email, googleId, createAt, updateAt) VALUES (?, ?, ?, ?, ?)";
-            h.createUpdate(sql)// ID của người dùng từ Google OAuth
-                    .bind(0, user.getName())
-                    .bind(1, user.getEmail())
-                    .bind(2, user.getGoogleId())
-                    .bind(3, user.getCreateAt())
-                    .bind(4, user.getUpdateAt())
-                    .execute();
-        });
-    }
+//    public void insertGoogleUser(User user) {
+//        JDBIConnect.get().useHandle(h -> {
+//            String sql = "INSERT INTO users (name, email, googleId, createAt, updateAt) VALUES (?, ?, ?, ?, ?)";
+//            h.createUpdate(sql)// ID của người dùng từ Google OAuth
+//                    .bind(0, user.getName())
+//                    .bind(1, user.getEmail())
+//                    .bind(2, user.getGoogleId())
+//                    .bind(3, user.getCreateAt())
+//                    .bind(4, user.getUpdateAt())
+//                    .execute();
+//        });
+//    }
 
-    public void updateGoogleId(int userId, String googleId) {
-        JDBIConnect.get().useHandle(h -> {
-            h.createUpdate("UPDATE users SET googleId = ?, updateAt = ? WHERE userID = ?")
-                    .bind(0, googleId)
-                    .bind(1, new Date())
-                    .bind(2, userId)
-                    .execute();
-        });
-    }
+//    public void updateGoogleId(int userId, String googleId) {
+//        JDBIConnect.get().useHandle(h -> {
+//            h.createUpdate("UPDATE users SET googleId = ?, updateAt = ? WHERE userID = ?")
+//                    .bind(0, googleId)
+//                    .bind(1, new Date())
+//                    .bind(2, userId)
+//                    .execute();
+//        });
+//    }
+//
+//    public User findByGoogleId(String googleId) {
+//        return JDBIConnect.get().withHandle(h ->
+//                h.createQuery("SELECT * FROM users WHERE googleId = ?")
+//                        .bind(0, googleId)
+//                        .mapToBean(User.class)
+//                        .findOne()
+//                        .orElse(null)
+//        );
+//    }
 
-    public User findByGoogleId(String googleId) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT * FROM users WHERE googleId = ?")
-                        .bind(0, googleId)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
-    }
 
     public static void main(String[] args) {
         UserDao userDao = new UserDao();

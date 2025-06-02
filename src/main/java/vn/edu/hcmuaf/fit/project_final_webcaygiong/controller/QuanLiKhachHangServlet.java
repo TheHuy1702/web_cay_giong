@@ -6,6 +6,9 @@ import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.QuanLiCustomerDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.QuanLiCustomers;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserPermissionDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
+
 
 import java.io.IOException;
 import java.util.List;

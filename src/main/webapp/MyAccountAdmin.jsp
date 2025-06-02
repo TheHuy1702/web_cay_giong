@@ -512,10 +512,14 @@
                     </form>
 
                     <label>Email:</label>
-                    <p>${u.email}<a class="change-link" href="send-otp-email?action=updateEmail" onclick="openEmailPopup()">Thay Đổi</a></p>
+                    <p>${u.email}
+                        <a class="change-link" href="send-otp-email?action=updateEmail&type=admin" onclick="openEmailPopup()">Thay Đổi</a>
+                    </p>
 
                     <div class="popup-overlay" id="email-popup">
                         <form id="emailCus" action="UpdateEmail" method="POST">
+                            <input type="hidden" name="type" value="admin">
+
                             <div class="popup-content">
                                 <div class="popup-header">Thay đổi Email</div>
                                 <input type="email" id="email" class="popup-input" placeholder="Nhập Email mới" name="nameEmail" required>
@@ -528,10 +532,11 @@
                     </div>
 
 
+
                     <label>Số điện thoại</label>
-                    <p>${customer.phone}<a class="change-link" href="send-otp-email?action=updatePhone" onclick="openPhonePopup()">Thay Đổi</a></p>
+                    <p>${customer.phone}<a class="change-link" href="send-otp-email?action=updatePhone&type=admin" onclick="openPhonePopup()">Thay Đổi</a></p>
                     <div class="popup-overlay" id="phone-popup">
-                        <form id="phoneCus" action="UpdatePhone" method="POST">
+                        <form id="phoneCus" action="UpdatePhoneAdmin" method="POST">
                             <div class="popup-content">
                                 <div class="popup-header">Thay đổi số điện thoại</div>
                                 <input type="number" id="phone" class="popup-input" placeholder="Nhập Số điện thoại mới" name="phone"

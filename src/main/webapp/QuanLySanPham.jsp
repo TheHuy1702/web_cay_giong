@@ -101,6 +101,13 @@
         .form-group {
             margin-bottom: 15px;
         }
+        .alert-warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;
+        }
 
         .form-group label {
             display: block;

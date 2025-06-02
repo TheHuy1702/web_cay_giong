@@ -294,13 +294,19 @@
         </div>
         <div class="content">
             <c:if test="${not empty errorMessage}">
-                <div class="alert-warning">
+                <h2>Dashboard</h2>
+                <div style="background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px;">
                         ${errorMessage}
                 </div>
             </c:if>
-            <c:if test="${empty errorMessage}"></c:if>
+
             <div class="head-content"></div>
             <h2>Dashboard</h2>
+
             <div class="dashboard-cards">
                 <div class="card">
                     <h3>Tổng số sản phẩm</h3>
