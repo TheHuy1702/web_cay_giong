@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CommentAndReviewDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.ProductDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.cart.Cart;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
 import java.io.IOException;
 
@@ -19,21 +20,27 @@ public class remove extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("pid"));
-        String action = request.getParameter("action");
-        HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new Cart();
-            session.setAttribute("cart", cart);
-        }
-        if ("delete".equals(action)) {
-            boolean dl = cart.removeProduct(id);
-            if (dl) {
-                response.sendRedirect("show-cart?remove=thanhCong");
-            } else {
-                response.sendRedirect("show-cart?remove=thatBai");
+        HttpSession session1=request.getSession();
+        User user = (User) session1.getAttribute("user");
+        if (user!=null){
+            int id = Integer.parseInt(request.getParameter("pid"));
+            String action = request.getParameter("action");
+            HttpSession session = request.getSession();
+            Cart cart = (Cart) session.getAttribute("cart");
+            if (cart == null) {
+                cart = new Cart();
+                session.setAttribute("cart", cart);
             }
+            if ("delete".equals(action)) {
+                boolean dl = cart.removeProduct(id);
+                if (dl) {
+                    response.sendRedirect("show-cart?remove=thanhCong");
+                } else {
+                    response.sendRedirect("show-cart?remove=thatBai");
+                }
+            }
+        }else{
+            response.sendRedirect("login");
         }
     }
 }

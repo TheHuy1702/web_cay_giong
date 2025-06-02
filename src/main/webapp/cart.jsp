@@ -577,9 +577,16 @@
    <span>
     Tổng Giá: <fmt:formatNumber value="${sessionScope.cart.total}" type="number" pattern="#,##0 VND"/>
    </span>
-        <a class="buy-btn" href="thanhtoan">
-            Mua Ngay
-        </a>
+        <c:if test="${not empty sessionScope.cart.list}">
+            <a class="buy-btn" href="thanhtoan">
+                Mua Ngay
+            </a>
+        </c:if>
+        <c:if test="${empty sessionScope.cart.list}">
+            <a class="buy-btn" href="TrangChu" title="Bạn chưa có sản phẩm nào trong giỏ hàng, bấm vào đây để về trang chủ">
+                Mua Ngay
+            </a>
+        </c:if>
     </div>
 </div>
 <div id="footerSection" class="custom-bg">

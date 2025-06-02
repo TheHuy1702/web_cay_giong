@@ -5,7 +5,6 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,28 +61,6 @@ public class UserDao {
         return false;
     }
 
-//    public boolean checkLogin2(String phone, String password) {
-//        User user = JDBIConnect.get().withHandle(h ->
-//                h.createQuery("SELECT u.* FROM users u join ActivationToken a ON u.userID = a.userID WHERE a.used = 1  and phone = ?")
-//                        .bind(0, phone)
-//                        .mapToBean(User.class)
-//                        .findOne()
-//                        .orElse(null)
-//        );
-//
-//        // Kiểm tra xem người dùng có tồn tại.
-//        if (user != null) {
-//            return checkPassword(password, user.getPassword());
-//        }
-//        return false;
-//    }
-
-
-    // Phương thức để kiểm tra mật khẩu
-    private boolean checkPassword(String inputPassword, String storedPassword) {
-        return inputPassword.equals(storedPassword);
-    }
-
     public boolean insertUser(User user) {
         try {
             // Hash password trước khi lưu
@@ -122,40 +99,6 @@ public class UserDao {
         );
     }
 
-    public boolean updateOrInsertVerificationCode(String phone, String verificationCode, Date expirationDate) {
-        User user = findByPhone(phone);
-        if (user == null) {
-            return false;
-        }
-        return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET verifiCode = ?, verifiExpines = ? WHERE phone = ?")
-                        .bind(0, verificationCode)
-                        .bind(1, expirationDate)
-                        .bind(2, phone)
-                        .execute() > 0
-        );
-    }
-
-    public boolean isVerificationCodeValid(String phone, String verificationCode) {
-        User user = findByPhone(phone);
-        if (user == null || user.getVerifiCode() == null || user.getVerifiExpines() == null) {
-            return false;
-        }
-        return user.getVerifiCode().equals(verificationCode) &&
-                user.getVerifiExpines().after(new Date(System.currentTimeMillis()));
-    }
-
-    public static boolean updatePassword(String phone, String newPassword) {
-        // Thực hiện cập nhật mật khẩu vào cơ sở dữ liệu mà không mã hóa
-        return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET password = ?, updateAt = ? WHERE phone = ?")
-                        .bind(0, newPassword)  // Liên kết mật khẩu mới (không mã hóa)
-                        .bind(1, new Timestamp(System.currentTimeMillis()))  // Cập nhật thời gian thay đổi
-                        .bind(2, phone)  // Liên kết số điện thoại
-                        .execute() > 0  // Trả về true nếu có ít nhất 1 bản ghi bị thay đổi
-        );
-    }
-
     public User findByEmail(String email) {
         return JDBIConnect.get().withHandle(h ->
                 h.createQuery("SELECT * FROM users WHERE email = ?")
@@ -177,26 +120,6 @@ public class UserDao {
                     .bind(4, user.getUpdateAt())
                     .execute();
         });
-    }
-
-    public void updateGoogleId(int userId, String googleId) {
-        JDBIConnect.get().useHandle(h -> {
-            h.createUpdate("UPDATE users SET googleId = ?, updateAt = ? WHERE userID = ?")
-                    .bind(0, googleId)
-                    .bind(1, new Date())
-                    .bind(2, userId)
-                    .execute();
-        });
-    }
-
-    public User findByGoogleId(String googleId) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT * FROM users WHERE googleId = ?")
-                        .bind(0, googleId)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
     }
 
     public User emailExists(String email) {
@@ -286,18 +209,6 @@ public class UserDao {
         );
     }
 
-    // Thêm các phương thức này vào class UserDao
-
-    public boolean isTokenValid(String token) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT COUNT(*) FROM ActivationToken WHERE token = ? AND used = 1 AND expiryTime > NOW()")
-                        .bind(0, token)
-                        .mapTo(Integer.class)
-                        .findOne()
-                        .orElse(0) > 0
-        );
-    }
-
     public User findUserByToken(String token) {
         return JDBIConnect.get().withHandle(h ->
                 h.createQuery("SELECT u.* FROM users u JOIN ActivationToken a ON u.userID = a.userID WHERE a.token = ? AND a.used = false AND a.expiryTime > NOW()")
@@ -308,44 +219,6 @@ public class UserDao {
         );
     }
 
-    public boolean activateUserById(int userId, String token) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET verifiCode = ?, verifiExpines = NULL WHERE userID = ?")
-                        .bind(0, token)
-                        .bind(1,userId)
-                        .execute() > 0
-        );
-    }
-
-
-    public boolean activateUser(String verificationCode) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET verifiCode = NULL, verifiExpines = NULL WHERE verifiCode = ? AND verifiExpines > NOW()")
-                        .bind(0, verificationCode)
-                        .execute() > 0
-        );
-    }
-
-    // sửa
-    public boolean createVerificationCode(User user, String verificationCode, Date expiryDate) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET verifiCode = ?, verifiExpines = ? WHERE userID = ?")
-                        .bind(0, verificationCode)
-                        .bind(1, expiryDate)
-                        .bind(2, user.getUserID())
-                        .execute() > 0
-        );
-    }
-
-    public User findByVerificationCode(String verificationCode) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT * FROM users WHERE verifiCode = ? AND verifiExpines > NOW()")
-                        .bind(0, verificationCode)
-                        .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
-        );
-    }
 
     public boolean createActivationToken(int userId, String token, Date expiryTime) {
         return JDBIConnect.get().withHandle(h ->
@@ -375,44 +248,28 @@ public class UserDao {
         );
     }
 
-    public boolean activateUser(int userId) {
+    // Cập nhật trạng thái active
+    public boolean activateAccount(String phone) {
         return JDBIConnect.get().withHandle(h ->
-                h.createUpdate("UPDATE users SET active = 1 WHERE userID = ?")
-                        .bind(0, userId)
+                h.createUpdate("UPDATE users SET active = 1 WHERE phone = ?")
+                        .bind(0, phone)
                         .execute() > 0
         );
     }
 
-    public boolean isUserActive(int userId) {
-        return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT active FROM users WHERE userID = ?")
-                        .bind(0, userId)
-                        .mapTo(Boolean.class)
-                        .findOne()
-                        .orElse(false)
+    // Tạo token kích hoạt mới
+    public boolean createNewActivationToken(int userId, String token, Date expiryTime) {
+        // Xóa token cũ nếu có
+        JDBIConnect.get().useHandle(h ->
+                h.execute("DELETE FROM ActivationToken WHERE userID = ?", userId)
         );
-    }
 
-    // Thêm phương thức checkPassword cho admin (nếu cần)
-    private boolean checkAdminPassword(String inputPassword, String storedPassword) {
-        // Giữ nguyên cách check password cũ cho admin nếu cần
-        return inputPassword.equals(storedPassword);
+        // Tạo token mới
+        return createActivationToken(userId, token, expiryTime);
     }
 
 
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
-//        List<User> listAll = userDao.getAllUsers();
-//        for (User c : listAll) {
-//            System.out.println(c);
-//        }
-//        System.out.println(userDao.findUserID(2));
-//        boolean test = userDao.createVerificationCode(new User(17), "02959823429fakfj", null);
-//        if (test == true) {
-//            System.out.println(userDao.findUserID(17));
-//        } else {
-//            System.out.println("Không thành công!");
-//        }
-        System.out.println(userDao.findUserByToken("6d93b105-9dae-473f-aaae-b3625b3548c1"));
     }
 }

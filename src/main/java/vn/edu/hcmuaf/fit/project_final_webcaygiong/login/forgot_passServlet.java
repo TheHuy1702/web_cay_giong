@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.project_final_webcaygiong.login;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.UserDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
@@ -12,8 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.LogUtil;
 
 @WebServlet(name = "forgot_passServlet", value = "/forgot_pass")
 public class forgot_passServlet extends HttpServlet {
