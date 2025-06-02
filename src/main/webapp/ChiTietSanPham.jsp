@@ -573,18 +573,23 @@
         }
 
         .product-info,
-        .product-details {
-            border: 1px solid #ccc;
+        .product-details,
+        .comment-section{
+            border: 2px solid #ececec;
             padding: 10px;
             margin-top: 20px;
             background-color: white;
         }
 
         .product-info h3,
-        .product-details h3 {
+        .product-details h3,
+        .comment-section h3{
             background-color: #9dee46;
             padding: 10px;
-            margin: -10px -10px 10px -10px;
+            border-radius: 10px;
+        }
+        .product-info h3{
+            margin-top: 0;
         }
 
         .product-details ul {
@@ -606,16 +611,11 @@
             margin-right: 5px;
         }
 
-        .product-details {
-            margin-left: 20px;
-            margin-right: 20px;
-        }
 
         .product-details h3 {
             background-color: #9dee46;
             padding: 10px;
-            margin: -10px -10px 10px -10px;
-            border: 1px solid #ccc;
+            margin-top: 0;
         }
 
         .product-details p {
@@ -633,16 +633,13 @@
         }
 
         /*Bình luận và đánh giá */
-        .comment-section {
+        .comment-section, .product-details, .product-info   {
             margin-top: 30px;
             margin-left: 20px;
             margin-right: 20px;
+            border-radius: 10px;
         }
 
-        .comment-section h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
 
         .average-rating {
             display: flex;
@@ -745,11 +742,13 @@
         .view-all-comments {
             text-align: center;
             margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         .view-all-comments2 {
             text-align: center;
             margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         /* CSS cho nút Đăng Xuất */
@@ -772,7 +771,7 @@
         .view-all-comments a {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #007bff;
+            background-color: #4caf50;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -782,7 +781,7 @@
         .view-all-comments2 a {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #007bff;
+            background-color: #4caf50;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -790,11 +789,11 @@
         }
 
         .view-all-comments a:hover {
-            background-color: #0056b3;
+            background-color: #28732a;
         }
 
         .view-all-comments2 a:hover {
-            background-color: #0056b3;
+            background-color: #28732a;
         }
 
         .error-message {
@@ -807,8 +806,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
-            padding: 20px;
-            padding-top: 40px;
+            padding-bottom: 20px;
+
         }
 
         .container_2 .product {
@@ -903,15 +902,14 @@
 
         .product-same h3 {
             background-color: #9dee46;
-            border-top: 2px solid #ccc;
-            border-left: 2px solid #ccc;
-            border-right: 2px solid #ccc;
-            border-bottom: 1px solid #ccc;
+            border-radius: 10px;
             padding: 10px;
-            margin-bottom: -10px;
-            margin-top: 20px;
-            margin-left: 20px;
-            margin-right: 20px;
+        }
+
+        .comment-section h3 {
+            background-color: #9dee46;
+            padding: 10px;
+            margin-top: 0;
         }
 
         /* quay về đầu trang*/
@@ -1048,6 +1046,9 @@
 
         .listCom {
             margin-top: 19px;
+            border: 5px solid #f7f7f7;
+            background-color: #efefef;
+            border-radius: 10px;
         }
 
         .listCom .fa-star {
@@ -1234,28 +1235,11 @@
             </div>
 
             <div class="comment-section">
-                <h2>
+                <h3>
                     Bình luận và đánh giá:
-                </h2>
-                <form action="ChiTietSanPham" method="post">
-                    <div class="comment-form">
-                        <div class="tb" style="margin-bottom: 10px;">Trung bình số sao: (${tbSao}/5) <i
-                                class="fas fa-star" style="color: yellow;"></i></div>
-                        <input type="hidden" name="pid" value="${detail.productID}">
-                        <input id="name" name="nameCus" placeholder="Tên của bạn..." type="text" required/>
-                        <textarea name="content" placeholder="Bình luận của bạn..." rows="5" required></textarea>
-                        <div class="choose-comment">Chọn số sao đánh giá</div>
-                        <select name="ratingStars" class="custom-select">
-                            <option value="1">Đánh giá 1 Sao</option>
-                            <option value="2">Đánh giá 2 Sao</option>
-                            <option value="3">Đánh giá 3 Sao</option>
-                            <option value="4">Đánh giá 4 Sao</option>
-                            <option value="5">Đánh giá 5 Sao</option>
-                        </select>
-                        <button type="submit"> Gửi bình luận và đánh giá</button>
-                    </div>
-                </form>
-
+                </h3>
+                <div class="tb" style="margin-bottom: 10px;">Trung bình số sao: (${tbSao}/5) <i
+                        class="fas fa-star" style="color: yellow;"></i></div>
                 <c:if test="${showAll}">
                     <c:forEach var="commentAll" items="${listCommentAndReviewAll}">
                         <div class="listCom">
@@ -1353,40 +1337,6 @@
 </div>
 </body>
 <script>
-    // // Danh sách các URL của hình ảnh
-    // const images = [
-    //     "Ảnh/hoa/mẫu đơn 2.jpg",
-    //     "Ảnh/hoa/mẫu đơn 3.jpg",
-    //     "Ảnh/hoa/mẫu đơn 4.jpg",
-    //     "Ảnh/hoa/mẫu đơn 5.jpg",
-    //     "Ảnh/hoa/mẫu đơn 6.jpg"
-    // ];
-    //
-    // // Chỉ số của hình ảnh hiện tại
-    // let currentIndex = 0;
-    // const mainImage = document.getElementById('mainImage'); // Lấy phần tử hình ảnh chính
-    //
-    // // Hàm thay đổi hình ảnh chính khi nhấp vào hình nhỏ
-    // function changeImage(src) {
-    //     mainImage.src = src; // Cập nhật nguồn hình ảnh chính
-    //     currentIndex = images.indexOf(src); // Cập nhật chỉ số hiện tại dựa trên hình ảnh vừa được nhấp
-    // }
-    //
-    // // Hàm chuyển sang hình ảnh tiếp theo
-    // function nextImage() {
-    //     currentIndex = (currentIndex + 1) % images.length; // Tăng chỉ số và quay lại đầu nếu vượt quá số hình ảnh
-    //     mainImage.src = images[currentIndex]; // Cập nhật hình ảnh chính
-    // }
-    //
-    // // Hàm quay lại hình ảnh trước đó
-    // function prevImage() {
-    //     currentIndex = (currentIndex - 1 + images.length) % images.length; // Giảm chỉ số và quay lại cuối nếu dưới 0
-    //     mainImage.src = images[currentIndex]; // Cập nhật hình ảnh chính
-    // }
-
-    // // Tự động chuyển hình ảnh chính mỗi 5 giây
-    // setInterval(nextImage, 5000);
-
     // quay về đầu trang
     // Hiện nút khi cuộn xuống
     window.onscroll = function () {

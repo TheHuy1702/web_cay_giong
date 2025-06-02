@@ -27,7 +27,7 @@ public class DiscountDao {
 
     public void addDiscount(Discount discount) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("INSERT INTO discounts (code, description, minOrderValue, startDate, endDate) VALUES (:code, :description, :minOrderValue, :startDate, :endDate)")
+                h.createUpdate("INSERT INTO discounts (code, description, minOrderValue, startDate, endDate, percentDecrease) VALUES (:code, :description, :minOrderValue, :startDate, :endDate, :percentDecrease)")
                         .bindBean(discount)
                         .execute()
         );
@@ -35,12 +35,13 @@ public class DiscountDao {
 
     public void updateDiscount(Discount discount, int id) {
         JDBIConnect.get().useHandle(h ->
-                h.createUpdate("UPDATE discounts SET code = :code, description = :description, minOrderValue = :minOrderValue,startDate = :startDate, endDate = :endDate WHERE iD = :iD")
+                h.createUpdate("UPDATE discounts SET code = :code, description = :description, minOrderValue = :minOrderValue,startDate = :startDate, endDate = :endDate, percentDecrease =:percentDecrease WHERE iD = :iD")
                         .bind("code", discount.getCode())
                         .bind("description", discount.getDescription())
                         .bind("minOrderValue", discount.getMinOrderValue())
                         .bind("startDate", discount.getStartDate())
                         .bind("endDate", discount.getEndDate())
+                        .bind("percentDecrease",discount.getPercentDecrease())
                         .bind("iD", id)
                         .execute()
         );
@@ -66,6 +67,15 @@ public class DiscountDao {
                         .bind(0, id)
                         .execute());
     }
+
+    public Discount getDiscountByCode(String code) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM discounts WHERE code = :code AND deleted = false")
+                        .bind("code", code)
+                        .mapToBean(Discount.class)
+                        .findOne() // Sử dụng findOne thay vì one
+                        .orElse(null));
+}
 
     public static void main(String[] args) {
         DiscountDao dao = new DiscountDao();

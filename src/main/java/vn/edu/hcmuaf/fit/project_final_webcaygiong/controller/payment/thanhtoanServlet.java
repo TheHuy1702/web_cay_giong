@@ -6,15 +6,19 @@ import jakarta.servlet.annotation.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.CustomerDao;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.DiscountDao;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.cart.Cart;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.cart.CartProduct;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Customer;
+import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Discount;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.Product;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.diaChi.GHNApiClient;
 
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "thanhtoanServlet", value = "/thanhtoan")
 public class thanhtoanServlet extends HttpServlet {
@@ -27,6 +31,19 @@ public class thanhtoanServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         Cart cart = (Cart) session.getAttribute("cart");
         if (user != null && cart != null) {
+            double orderValue = cart.getTotal();
+            // Lấy danh sách mã giảm giá
+            DiscountDao discountDao = new DiscountDao();
+            List<Discount> allDiscounts = discountDao.getAllDiscounts();
+
+            // Lọc các mã giảm giá có giá trị tối thiểu lớn hơn hoặc bằng giá trị đơn hàng và chưa hết hạn
+            LocalDateTime currentDate = LocalDateTime.now();
+            List<Discount> availableDiscounts = allDiscounts.stream()
+                    .filter(discount -> discount.getMinOrderValue() <= orderValue &&
+                            (discount.getEndDate() == null || discount.getEndDate().isAfter(currentDate)) &&
+                            !discount.isDeleted()) // Kiểm tra không bị xóa
+                    .collect(Collectors.toList());
+            request.setAttribute("availableDiscounts", availableDiscounts);
             CustomerDao customerDao = new CustomerDao();
             Customer customer = customerDao.getCustomerWithUID(user.getUserID());
             // Kiểm tra giá trị của các biến.
@@ -58,9 +75,6 @@ public class thanhtoanServlet extends HttpServlet {
                 params.put("service_type_id", 2);
                 // Gọi API để tính phí giao hàng
                 JSONObject result = GHNApiClient.callGHNApi("v2/shipping-order/fee", "POST", params);
-                System.out.println("Response code: " + result.getInt("code"));
-                System.out.println("Response message: " + result.getString("message"));
-                System.out.println("Result: " + result);
                 int service_fee = result.getJSONObject("data").getInt("service_fee");
                 // Lưu thông tin phí giao hàng
                 request.setAttribute("shippingFee", result.getJSONObject("data"));

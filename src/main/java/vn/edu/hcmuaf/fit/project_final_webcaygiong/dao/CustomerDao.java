@@ -128,6 +128,7 @@ public class CustomerDao {
 
     public static void main(String[] args) {
         CustomerDao customerDao = new CustomerDao();
+
 //        customerDao.updateInfoCustomerEmail(2, "thththt@gmail.com");
 //        customerDao.createCus(2);
 Customer customer=customerDao.getCustomerWithUID(2);
@@ -203,6 +204,7 @@ if(customer==null){
                     .bind(1,email )
                     .execute();
         });
+
     }
 }
 

@@ -5,9 +5,14 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
+
+import java.sql.Timestamp;
+import java.util.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 public class UserDao {
     List<User> users;
@@ -132,6 +137,43 @@ public class UserDao {
         );
     }
 
+
+    // danh sách user theo sắp sếp.
+    public List<Map<String, Object>> dsUser(String sortBy) {
+        String query = " SELECT DISTINCT  u.userID,u.name, u.phone, u.createAt, u.updateAt,u.status, c.customerID , c.email FROM users u JOIN customers c ON u.userID = c.userID  GROUP BY u.userID  ORDER BY u.createAt " + (sortBy.equals("desc") ? "DESC" : "ASC");
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery(query)
+                        .map((rs, ctx) -> {
+                            Map<String, Object> result = new HashMap<>();
+                            result.put("userID", rs.getInt("userID"));
+                            result.put("name", rs.getString("name"));
+                            result.put("phone", rs.getString("phone"));
+                            result.put("createAt", rs.getDate("createAt"));
+                            result.put("updateAt", rs.getDate("updateAt"));
+                            result.put("status", rs.getString("status"));
+                            result.put("customerID", rs.getInt("customerID"));
+                            result.put("email", rs.getString("email"));
+                            return result;
+                        })
+                        .list());
+    }
+
+    public List<User> getUsers(String sortBy) {
+        users = JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users ORDER BY createAt " + (sortBy.equals("desc") ? "DESC" : "ASC"))
+                        .mapToBean(User.class).list());
+        return users;
+    }
+
+    public static void main(String[] args) {
+    }
+
+    public List<User> searchUser(String keyword) {
+        return JDBIConnect.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE name LIKE ? OR phone LIKE ?")
+                        .bind(0, "%" + keyword + "%")
+                        .bind(1, keyword + "%")
+
     public User findByFacebookId(String facebookId) {
         return JDBIConnect.get().withHandle(h ->
                 h.createQuery("SELECT * FROM users WHERE facebookId = ?")
@@ -213,11 +255,13 @@ public class UserDao {
         return JDBIConnect.get().withHandle(h ->
                 h.createQuery("SELECT u.* FROM users u JOIN ActivationToken a ON u.userID = a.userID WHERE a.token = ? AND a.used = false AND a.expiryTime > NOW()")
                         .bind(0, token)
+
                         .mapToBean(User.class)
-                        .findOne()
-                        .orElse(null)
+                        .list()
         );
     }
+
+
 
 
     public boolean createActivationToken(int userId, String token, Date expiryTime) {

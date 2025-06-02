@@ -73,6 +73,7 @@ public class QuanLyVoucherServlet extends HttpServlet {
             double minValue = minVal == null ? 0.0 : Double.parseDouble(minVal);
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
+            double percentDecrease = Double.parseDouble(request.getParameter("percentDecrease"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             LocalDateTime startDateConvert = null;
             LocalDateTime endDateConvert = null;
@@ -88,6 +89,7 @@ public class QuanLyVoucherServlet extends HttpServlet {
             discount.setDescription(description);
             discount.setMinOrderValue(minValue);
             discount.setStartDate(startDateConvert);
+            discount.setPercentDecrease(percentDecrease);
             dao.addDiscount(discount);
             response.sendRedirect("QuanLyVoucher?them=ThanhCong");
         } else if ("edit".equals(action)) {
@@ -97,6 +99,7 @@ public class QuanLyVoucherServlet extends HttpServlet {
             double minValue = minVal == null ? 0.0 : Double.parseDouble(minVal);
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
+            double percentDecrease = Double.parseDouble(request.getParameter("percentDecrease"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             LocalDateTime startDateConvert = null;
             LocalDateTime endDateConvert = null;
@@ -112,6 +115,7 @@ public class QuanLyVoucherServlet extends HttpServlet {
             discount.setDescription(description);
             discount.setMinOrderValue(minValue);
             discount.setStartDate(startDateConvert);
+            discount.setPercentDecrease(percentDecrease);
             dao.updateDiscount(discount, id);
             response.sendRedirect("QuanLyVoucher?capNhat=ThanhCong");
         } else if ("redo".equals(action)) {
