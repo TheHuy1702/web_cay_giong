@@ -82,7 +82,9 @@ public class ChangePasswordServlet extends HttpServlet {
 
         // Cập nhật mật khẩu mới(đã mã hoá)
         String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
-        boolean updated = UserDao.updatePassword(phone, hashedNewPassword);
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        boolean updated = UserDao.updatePassword(userId, hashedNewPassword);
+
 
 
         if (updated) {

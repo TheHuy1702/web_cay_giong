@@ -5,13 +5,7 @@ import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.db.JDBIConnect;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.TokenForgotPassword;
 import vn.edu.hcmuaf.fit.project_final_webcaygiong.dao.model.User;
 
-
-import java.sql.Timestamp;
 import java.util.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class UserDao {
     List<User> users;
@@ -20,7 +14,7 @@ public class UserDao {
         users = new ArrayList<>();
     }
 
-    // lấy ra tất cả user.
+    // lấy ra tất cả user
     public List<User> getAllUsers() {
         users = JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("select * from users")
@@ -37,7 +31,6 @@ public class UserDao {
                         .orElse(null)
         );
     }
-
 
     public User findUsername(String name) {
         return JDBIConnect.get().withHandle(h ->
@@ -59,7 +52,6 @@ public class UserDao {
         );
 
         if (user != null) {
-            // Kiểm tra password đã hash
             return BCrypt.checkpw(password, user.getPassword());
         }
         return false;
@@ -67,7 +59,6 @@ public class UserDao {
 
     public boolean insertUser(User user) {
         try {
-            // Hash password trước khi lưu
             String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             return JDBIConnect.get().withHandle(h -> {
                 String sql = "INSERT INTO users (name, phone, email, password, verifiCode, verifiExpines, createAt, updateAt, active) " +
@@ -77,7 +68,7 @@ public class UserDao {
                         .bind("name", user.getName())
                         .bind("phone", user.getPhone())
                         .bind("email", user.getEmail())
-                        .bind("password", hashedPassword) // Sử dụng password đã hash
+                        .bind("password", hashedPassword)
                         .bind("verifiCode", user.getVerifiCode())
                         .bind("verifiExpines", user.getVerifiExpines())
                         .bind("createAt", user.getCreateAt())
@@ -92,7 +83,6 @@ public class UserDao {
         }
     }
 
-    // Phương thức để cập nhật mã xác minh và ngày hết hạn vào cơ sở dữ liệu
     public User findByPhone(String phone) {
         return JDBIConnect.get().withHandle(h ->
                 h.createQuery("SELECT * FROM users WHERE phone = ?")
@@ -116,7 +106,7 @@ public class UserDao {
     public void insertGoogleUser(User user) {
         JDBIConnect.get().useHandle(h -> {
             String sql = "INSERT INTO users (name, email, googleId, createAt, updateAt) VALUES (?, ?, ?, ?, ?)";
-            h.createUpdate(sql)// ID của người dùng từ Google OAuth
+            h.createUpdate(sql)
                     .bind(0, user.getName())
                     .bind(1, user.getEmail())
                     .bind(2, user.getGoogleId())
@@ -136,10 +126,10 @@ public class UserDao {
         );
     }
 
-
-    // danh sách user theo sắp sếp.
     public List<Map<String, Object>> dsUser(String sortBy) {
-        String query = " SELECT DISTINCT  u.userID,u.name, u.phone, u.createAt, u.updateAt,u.status, c.customerID , c.email FROM users u JOIN customers c ON u.userID = c.userID  GROUP BY u.userID  ORDER BY u.createAt " + (sortBy.equals("desc") ? "DESC" : "ASC");
+        String query = " SELECT DISTINCT  u.userID,u.name, u.phone, u.createAt, u.updateAt,u.status, c.customerID , c.email " +
+                "FROM users u JOIN customers c ON u.userID = c.userID  " +
+                "GROUP BY u.userID  ORDER BY u.createAt " + (sortBy.equals("desc") ? "DESC" : "ASC");
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery(query)
                         .map((rs, ctx) -> {
@@ -164,14 +154,16 @@ public class UserDao {
         return users;
     }
 
-    public static void main(String[] args) {
-    }
-
+    // ✅ Bổ sung searchUser để fix lỗi build
     public List<User> searchUser(String keyword) {
         return JDBIConnect.get().withHandle(handle ->
                 handle.createQuery("SELECT * FROM users WHERE name LIKE ? OR phone LIKE ?")
                         .bind(0, "%" + keyword + "%")
-                        .bind(1, keyword + "%")
+                        .bind(1, "%" + keyword + "%")
+                        .mapToBean(User.class)
+                        .list()
+        );
+    }
 
     public User findByFacebookId(String facebookId) {
         return JDBIConnect.get().withHandle(h ->
@@ -182,7 +174,6 @@ public class UserDao {
                         .orElse(null)
         );
     }
-
 
     public void insertFacebookUser(User user) {
         JDBIConnect.get().useHandle(h -> {
@@ -208,7 +199,6 @@ public class UserDao {
         });
     }
 
-    // Thêm các phương thức này vào UserDao class
     public boolean savePasswordResetToken(TokenForgotPassword token) {
         return JDBIConnect.get().withHandle(h ->
                 h.createUpdate("INSERT INTO TokenForgotPassword (userID, used, token, expiryTime) VALUES (?, ?, ?, ?)")
@@ -238,8 +228,7 @@ public class UserDao {
         );
     }
 
-    public boolean updatePassword(int userId, String newPassword) {
-        // Hash password mới trước khi lưu
+    public static boolean updatePassword(int userId, String newPassword) {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
         return JDBIConnect.get().withHandle(handle ->
@@ -251,18 +240,17 @@ public class UserDao {
         );
     }
 
+    // ✅ Bổ sung findUserByToken để fix lỗi build
     public User findUserByToken(String token) {
         return JDBIConnect.get().withHandle(h ->
-                h.createQuery("SELECT u.* FROM users u JOIN ActivationToken a ON u.userID = a.userID WHERE a.token = ? AND a.used = false AND a.expiryTime > NOW()")
+                h.createQuery("SELECT u.* FROM users u JOIN ActivationToken a ON u.userID = a.userID " +
+                                "WHERE a.token = ? AND a.used = false AND a.expiryTime > NOW()")
                         .bind(0, token)
-
                         .mapToBean(User.class)
-                        .list()
+                        .findOne()
+                        .orElse(null)
         );
     }
-
-
-
 
     public boolean createActivationToken(int userId, String token, Date expiryTime) {
         return JDBIConnect.get().withHandle(h ->
@@ -292,7 +280,6 @@ public class UserDao {
         );
     }
 
-    // Cập nhật trạng thái active
     public boolean activateAccount(String phone) {
         return JDBIConnect.get().withHandle(h ->
                 h.createUpdate("UPDATE users SET active = 1 WHERE phone = ?")
@@ -301,17 +288,12 @@ public class UserDao {
         );
     }
 
-    // Tạo token kích hoạt mới
     public boolean createNewActivationToken(int userId, String token, Date expiryTime) {
-        // Xóa token cũ nếu có
         JDBIConnect.get().useHandle(h ->
                 h.execute("DELETE FROM ActivationToken WHERE userID = ?", userId)
         );
-
-        // Tạo token mới
         return createActivationToken(userId, token, expiryTime);
     }
-
 
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
