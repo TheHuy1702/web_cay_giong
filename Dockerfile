@@ -1,14 +1,18 @@
-# Sử dụng Tomcat chính thức
+# Stage 1: Build WAR bằng Maven
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Stage 2: Deploy WAR lên Tomcat
 FROM tomcat:9.0-jdk17
+WORKDIR /usr/local/tomcat
 
-# Xóa app mặc định ROOT
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
+# Xóa ROOT mặc định
+RUN rm -rf webapps/ROOT
 
-# Copy file .war từ target/ vào Tomcat
-COPY target/Project_Final_WebCayGiong-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+# Copy file WAR từ stage build vào Tomcat
+COPY --from=build /app/target/Project_Final_WebCayGiong-1.0-SNAPSHOT.war webapps/ROOT.war
 
-# Mở port 8080
 EXPOSE 8080
-
-# Chạy Tomcat
 CMD ["catalina.sh", "run"]
