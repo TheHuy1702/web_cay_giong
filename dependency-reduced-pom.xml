@@ -3,6 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>vn.edu.hcmuaf.fit</groupId>
   <artifactId>Project_Final_WebCayGiong</artifactId>
+  <packaging>war</packaging>
   <name>Project_Final_WebCayGiong</name>
   <version>1.0-SNAPSHOT</version>
   <build>

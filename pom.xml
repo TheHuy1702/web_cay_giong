@@ -8,7 +8,7 @@
     <artifactId>Project_Final_WebCayGiong</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Project_Final_WebCayGiong</name>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
 
     <properties>
